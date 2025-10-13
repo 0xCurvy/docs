@@ -27,16 +27,20 @@ Why? If an external wallet (e.g. 0xabc...) receives funds from 3 different steal
 Let’s say you’ve received funds across 3 stealth addresses and want to move them to a single wallet:
 
 - If you send all the funds to one wallet in a single transaction, you’ve created a visible link between them.  
-- Instead, consider spending them separately or wait until Curvy supports [private batching](./best-practices-for-maximum-pivacy#private-batch-transactions) .
+- Instead, consider spending them separately or wait until Curvy supports [private batching](./best-practices-for-maximum-pivacy#private-batch-transactions) on desired network.
+
+## Private batch transactions
+
+Currently supported on:
+- Ethereum Sepolia
+  
+On networks that are supported, users are not required to choose stealth address from which they want to send assets. Instead, Curvy intelligently finds the most appropriate combination of assets from multiple sources (stealth addresses, ERC1155 addresses or Aggregator notes) and executes the transfer without revealing the underlying links between individual actions. This makes it much harder to trace your activity on-chain, while allowing you to send both to Curvy users and external addresses.
 
 ## **Real-World Privacy Isn’t Always Simple**
 
-We understand that in real-world usage, users want more than just 1:1 private transfers. They want to manage funds efficiently, use DeFi protocols, and interact with apps across chains.
+We understand that in real-world usage, users want more than just private transfers. They want to manage funds efficiently, use DeFi protocols, and interact with apps across chains.
 
 To make this seamless, we’re actively working on advanced privacy features:
-
-- ### Private batch transactions
-  Send assets from multiple stealth addresses in a single transaction, without revealing links between them.
 
 - ### Private swaps and bridges  
   Swap tokens or bridge assets between chains while preserving privacy end to end.
