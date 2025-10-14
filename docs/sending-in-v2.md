@@ -1,6 +1,6 @@
 # Sending in V2 (new)
 
-To send funds throw Aggregator
+To send funds through the Aggregator.
 
 - Enter the recipient’s Curvy ID or a regular wallet address
 
