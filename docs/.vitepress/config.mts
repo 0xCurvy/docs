@@ -38,6 +38,7 @@ export default defineConfig({
               {text: 'Create Your Curvy Wallet', link: '/create-your-curvy-wallet' },
               {text: 'Deposit Assets', link: '/deposit-assets' },
               {text: 'Send Assets Privately', link: '/send-assets-privately' },
+              {text: 'Sending in V2 (new)', link: '/sending-in-v2'},
             ]
           },
           { text: 'How Curvy Works', 
@@ -45,9 +46,10 @@ export default defineConfig({
             collapsible: true,
             items: [
               {text: 'How Privacy Works in Curvy', link: '/how-privacy-works-in-curvy' },
-              {text: 'Best Practices for Maximum Privacy', link: 'best-practices-for-maximum-pivacy' },
+              {text: 'Best Practices for Maximum Privacy', link: '/best-practices-for-maximum-pivacy' },
               {text: 'How You Stay in Control', link: '/how-you-stay-in-control' },
-              {text: 'Wallets & Networks', link: 'wallets-and-networks' },
+              {text: 'Wallets & Networks', link: '/wallets-and-networks' },
+              {text: "What's new in V2 (Relayer, Aggregator, Bidirectional Flow, Privacy Score)", link:'/whats-new-in-v2' },
             ]
           },
           { text: 'Develop with Curvy SDK',
@@ -68,7 +70,9 @@ export default defineConfig({
             items: [
             {text: 'Deep Dive: Technical Documentation', link: '/technical-documentation' },
             {text: 'Research Papers', link: '/research-papers' },
-            {text: 'Curvy Protocol Versions', link: '/curvy-protocol-versions' }
+            {text: 'Curvy Protocol Versions', link: '/curvy-protocol-versions' },
+            {text: 'Curvy V2 Architecture Overview', link: '/curvy-v2-architecture' },
+            {text: 'ZK Circuits Overview', link: '/zk-circuits' },
             ]
           },
           { text: 'Partnerships', 
