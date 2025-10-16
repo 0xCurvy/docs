@@ -10,3 +10,5 @@ This quick-start guide walks you through setting up your wallet and Curvy ID, re
 [2. Deposit Assets](./deposit-assets)
 
 [3. Send Assets Privately](./send-assets-privately)
+
+[4. Sending in V2 (new) ](./sending-in-v2)

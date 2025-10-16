@@ -17,3 +17,7 @@ How you control your keys, wallet, and funds.
 ### [Wallets & Networks →](/wallets-and-networks)
 
 Wallets and blockchains Curvy supports.
+
+### [What's new in V2 (Relayer, Aggregator, Bidirectional Flow, Privacy Score) →](/whats-new-in-v2)
+
+Informacion about new features (Relayer, Aggregator, Bidirectional Flow, Privacy Score)
