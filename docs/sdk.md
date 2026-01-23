@@ -8,7 +8,7 @@
 > To get your own API key for testing, please first submit this [Form](https://form.typeform.com/to/xNPxnHQO)
 >
 > To receive support, reach out via the [Curvy Telegram chat](https://t.me/CurvyProtocol/8)
-> or [GitHub Issues](https://github.com/0xCurvy/curvy-sdk/issues/)
+> or [GitHub Issues](https://github.com/0xCurvy/sdk/issues/)
 
 > [!NOTE]
 > Current limitations of Curvy SDK:
@@ -18,8 +18,8 @@
 Curvy SDK is a Typescript SDK that works in both server and browser environments and
 gives you the complete feature set of the Curvy protocol.
 
-- [GitHub repository](https://github.com/0xCurvy/curvy-sdk/)
-- [NPM](https://www.npmjs.com/package/@0xcurvy/curvy-sdk)
+- [GitHub repository](https://github.com/0xCurvy/sdk/)
+- [NPM](https://www.npmjs.com/package/@0xcurvy/sdk)
 
 ## Installation {#installation}
 
@@ -32,7 +32,7 @@ pnpm install @0xcurvy/curvy-sdk
 The easiest way to get started is to run the provided `curvy-os` example app:
 
 ```
-git clone https://github.com/0xCurvy/curvy-sdk.git
+git clone https://github.com/0xCurvy/sdk.git
 cd example/curvy-os
 pnpm install
 pnpm start
@@ -65,7 +65,7 @@ window.curvySDK = await init(
 The value of the `selectedNetworkFilter` can be:
  - `string`: slug format, e.g. "ethereum-sepolia"
  - `number`: Curvy ID of the network (as returned by https://api.curvy.box/currency/latest)
- - `callback`: Filter callback function that takes the [type Network](https://github.com/0xCurvy/curvy-sdk/blob/main/src/types.ts#L28-L40) as argument
+ - `callback`: Filter callback function that takes the [type Network](https://github.com/0xCurvy/sdk/blob/main/src/types.ts#L28-L40) as argument
  - `boolean`: Indicates whether we should connect to all mainnets (false) or all testnets (true)
  - `undefined`: We want to select all networks
 
