@@ -19,4 +19,4 @@ Curvy software ecosystem consists of:
 
 - **[Curvy App](https://app.curvy.box)** the privacy wallet developed and maintained by us, built on top of Curvy SDK.
 - **[Curvy SDK](https://github.com/0xCurvy/sdk/)** complete open-source framework for building privacy enabled dApps and wallets
-- **[Curvy Smart Contracts](./for-the-curious/smart-contracts/index.md)** on-chain contracts that facilitate private payments.
+- **[Curvy Smart Contracts](https://github.com/0xCurvy/contracts)** on-chain contracts that facilitate private payments.

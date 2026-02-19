@@ -1,109 +1,154 @@
-import {defineConfig} from 'vitepress'
-import {withMermaid} from "vitepress-plugin-mermaid";
+import { defineConfig } from 'vitepress'
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid(
-    defineConfig({
-        title: "Curvy Docs",
-        description: "Curvy documentation portal",
-        head: [
-            [
-                'script',
-                {async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-8B1Y93VV4T'}
-            ],
-            [
-                'script',
-                {},
-                `window.dataLayer = window.dataLayer || [];
+  defineConfig({
+    title: "Curvy Docs",
+    description: "Curvy documentation portal",
+    head: [
+      [
+        'script',
+        { async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-8B1Y93VV4T' }
+      ],
+      [
+        'script',
+        {},
+        `window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag("js", new Date());
           gtag("config", "G-8B1Y93VV4T");`
-            ],
-            [
-                'link',
-                {rel: 'icon', href: '/images/favicon.png'}
-            ]
-        ],
-        themeConfig: {
-            // https://vitepress.dev/reference/default-theme-config
-            nav: [
-                {text: 'Home', link: '/'},
-                {text: 'Docs', link: '/get-started-with-curvy'}
-            ],
+      ],
+      [
+        'link',
+        { rel: 'icon', href: '/images/favicon.png' }
+      ]
+    ],
+    themeConfig: {
+      // https://vitepress.dev/reference/default-theme-config
+      nav: [
+        { text: 'Home', link: '/' },
+        { text: 'Docs', link: '/get-started-with-curvy' }
+      ],
 
-            sidebar: [
-                {
-                    text: 'Get Started with Curvy',
-                    link: '/get-started-with-curvy',
-                    collapsible: true,
-                    items: [
-                        {text: 'Create Your Curvy Wallet', link: '/create-your-curvy-wallet'},
-                        {text: 'Deposit Assets', link: '/deposit-assets'},
-                        {text: 'Send Assets Privately', link: '/send-assets-privately'},
-                        {text: 'Sending in V2 (new)', link: '/sending-in-v2'},
-                    ]
-                },
-                {
-                    text: 'How Curvy Works',
-                    link: '/how-curvy-works',
-                    collapsible: true,
-                    items: [
-                        {text: 'How Privacy Works in Curvy', link: '/how-privacy-works-in-curvy'},
-                        {text: 'Best Practices for Maximum Privacy', link: '/best-practices-for-maximum-pivacy'},
-                        {text: 'How You Stay in Control', link: '/how-you-stay-in-control'},
-                        {text: 'Wallets & Networks', link: '/wallets-and-networks'},
-                        {
-                            text: "What's new in V2 (Relayer, Aggregator, Bidirectional Flow, Privacy Score)",
-                            link: '/whats-new-in-v2'
-                        },
-                    ]
-                },
-                {
-                    text: 'Develop with Curvy SDK',
-                    link: '/sdk',
-                    collapsible: true,
-                    items: [
-                        {text: 'Getting Started', link: '/sdk#getting-started'},
-                        {text: 'Installation', link: '/sdk#installation'},
-                        {text: 'Initializing the SDK', link: '/sdk#initializing'},
-                        {text: 'Signing into Curvy', link: '/sdk#signing-in'},
-                        {text: 'Querying balances', link: '/sdk#querying-balances'},
-                        {text: 'Sending funds', link: '/sdk#sending-funds'},
-                    ]
-                },
-                {
-                    text: 'Research & Protocol Versions',
-                    link: '/research-and-protocol-versions',
-                    collapsible: true,
-                    items: [
-                        {text: 'Deep Dive: Technical Documentation', link: '/technical-documentation'},
-                        {text: 'Research Papers', link: '/research-papers'},
-                        {text: 'Curvy Protocol Versions', link: '/curvy-protocol-versions'},
-                        {text: 'Curvy V2 Architecture Overview', link: '/curvy-v2-architecture'},
-                        {text: 'ZK Circuits Overview', link: '/zk-circuits'},
-                    ]
-                },
-                {
-                    text: 'Partnerships',
-                    collapsible: true,
-                    items: [
-                        {text: 'ETH Belgrade - Use Case', link: '/eth-belgrade-use-case'},
-                        {text: 'ETH Belgrade - Participant Guide', link: '/eth-belgrade-participant-guide'}
-                    ]
-                }
-            ],
-            socialLinks: [
-                {icon: 'github', link: 'https://github.com/0xCurvy/'},
-                {icon: 'x', link: 'https://x.com/0xcurvy'}
-            ]
-        },
-        vite: {
-            optimizeDeps: { include: ['@braintree/sanitize-url'] },
-            resolve: {
-                alias: {
-                    dayjs: 'dayjs/',
-                },
+      sidebar: [
+        {
+          text: 'Introduction',
+          link: '/introduction',
+          items: [
+            {
+              text: 'Frequently asked questions',
+              link: '/faq',
             },
+            {
+              text: 'Get involved',
+              link: '/get-involved',
+            },
+          ]
         },
-    })
+        {
+          text: 'Curvy for users',
+          link: '/for-users/index.md',
+          collapsible: true,
+          items: [
+            {
+              text: 'Register your Curvy ID', link: '/for-users/register-your-curvy-id', items: [
+                { 'text': 'using a passkey', link: '/for-users/register-your-curvy-id#step-2a-register-using-a-passkey' },
+                { 'text': 'using an existing wallet', link: '/for-users/register-your-curvy-id#step-2b-register-using-an-existing-wallet' }
+              ]
+            },
+            { text: 'Shield your existing assets', link: '/for-users/shield-your-existing-assets' },
+            {
+              text: 'Receive assets privately', link: '/for-users/receive-assets-privately', items: [
+                { text: 'by sharing your ENS', link: '/for-users/receive-assets-privately#by-sharing-your-curvy-id-ens' },
+                { text: 'by sharing your public URL', link: '/for-users/receive-assets-privately#by-sharing-your-public-page-url' },
+                { text: 'by generating a private address', link: '/for-users/receive-assets-privately#by-manually-generating-a-private-address' }
+              ]
+            },
+            {
+              text: 'Send assets privately', link: '/for-users/send-assets-privately', items: [
+                { text: 'to Curvy ID', link: '/for-users/send-assets-privately#send-to-curvy-id' },
+                { text: 'to external wallet', link: '/for-users/send-assets-privately#send-to-external-wallet' },
+                { text: 'as a link', link: '/for-users/send-assets-privately#send-as-a-link' },
+              ]
+            },
+          ]
+        },
+        {
+          text: 'Curvy for the curious',
+          link: '/for-the-curious/index.md',
+          collapsible: true,
+          items: [
+            {
+              text: 'In-depth walkthroughs', link: '/for-the-curious/walkthroughs/index.md', items: [
+                { text: 'Receiving funds privately', link: '/for-the-curious/walkthroughs/receiving-funds-privately' },
+                { text: 'Sending funds privately', link: '/for-the-curious/walkthroughs/sending-funds-privately' },
+                { text: 'Withdrawing funds privately', link: '/for-the-curious/walkthroughs/withdrawing-funds-privately' }
+              ]
+            },
+            {
+              text: 'Building blocks', link: '/for-the-curious/building-blocks/index', items: [
+                { text: 'Curvy ID', link: '/for-the-curious/building-blocks/curvy-id' },
+                { text: 'Portals', link: '/for-the-curious/building-blocks/portals' },
+                { text: 'Privacy aggregator', link: '/for-the-curious/building-blocks/privacy-aggregator' },
+                { text: 'Curvy SDK', link: '/for-the-curious/building-blocks/curvy-sdk' },
+              ]
+            },
+            {
+              text: 'Privacy model', link: '/for-the-curious/privacy-model', items: [
+                { text: 'Receiving privacy', link: '/for-the-curious/receiving-privacy' },
+                { text: 'Sending privacy', link: '/for-the-curious/sending-privacy' },
+                { text: 'Time locality', link: '/for-the-curious/time-locality' },
+                { text: 'Selective disclosure', link: '/for-the-curious/selective-disclosure' },
+              ]
+            },
+            {
+              text: 'Compliance model', link: '/for-the-curious/compliance-model', items: [
+                { text: 'Pre-emptive checks', link: '/for-the-curious/receiving-privacy' },
+                { text: 'Retroactive tainting', link: '/for-the-curious/sending-privacy' },
+              ]
+            },
+          ]
+        },
+        {
+          text: 'Curvy for Programmers',
+          link: '/for-programmers/index',
+          collapsible: true,
+          items: [
+            { text: 'Installing the SDK', link: '/for-programmers/installing-the-sdk' },
+            { text: 'Authentication', link: '/authentication' },
+            { text: 'Querying balances', link: '/querying-balances' },
+            { text: 'Interacting with assets', link: '/interacting-with-assets' }
+          ]
+        },
+        {
+          text: 'Curvy for Businesses',
+          link: '/for-businesses/index',
+          collapsible: true,
+          items: [
+            {
+              text: 'Integrate with Curvy', link: '/for-businesses/integrate-with-curvy', items: [
+                { text: 'For institutions ', link: '/for-businesses/for-networks' },
+                { text: 'For networks', link: '/for-businesses/for-networks' },
+                { text: 'For wallets', link: '/for-businesses/for-networks' },
+              ]
+            },
+            { text: 'Custom Curvy deployments', link: '/for-businesses/custom-curvy-deployments' },
+          ]
+        },
+      ],
+      socialLinks: [
+        { icon: 'github', link: 'https://github.com/0xCurvy/' },
+        { icon: 'x', link: 'https://x.com/0xcurvy' }
+      ]
+    },
+    vite: {
+      optimizeDeps: { include: ['@braintree/sanitize-url'] },
+      resolve: {
+        alias: {
+          dayjs: 'dayjs/',
+        },
+      },
+    },
+  })
 )
