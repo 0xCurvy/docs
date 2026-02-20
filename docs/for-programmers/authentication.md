@@ -7,19 +7,32 @@ Authentication with the Curvy Protocol relies on cryptographic signatures. You c
 Registering a new handle on the Curvy Protocol network involves providing the desired handle alongside the signature data:
 
 ```typescript
+import { getAuthenticationSignatureParams } from "@0xcurvy/curvy-sdk";
+import { useSignTypedData, useAccount } from "wagmi";
+
+const { address } = useAccount();
+
+const password = "optional-password";
+const signatureParams = await getAuthenticationSignatureParams(
+  "evm",
+  address,
+  password,
+);
+
+const { signTypedDataAsync } = useSignTypedData();
+const signatureResult = await signTypedDataAsync(signatureParams);
+
 const signatureData = {
-  signatureResult: "0x...",
-  signatureParams: {
-    /* EIP-712 domain, message types, etc. */
-  },
-  signingAddress: "0x...",
+  signatureResult,
+  signatureParams,
+  signingAddress: address,
 };
 
 await sdk.register(
   "my-awesome-handle.curvy.name", // Handle to register (it need to end with .curvy.name domain)
   "evm",
   signatureData,
-  "optional-password",
+  password,
 );
 ```
 
@@ -28,14 +41,7 @@ await sdk.register(
 If you already have a user's signature, you can use the SDK's `login` method.
 
 ```typescript
-// Example: Adding an existing wallet using a signature (e.g. from an EVM wallet)
-const signatureData = {
-  signatureResult: "0x...",
-  signatureParams: {
-    /* EIP-712 domain, message types, etc. */
-  },
-  signingAddress: "0x...",
-};
+// Logging in on the Curvy Protocol network uses the same `signatureData` process as registration
 
-await sdk.login("evm", signatureData, "optional-password");
+await sdk.login("evm", signatureData, password);
 ```
