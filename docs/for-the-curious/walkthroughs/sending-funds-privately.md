@@ -26,4 +26,4 @@ Charlie has a registered Curvy ID: `charlie.curvy.name`
 
 > [!IMPORTANT]
 > Although this is the simplest process in Curvy, it is also the most private - as the exact:
-> **amount, currency, sender and recipient are completely hidden from any 3rd party.**
+> **amount, currency, sender and recipient are completely hidden from the public eye.**

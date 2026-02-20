@@ -40,8 +40,8 @@ transfers on Polygon, BSC, Arbitrum, Optimism, Linea, Base or Gnosis.*
    and shielded inside the **Privacy Aggregator**.
 6. **Curvy ZK Prover** is continuously keeping in sync with the Notes emitted by the **Aggregator.sol**, indexed in the
    public **Notes Registry**.
-7. After a deposit event is observed on the **Aggregator.sol**, the **ZK Prover** will start constructing the proof for
-   the deposit of the new note. After a successful proof verification on the chain, the new note is emitted and a new
+7. After a shielding event is observed on the **Aggregator.sol**, the **ZK Prover** will start constructing the proof for
+   the shielding of the new note. After a successful proof verification on the chain, the new note is emitted and a new
    version of the resulting notes tree is verified using on-chain ZK verifiers which are a part of the **Aggregator.sol**.
 
 ### 🟢 Bob

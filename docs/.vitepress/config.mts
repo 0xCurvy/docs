@@ -83,7 +83,7 @@ export default withMermaid(
               text: 'In-depth walkthroughs', link: '/for-the-curious/walkthroughs/index.md', items: [
                 { text: 'Receiving funds privately', link: '/for-the-curious/walkthroughs/receiving-funds-privately' },
                 { text: 'Sending funds privately', link: '/for-the-curious/walkthroughs/sending-funds-privately' },
-                { text: 'Withdrawing funds privately', link: '/for-the-curious/walkthroughs/withdrawing-funds-privately' }
+                { text: 'Unshielding funds privately', link: '/for-the-curious/walkthroughs/unshielding-funds-privately' }
               ]
             },
             {

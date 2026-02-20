@@ -51,7 +51,7 @@ Using Aggregation, one can:
 
 Unshielding is the process of moving funds out of the Privacy Aggregator.
 
-After a successfully verified unshielding proof, funds are being withdrawn to the address specified in the proof itself. 
+After a successfully verified unshielding proof, funds are being transferred from the Privacy aggregator to the address specified in the proof itself. 
 
 > [!NOTE]
 > Curvy's contracts are 100% open-source and verified on block explorers, we invite you to take a look at the [0xCurvy/contracts](https://github.com/0xCurvy/contracts/) GitHub repository
