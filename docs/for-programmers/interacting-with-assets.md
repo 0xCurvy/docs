@@ -17,7 +17,7 @@ const intent: CurvyIntent = {
   amount: 1000000000000000000n, // 1 ETH in wei
   currency: currency,
   network: network,
-  recipient: "vitalik.eth", // Can be a CurvyHandle, an ENS name, or address
+  recipient: "vitalik.curvy.name", // Can be a CurvyHandle or address
 };
 ```
 
