@@ -1,63 +1,104 @@
 # Frequently asked questions
 
 ::: details Is Curvy a stealth address protocol?
-No. Curvy expands on stealth address protocols by combining them with ZK-SNARKs to enable private transactions privately addressable to Curvy IDs.
+No. Curvy builds on stealth address approach and expands them by combining stealth addresses with ZK-SNARKs and programmable execution flows to enable end-to-end private and compliant transactions.
 :::
 
 ::: details Does Curvy have custody of my assets?
-No. Curvy is a self-custody wallet, which means you have full control over your funds.
+No. Curvy is non-custodial. You retain full control over your assets at all times. The protocol never takes custody of user funds.
 :::
 
 ::: details How does Curvy make money?
-Curvy makes money through protocol fees.
+Curvy generates revenue through protocol-level fees.
 
 The following actions incur protocol fees:
+- Shielding into the Privacy Aggregator: 0.1% of the shielded amount
+- Aggregation inside the Privacy Aggregator: 0.1% of the aggregated amount
+- Unshielding from the Privacy Aggregator: 0.2% of the unshielded amount
 
-- Shielding to Privacy aggregator: 0.1% of amount shielded
-- Aggregation in Privacy aggregator: 0.1% of amount aggregated
-- Unshielding from Privacy aggregator: 0.2% of amount unshielded
-- 
-Every aggregation in the Privacy Aggregator that Curvy does costs 0.1% of the total amount.
-The provided documentation does not contain information on how Curvy makes money.
 :::
 
 ::: details How does Curvy protect my privacy?
-Curvy protects user privacy by combining stealth addresses with ZK-SNARKs. This ensures that the sender, recipient, amount, and currency of private transfers are completely hidden. The protocol is designed so that no party can reconstruct your transaction history or balance without your explicit approval, which can be given by sharing a viewing key.
+Curvy combines stealth addresses with ZK-SNARKs to provide strong transactional privacy.
+
+Within the Privacy Aggregator:
+- Sender identity is hidden
+- Recipient identity is hidden
+- Transaction amount is hidden
+- Asset type is hidden
+
+The protocol architecture ensures that no party can reconstruct your balance or transaction history without your explicit consent. Users may optionally share a private viewing key to grant read-only visibility to selected third parties, such as auditors or compliance entities.
 :::
 
 ::: details Is Curvy a wallet?
-Curvy is a software ecosystem for private payments. This ecosystem includes the **Curvy App**, which is a privacy-focused wallet. The ecosystem also includes the open-source **Curvy SDK** for developers and the **Curvy Smart Contracts** that power the protocol.
+No, Curvy is a privacy payments protocol.
+
+The ecosystem includes:
+- Curvy App – a privacy-focused non-custodial web application
+- Curvy SDK – an open-source developer toolkit
+- Curvy Smart Contracts – the on-chain infrastructure powering the protocol
+
 :::
 
 ::: details What is shielding and unshielding?
-"Shielding" is the process of moving funds into Curvy's privacy-preserving system (the Privacy Aggregator). "Unshielding" is the process of moving funds from the system to a regular blockchain address.
+Shielding means sending funds into the ZK aggregator to make them private.
+Unshielding means moving funds out of the ZK aggregator back to a public blockchain address.
+Think of it as entering and exiting a privacy zone.
+
 :::
 
 ::: details Can Curvy trace my transactions?
-No. By default, Curvy cannot trace your transactions. The protocol is designed to ensure no party can reconstruct your transaction history without your consent. You have the option to share a "viewing private key" with a third party if you wish to grant them read-only access to your transaction trail.
+No. By design, Curvy cannot trace or reconstruct private transaction history.
+
+The system architecture prevents any single party from deanonymizing users. However, users may voluntarily share a private viewing key to grant selective, read-only transparency when required.
 :::
 
 ::: details Where is Curvy incorporated?
-Curvy is incorporated in Serbia as Curvy Tech d.o.o. Beograd 
+Curvy is incorporated in Serbia under the legal entity “Curvy Tech d.o.o. Beograd”.
+
+The company is currently in the process of establishing a holding entity within the European Union.
 :::
 
 ::: details Does Curvy work with Kohaku?
-Both Kohaku and Curvy are working on solving a similar set of problems. We are researching ways of incorporating Curvy as one of privacy providers in the Kohaku toolchain.
+Kohaku and Curvy address related privacy and compliance challenges in blockchain infrastructure.
+
+We are actively researching ways to integrate Curvy as one of the privacy providers within the Kohaku toolchain.
 :::
 
 ::: details Is Curvy compliant? 
-Yes, compliance is a core principle of Curvy. The protocol includes a compliance model where designated "Portal Broadcasters" conduct compliance checks before shielding funds into the privacy system. This allows for blocking malicious actors proactively.
-We also have a plan laid in  place on how to allow for retroactive ("tainting") compliance methods.
+Yes. Compliance is a core design principle of Curvy.
+
+The protocol incorporates a compliance architecture in which designated Portal Broadcasters perform risk and compliance checks before funds are shielded into the Privacy Aggregator. This enables proactive blocking of sanctioned or malicious actors.
+
+Additionally, Curvy is developing a structured framework for retroactive compliance mechanisms, including taint-based models where legally required.
 :::
 
 ::: details Is Curvy audited?
-Curvy's smart contracts are currently in the audit process and we expect the auditt report to be published in Q2 2026.
+Curvy’s smart contracts are currently undergoing an independent security audit.
+
+The audit report is expected to be published in Q2 2026.
 :::
 
 ::: details How does Curvy differ from Railgun?
-Unlike systems like Railgun which primarily function as a ZK mixer/pool, Curvy's Privacy Aggregator combines ZK technology with stealth addresses. This allows users to directly address notes to different recipients.
+Unlike solutions such as Railgun, which primarily operate as ZK privacy pools, Curvy combines:
+- Stealth addresses for the best UX when privately receiving funds
+- ZK-based aggregation for private execution
+- Human-readable usernames
+- Programmable transaction routing & flow automation
+- Integrated compliance hooks
+
 :::
 
 ::: details On which networks is Curvy available?
-Curvy is available on Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, and Gnosis.
+Curvy is currently available on:
+- Arbitrum
+- Base
+- Ethereum
+- Optimism
+- Polygon
+- Binance Smart Chain
+- Linea
+- Gnosis
+
+The stealth address flow (without the ZK aggregator component) is currently available on Starknet.
 :::
