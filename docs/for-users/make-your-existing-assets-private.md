@@ -1,4 +1,4 @@
-# Shield Your Existing Assets
+# Make Your Existing Assets Private
 
 To be able to use Curvy to pay privately, you first need to get some assets in your Curvy app.
 
