@@ -1,12 +1,11 @@
-# Curvy for Networks
+# Curvy for networks
 
-If you are a blockchain ecosystem interested in partnering with Curvy, contact us at **hey@curvy.box**.
+> [!NOTE]
+> If you are a blockchain ecosystem interested in partnering with Curvy, contact us at **<hey@curvy.box>**.
 
 Curvy provides native privacy infrastructure that can be integrated at the network level, enabling private, compliant, and programmable payment flows for your ecosystem participants.
 
 In addition to default support for your network through the Curvy SDK and Curvy App, we offer deeper integration models tailored to your strategic goals.
-
----
 
 ## Default Integration
 
@@ -19,11 +18,9 @@ Out of the box, Curvy supports:
 
 This allows your users, wallets, and applications to immediately benefit from privacy-enabled flows.
 
----
-
 ## Custom Network-Level Integrations
 
-### Whitelabeled User Domains
+### White-label user domains
 
 Launch your own ENS-style username namespace:
 
@@ -33,9 +30,7 @@ instead of
 
 This allows your ecosystem to own the user-facing identity layer while leveraging Curvy’s underlying privacy infrastructure and customizing it to your needs.
 
----
-
-### Full Protocol Customization
+### Full protocol customization
 
 For ecosystems seeking deeper integration, Curvy can be customized at the infrastructure level:
 
@@ -48,9 +43,7 @@ For ecosystems seeking deeper integration, Curvy can be customized at the infras
 
 This enables networks to design privacy as a native feature rather than an external add-on.
 
----
-
-## Partnership Models
+## Partnership models
 
 Curvy supports multiple collaboration models depending on ecosystem needs:
 
@@ -60,9 +53,7 @@ Curvy supports multiple collaboration models depending on ecosystem needs:
 - Ecosystem-wide privacy incentives  
 - Strategic co-development  
 
----
-
-## Why Integrate Curvy?
+## Why integrate Curvy?
 
 - Enterprise-ready privacy infrastructure
 - The best UX for private payments

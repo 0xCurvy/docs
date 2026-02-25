@@ -1,16 +1,19 @@
 # Curvy for Enterprises & Institutions
 
-## Private Payments, Branded and Controlled
+> [!NOTE]
+> To get started with enterprise Curvy integration, [schedule a call with our CEO, Petar](https://curvy.box/petar).
+
+## Private payments, branded and controlled
 
 Curvy enables enterprises and institutions to deploy privacy-enabled payment infrastructure with full branding, compliance alignment, and operational control.
 
-Built for organizations that require privacy, regulatory alignment, full costomization, and scalable execution.
+Built for organizations that require privacy, regulatory alignment, full customization, and scalable execution.
 
 ---
 
-## Enterprise Capabilities
+## Enterprise capabilities
 
-### Whitelabeled User Domains
+### White-label user domains
 
 Launch enterprise-branded programmable identities.
 
@@ -29,7 +32,7 @@ This allows you to:
 
 ---
 
-### Whitelabeled Application Domain
+### White-label application domain
 
 Deploy a fully re-branded application interface under your own domain.
 
@@ -44,7 +47,7 @@ Curvy infrastructure operates in the background while your brand remains fully v
 
 ---
 
-### Custom Fee Models
+### Custom fee models
 
 Define pricing and settlement logic aligned with your business model.
 
@@ -58,7 +61,7 @@ You control how value flows through your ecosystem.
 
 ---
 
-### Custom Aggregator Routing
+### Custom privacy aggregator routing
 
 Control where and how funds are aggregated inside the Privacy Aggregator.
 
@@ -71,7 +74,7 @@ This enables:
 
 ---
 
-### Custom Networks and Tokens
+### Custom networks and tokens
 
 Support only the chains and assets relevant to your organization.
 
@@ -82,7 +85,7 @@ Support only the chains and assets relevant to your organization.
 
 ---
 
-### Custom Compliance Rules
+### Custom compliance rules
 
 Curvy includes a modular compliance framework that can be aligned with your institutional requirements.
 
@@ -98,7 +101,7 @@ Configurable components include:
 
 ---
 
-### 24/7 Enterprise Support
+### 24/7 Enterprise support
 
 Enterprise partners receive:
 

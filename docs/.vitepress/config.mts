@@ -122,18 +122,14 @@ export default withMermaid(
           ]
         },
         {
+
           text: 'Curvy for Businesses',
           link: '/for-businesses/index',
           collapsible: true,
           items: [
-            {
-              text: 'Integrate with Curvy', link: '/for-businesses/integrate-with-curvy', items: [
-                { text: 'For institutions ', link: '/for-businesses/for-networks' },
-                { text: 'For networks', link: '/for-businesses/for-networks' },
-                { text: 'For wallets', link: '/for-businesses/for-networks' },
-              ]
-            },
-            { text: 'Custom Curvy deployments', link: '/for-businesses/custom-curvy-deployments' },
+            { text: 'For institutions ', link: '/for-businesses/for-networks' },
+            { text: 'For networks', link: '/for-businesses/for-networks' },
+            { text: 'For wallets', link: '/for-businesses/for-networks' },
           ]
         },
       ],
