@@ -1,10 +1,11 @@
 # Curvy SDK
 
 > [!TIP]
-> This page aims to explain the core concepts behind Curvy SDK. 
-> If you're looking to build with Curvy SDK, visit the [Curvy for programmers](/for-programmers/index.md) section.
+> This page aims to explain the core concepts behind Curvy SDK.
+> If you're looking to build with Curvy SDK, visit the [Curvy for programmers](/for-programmers/installing-the-sdk.md) section.
 
 The Curvy SDK facilitates:
+
 - Logging into Curvy
 - Key derivation
 - Announcement scanning
@@ -18,7 +19,6 @@ The Curvy SDK facilitates:
 - EIP-7702 and Meta-transaction-based gas sponsorships
 
 all through a simple API that lets the user specify the **intent**, rather than an explicit set of actions.
-
 
 To accomplish this, the SDK has background processes that sync and scan Notes, Portals, and other potential sources of users' balances to build a coherent picture
 of their private portfolio.
@@ -44,7 +44,7 @@ console.dir(newBalances)
 ```
 
 The above code snippet will generate a plan for transferring 1 ETH to an address on Polygon.
-Because a user's balance could be fragmented across different contracts, stealth addresses, and notes, it is the **Planner's** task to create an execution plan that 
+Because a user's balance could be fragmented across different contracts, stealth addresses, and notes, it is the **Planner's** task to create an execution plan that
 pools the funds together **without sacrificing privacy**.
 
 The smallest unit of execution within the SDK's Planner and Executor is called a **Command**.

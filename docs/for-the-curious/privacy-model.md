@@ -6,7 +6,7 @@ On this page, we will explain:
 
 - how we define different levels of privacy
 - how [Sending](#sending-privacy) and [Receiving](#receiving-privacy) privacy differ and how we accomplish them
-- how we tackle the problem of [time locality](#time-locality-issue) with [Portals](./portals)
+- how we tackle the problem of [time locality](#time-locality-issue) with [Portals](/for-the-curious/building-blocks/portals)
 
 ## Degrees of privacy
 

@@ -7,11 +7,12 @@ This quick-start guide walks you through setting up your wallet and Curvy ID, as
 > [!TIP]
 > To see how Curvy works under the hood, read the [Curvy for the Curious section](../for-the-curious/index.md).
 > <br>
-> To start developing right away with the Curvy SDK, refer to [Curvy for Programmers](../for-programmers/index.md).
+> To start developing right away with the Curvy SDK, refer to [Curvy for Programmers](../for-programmers/installing-the-sdk).
 
 ## Supported networks and tokens
 
 Curvy currently supports:
+
 - ETH
 - WETH
 - USDT
@@ -20,6 +21,7 @@ Curvy currently supports:
 - USDC
 
 on the following networks:
+
 - Arbitrum
 - Base
 - Ethereum

@@ -2,6 +2,7 @@
 
 > [!TIP]
 > To get a mathematical understanding of how stealth addresses are derived in the Curvy protocol using viewing and spending keys, take a look at our previous research:
+>
 > - ["Elliptic Curve Pairing Stealth Address Protocols"](https://arxiv.org/abs/2312.12131)
 > - ["Post-Quantum Secure Stealth Address Protocols"](https://eprint.iacr.org/2025/112.pdf)
 
@@ -14,11 +15,10 @@ A Curvy user is identified by the following tuple:
 - [Spending public key](#spending-public-key)
 - [BabyJubJub public key](#babyjubjub-public-key)
 
-
 All of this information is completely public and is used when:
 
-- using the SDK to send funds to a Curvy user 
-- opening the public page (https://travica.curvy.name) to get new receiving addresses
+- using the SDK to send funds to a Curvy user
+- opening the public page (<https://travica.curvy.name>) to get new receiving addresses
 - resolving the receiving address using ENS (e.g. `travica.curvy.name`)
 
 ### BabyJubJub public key
@@ -40,10 +40,9 @@ The private key is envisioned to be shared when the user wants to prove their tr
 
 This public key is necessary to construct proper stealth addresses and Portal recovery addresses for the user.
 
-Explained in more detail in the [Compliance](../compliance/index.md) section, the spending public key is used to recover funds not deemed compliant by Curvy, and whose entry was blocked from the Privacy Aggregator.
+Explained in more detail in the [Compliance](/for-the-curious/compliance-model) section, the spending public key is used to recover funds not deemed compliant by Curvy, and whose entry was blocked from the Privacy Aggregator.
 
 The recovery of Portal funds is a completely transparent on-chain action; in addition to returning non-compliant funds, it is also used when an unsupported token is sent to a Portal address.  
-
 
 ## How are Curvy user's private keys generated?
 
@@ -59,4 +58,3 @@ or signature points of a message hashed with a well-known salt and a user-suppli
 ## 3rd party wallet (signature) authentication
 
 ![3rd party wallet authentication](./3rd-party-wallet-auth.png)
-

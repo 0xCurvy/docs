@@ -7,7 +7,7 @@ The core building blocks of the Curvy privacy protocol are:
   - Executes ENS resolves
 
 - [Portals](./portals)
-  - Automates shielding to solve the problem of [time locality](/for-the-curious/privacy-model/time-locality)
+  - Automates shielding to solve the problem of [time locality](/for-the-curious/privacy-model#time-locality)
   - Delivers the best possible UX to senders, regardless of their wallet choice.
 
 - [Privacy Aggregator](./privacy-aggregator)

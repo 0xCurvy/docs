@@ -67,5 +67,4 @@ To get started:
 - Curvy will next ask you to sign a message. This isn't a blockchain transaction; it's a local action that enables your wallet to generate the keys needed to manage your Curvy account and funds. This happens entirely in your browser. Your private keys remain on your device and are never uploaded, shared, or stored anywhere else.
 
 > [!NOTE]
-> To learn more about how the authentication process in Curvy works, you can refer to the section [For the Curious](../for-the-curious/authentication.md)
-
+> To learn more about how the authentication process in Curvy works, you can refer to the [Curvy ID](/for-the-curious/building-blocks/curvy-id) in the "Curvy for the curious" section.
