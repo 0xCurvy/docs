@@ -116,9 +116,9 @@ export default withMermaid(
           collapsible: true,
           items: [
             { text: 'Installing the SDK', link: '/for-programmers/installing-the-sdk' },
-            { text: 'Authentication', link: '/authentication' },
-            { text: 'Querying balances', link: '/querying-balances' },
-            { text: 'Interacting with assets', link: '/interacting-with-assets' }
+            { text: 'Authentication', link: '/for-programmers/authentication' },
+            { text: 'Querying balances', link: '/for-programmers/querying-balances' },
+            { text: 'Interacting with assets', link: '/for-programmers/interacting-with-assets' }
           ]
         },
         {

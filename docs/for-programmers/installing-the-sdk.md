@@ -1,4 +1,4 @@
-## Installation
+# Installation
 
 Curvy SDK can be installed with a Node package manager:
 

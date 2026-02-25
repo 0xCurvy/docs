@@ -1,8 +1,8 @@
-## Authentication
+# Authentication
 
 Authentication with the Curvy Protocol relies on cryptographic signatures. You can log in an existing user or register a new one.
 
-### Registration
+## Registration
 
 Registering a new handle on the Curvy Protocol network involves providing the desired handle alongside the signature data:
 
@@ -36,7 +36,7 @@ await sdk.register(
 );
 ```
 
-### Logging In
+## Logging In
 
 If you already have a user's signature, you can use the SDK's `login` method.
 

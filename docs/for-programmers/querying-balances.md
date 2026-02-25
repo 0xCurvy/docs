@@ -1,8 +1,8 @@
-## Querying Balances
+# Querying Balances
 
 The Curvy SDK handles asset balances across multiple networks. You can refresh balances on-demand which updates the SDK's internal storage.
 
-### Refreshing Balances
+## Refreshing Balances
 
 Depending on what you want to scan, you can refresh note balances, address balances, or both.
 
@@ -17,7 +17,7 @@ await sdk.refreshBalances({ type: "addresses" });
 await sdk.refreshBalances();
 ```
 
-### Retrieving Balances from Storage
+## Retrieving Balances from Storage
 
 Once refreshed, you can query the internal storage for the synchronized balances:
 
@@ -25,7 +25,7 @@ Once refreshed, you can query the internal storage for the synchronized balances
 // 1. Get the current active wallet ID
 const activeWalletId = sdk.walletManager.activeWallet.id;
 
-// 2. Fetch the note balances for a specific network (e.g. "localnet", "ethereum", "arbitrum")
+// 2. Fetch the note balances for a specific network (e.g. "ethereum", "arbitrum", ...)
 const balances = await sdk.storage.getNoteBalances(activeWalletId, "localnet");
 
 console.log(`Found ${balances.length} note(s).`);
