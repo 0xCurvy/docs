@@ -35,12 +35,12 @@ features:
     icon: 💡
 
   - title: Curvy for Programmers
-    link: /how-curvy-works
+    link: /for-programmers/installing-the-sdk
     details: Install Curvy SDK, configure your environment and start hacking with the Demo App.
     icon: 🔧
 
-  - title: Curvy for Partners
-    link: /research-and-protocol-versions 
-    details: Take the first step for the Curvy protocol to support your network, dApp, or wallet, or to deploy your own.
+  - title: Curvy for Businesses
+    link: /for-businesses/index.md
+    details: Take the first step for the Curvy protocol to support your network, dApp, or wallet, or to deploy your own custom instance.
     icon: 💼
 ---

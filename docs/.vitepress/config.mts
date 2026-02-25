@@ -28,7 +28,7 @@ export default withMermaid(
       // https://vitepress.dev/reference/default-theme-config
       nav: [
         { text: 'Home', link: '/' },
-        { text: 'Docs', link: '/get-started-with-curvy' }
+        { text: 'Docs', link: '/introduction' }
       ],
 
       sidebar: [
@@ -108,8 +108,8 @@ export default withMermaid(
           ]
         },
         {
-
           text: 'Curvy for Businesses',
+          link: '/for-businesses/index.md',
           items: [
             { text: 'For enterprises and institutions ', link: '/for-businesses/for-enterprises-and-institutions' },
             { text: 'For networks', link: '/for-businesses/for-networks' },
