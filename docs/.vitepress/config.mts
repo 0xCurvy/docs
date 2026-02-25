@@ -57,12 +57,12 @@ export default withMermaid(
                 { 'text': 'using an existing wallet', link: '/for-users/register-your-curvy-id#step-2b-register-using-an-existing-wallet' }
               ]
             },
-            { text: 'Shield your existing assets', link: '/for-users/shield-your-existing-assets' },
+            { text: 'Make your existing assets private', link: '/for-users/make-your-existing-assets-private' },
             {
               text: 'Receive assets privately', link: '/for-users/receive-assets-privately', items: [
-                { text: 'by sharing your ENS', link: '/for-users/receive-assets-privately#by-sharing-your-curvy-id-ens' },
-                { text: 'by sharing your public URL', link: '/for-users/receive-assets-privately#by-sharing-your-public-page-url' },
-                { text: 'by generating a private address', link: '/for-users/receive-assets-privately#by-manually-generating-a-private-address' }
+                { text: 'by sharing your ENS', link: '/for-users/receive-assets-privately#by-sharing-your-ens' },
+                { text: 'by sharing your public URL', link: '/for-users/receive-assets-privately#by-sharing-your-public-url' },
+                { text: 'by generating a private address', link: '/for-users/receive-assets-privately#by-generating-a-private-address' }
               ]
             },
             {
@@ -100,8 +100,6 @@ export default withMermaid(
         },
         {
           text: 'Curvy for Programmers',
-          link: '/for-programmers/index',
-          collapsible: true,
           items: [
             { text: 'Installing the SDK', link: '/for-programmers/installing-the-sdk' },
             { text: 'Authentication', link: '/for-programmers/authentication' },
@@ -112,12 +110,10 @@ export default withMermaid(
         {
 
           text: 'Curvy for Businesses',
-          link: '/for-businesses/index',
-          collapsible: true,
           items: [
-            { text: 'For institutions ', link: '/for-businesses/for-networks' },
+            { text: 'For enterprises and institutions ', link: '/for-businesses/for-enterprises-and-institutions' },
             { text: 'For networks', link: '/for-businesses/for-networks' },
-            { text: 'For wallets', link: '/for-businesses/for-networks' },
+            { text: 'For wallets and web3 products', link: '/for-businesses/for-wallets-and-web3-products' },
           ]
         },
       ],

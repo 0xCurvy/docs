@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Curvy Protocol"
-  tagline: Privacy-first protocol for secure, fast and compliant crypto payments.
+  tagline: Privacy-first protocol for secure, fast, and compliant crypto payments.
   actions:
     - theme: brand
       text: Read the Introduction
@@ -26,7 +26,7 @@ hero:
 features:
   - title: Curvy for Users
     link: /for-users/
-    details: Learn how Curvy can help you establish on-chain privacy and how to get the most of out of it.
+    details: Learn how Curvy can help you establish on-chain privacy and get the most out of it.
     icon: 💻
 
   - title: Curvy for the Curious
@@ -41,6 +41,6 @@ features:
 
   - title: Curvy for Partners
     link: /research-and-protocol-versions 
-    details: Take the first step for Curvy protocol to support your Network, dApp or Wallet or deploy your own.
+    details: Take the first step for the Curvy protocol to support your network, dApp, or wallet, or to deploy your own.
     icon: 💼
 ---

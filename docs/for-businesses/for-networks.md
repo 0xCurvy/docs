@@ -13,7 +13,7 @@ Out of the box, Curvy supports:
 
 - Private sending and receiving flows via the Curvy SDK  
 - Network support within the Curvy App  
-- Stealth address–based receiving  
+- Stealth address-based receiving  
 - Privacy Aggregator support (where applicable)  
 
 This allows your users, wallets, and applications to immediately benefit from privacy-enabled flows.
@@ -34,12 +34,12 @@ This allows your ecosystem to own the user-facing identity layer while leveragin
 
 For ecosystems seeking deeper integration, Curvy can be customized at the infrastructure level:
 
-- Control over transaction routing paths  
-- Selection of integrated DeFi protocols  
-- Definition of supported tokens  
-- Ecosystem-level fee configuration  
-- Subsidized privacy flows  
-- Incentive mechanisms for adoption  
+- control over transaction routing paths
+- selection of integrated DeFi protocols
+- definition of supported tokens
+- ecosystem-level fee configuration
+- subsidized privacy flows
+- incentive mechanisms for adoption
 
 This enables networks to design privacy as a native feature rather than an external add-on.
 
@@ -47,12 +47,11 @@ This enables networks to design privacy as a native feature rather than an exter
 
 Curvy supports multiple collaboration models depending on ecosystem needs:
 
-- SDK-level integration  
-- Network-level identity layer  
-- Privacy infrastructure embedded into wallets  
-- Ecosystem-wide privacy incentives  
-- Strategic co-development  
-
+- SDK-level integration
+- network-level identity layer
+- privacy infrastructure embedded into wallets
+- ecosystem-wide privacy incentives
+- strategic co-development
 ## Why integrate Curvy?
 
 - Enterprise-ready privacy infrastructure

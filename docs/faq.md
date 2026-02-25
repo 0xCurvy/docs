@@ -1,7 +1,7 @@
 # Frequently asked questions
 
 ::: details Is Curvy a stealth address protocol?
-No. Curvy builds on stealth address approach and expands them by combining stealth addresses with ZK-SNARKs and programmable execution flows to enable end-to-end private and compliant transactions.
+No. Curvy builds on the stealth address approach and expands it by combining stealth addresses with ZK-SNARKs and programmable execution flows to enable end-to-end private and compliant transactions.
 :::
 
 ::: details Does Curvy have custody of my assets?
@@ -17,6 +17,10 @@ The following actions incur protocol fees:
 - Aggregation inside the Privacy Aggregator: 0.1% of the aggregated amount
 - Unshielding from the Privacy Aggregator: 0.2% of the unshielded amount
 
+:::
+
+::: details Does Curvy support hardware wallets?
+Yes! Any Hardware wallet that can do arbitrary message signing (`eth_signTypedDataV4`) is supported.
 :::
 
 ::: details How does Curvy protect my privacy?
@@ -53,7 +57,7 @@ Think of it as entering and exiting a privacy zone.
 ::: details Can Curvy trace my transactions?
 No. By design, Curvy cannot trace or reconstruct private transaction history.
 
-The system architecture prevents any single party from deanonymizing users. However, users may voluntarily share a private viewing key to grant selective, read-only transparency when required.
+The system architecture prevents any single party from de-anonymizing users. However, users may voluntarily share a private viewing key to grant selective, read-only transparency when required.
 :::
 
 ::: details Where is Curvy incorporated?
@@ -87,9 +91,9 @@ Unlike solutions such as Railgun, which primarily operate as ZK privacy pools, C
 
 - Stealth addresses for the best UX when privately receiving funds
 - ZK-based aggregation for private execution
-- Human-readable usernames
-- Programmable transaction routing & flow automation
-- Integrated compliance hooks
+- human-readable usernames
+- programmable transaction routing & flow automation
+- integrated compliance hooks
 
 :::
 

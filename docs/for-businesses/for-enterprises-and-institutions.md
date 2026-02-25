@@ -118,7 +118,7 @@ Enterprise partners receive:
 Curvy provides:
 
 - Non-custodial smart contract infrastructure
-- Stealth address–based private receiving
+- Stealth address-based private receiving
 - ZK-based Privacy Aggregator for private execution
 - Compliance-aware Portal Broadcasters
 - SDK for system-level integration

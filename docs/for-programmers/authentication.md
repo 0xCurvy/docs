@@ -4,7 +4,7 @@ Authentication with the Curvy Protocol relies on cryptographic signatures. You c
 
 ## Registration
 
-Registering a new handle on the Curvy Protocol network involves providing the desired handle alongside the signature data:
+Registering a new Curvy ID providing the desired name alongside the signature data:
 
 ```typescript
 import { getAuthenticationSignatureParams } from "@0xcurvy/curvy-sdk";
@@ -29,7 +29,7 @@ const signatureData = {
 };
 
 await sdk.register(
-  "my-awesome-handle.curvy.name", // Handle to register (it need to end with .curvy.name domain)
+  "my-awesome-id.curvy.name", // Curvy ID to register (it needs to end with .curvy.name domain)
   "evm",
   signatureData,
   password,

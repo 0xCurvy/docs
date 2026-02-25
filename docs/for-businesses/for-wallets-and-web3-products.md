@@ -1,4 +1,4 @@
-# Curvy for Wallets & Web3 product builders
+# Curvy for wallets & Web3 product builders
 
 Curvy enables wallets and Web3 applications to integrate privacy flows directly into their product with **zero upfront cost** and minimal engineering effort.
 
@@ -9,16 +9,16 @@ With just a few lines of code through the Curvy SDK, you can offer your users:
 - Shielding and unshielding capabilities  
 - Compliance-aware privacy infrastructure  
 
-This way privacy becomes a native feature of your app integrated within your product.
+This way, privacy becomes a native feature of your app integrated within your product.
 
 ## How integration works
 
 Curvy provides:
 
-- Open-source SDK  
-- Smart contract infrastructure  
-- Multi-chain compatibility  
-- Modular privacy components  
+- open-source SDK
+- smart contract infrastructure
+- multi-chain compatibility
+- modular privacy components
 
 ## Partnership program
 
@@ -33,12 +33,11 @@ Wallets and Web3 products can apply to join the Curvy Partnership Program by con
 
 In addition to revenue share, partners receive:
 
-- Dedicated collaboration channel between our teams  
-- Prioritized feature requests  
-- Additional chain support (based on demand)  
-- Token support expansion  
-- Execution flows tailored to partner use cases  
-
+- dedicated collaboration channel between our teams
+- prioritized feature requests
+- additional chain support (based on demand)
+- token support expansion
+- execution flows tailored to partner use cases
 We align product development with real ecosystem needs.
 
 ## Why integrate Curvy?

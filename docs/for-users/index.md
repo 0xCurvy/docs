@@ -1,17 +1,17 @@
 # Curvy for users
 
-Curvy App is a privacy-first app that gives you a familiar set of features like any crypto wallet would.
+The Curvy App is a privacy-first application that provides a familiar set of features, similar to any crypto wallet.
 
-This quick-start guide walks you through setting up your wallet and Curvy ID, receiving and sending assets privately. Start with any step, or follow them in order for the full experience.
+This quick-start guide walks you through setting up your wallet and Curvy ID, as well as receiving and sending assets privately. Start with any step, or follow them in order for the full experience.
 
 > [!TIP]
-> To see how Curvy works under the hood, read [Curvy for the Curious section](../for-the-curious/index.md).
+> To see how Curvy works under the hood, read the [Curvy for the Curious section](../for-the-curious/index.md).
 > <br>
-> To start hacking right away with the Curvy SDK, take a look at [Curvy for Programmers](../for-programmers/index.md).
+> To start developing right away with the Curvy SDK, refer to [Curvy for Programmers](../for-programmers/index.md).
 
 ## Supported networks and tokens
 
-Curvy currently has support for:
+Curvy currently supports:
 - ETH
 - WETH
 - USDT
