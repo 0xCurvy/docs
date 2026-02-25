@@ -3,42 +3,44 @@
 layout: home
 
 hero:
-  name: "Curvy Documentation"
-  tagline: Privacy-first protocol for secure, fast and compliant crypto payments.
+  name: "Curvy Protocol"
+  tagline: Privacy-first protocol for secure, fast, and compliant crypto payments.
   actions:
     - theme: brand
-      text: Docs 
-      link: /get-started-with-curvy.html
+      text: Read the Introduction
+      link: /introduction.html
     - theme: alt
-      text: SDK
-      link: /sdk/
+      text: 🗄️ Code
+      link: https://github.com/0xCurvy/
     - theme: alt
-      text: Website 
+      text: 🌍 Landing
       link: https://www.curvy.box
     - theme: alt
-      text: Web App
+      text: 📱 Curvy App
       link: https://app.curvy.box
     - theme: alt
-      text: Community Hub
+      text: 💬 Community
       link: https://community.curvy.box/
   
 
 features:
-  - title: Get Started with Curvy
-    link: /get-started-with-curvy
-    details: Create your wallet, set up your Curvy ID and start sending and receiving funds privately.
+  - title: Curvy for Users
+    link: /for-users/
+    details: Learn how Curvy can help you establish on-chain privacy and get the most out of it.
+    icon: 💻
 
-  - title: How Curvy Works
+  - title: Curvy for the Curious
+    link: /for-the-curious/
+    details: Get an understanding of how Curvy works under the hood.
+    icon: 💡
+
+  - title: Curvy for Programmers
     link: /how-curvy-works
-    details: Learn how Curvy protects your privacy using stealth addresses, view tags, a ZK-powered relayer, and best practices.
-    
-  - title: Develop with Curvy SDK
-    link: /sdk
     details: Install Curvy SDK, configure your environment and start hacking with the Demo App.
+    icon: 🔧
 
-  - title: Research & Protocol Versions
+  - title: Curvy for Partners
     link: /research-and-protocol-versions 
-    details: Dive deeper and explore the academic research behind Curvy and see how the protocol is evolving.
- 
+    details: Take the first step for the Curvy protocol to support your network, dApp, or wallet, or to deploy your own.
+    icon: 💼
 ---
-
