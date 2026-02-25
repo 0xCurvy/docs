@@ -94,20 +94,8 @@ export default withMermaid(
                 { text: 'Curvy SDK', link: '/for-the-curious/building-blocks/curvy-sdk' },
               ]
             },
-            {
-              text: 'Privacy model', link: '/for-the-curious/privacy-model', items: [
-                { text: 'Receiving privacy', link: '/for-the-curious/receiving-privacy' },
-                { text: 'Sending privacy', link: '/for-the-curious/sending-privacy' },
-                { text: 'Time locality', link: '/for-the-curious/time-locality' },
-                { text: 'Selective disclosure', link: '/for-the-curious/selective-disclosure' },
-              ]
-            },
-            {
-              text: 'Compliance model', link: '/for-the-curious/compliance-model', items: [
-                { text: 'Pre-emptive checks', link: '/for-the-curious/receiving-privacy' },
-                { text: 'Retroactive tainting', link: '/for-the-curious/sending-privacy' },
-              ]
-            },
+            { text: 'Privacy model', link: '/for-the-curious/privacy-model' },
+            { text: 'Compliance model', link: '/for-the-curious/compliance-model' },
           ]
         },
         {

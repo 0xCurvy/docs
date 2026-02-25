@@ -12,6 +12,7 @@ No. Curvy is non-custodial. You retain full control over your assets at all time
 Curvy generates revenue through protocol-level fees.
 
 The following actions incur protocol fees:
+
 - Shielding into the Privacy Aggregator: 0.1% of the shielded amount
 - Aggregation inside the Privacy Aggregator: 0.1% of the aggregated amount
 - Unshielding from the Privacy Aggregator: 0.2% of the unshielded amount
@@ -22,6 +23,7 @@ The following actions incur protocol fees:
 Curvy combines stealth addresses with ZK-SNARKs to provide strong transactional privacy.
 
 Within the Privacy Aggregator:
+
 - Sender identity is hidden
 - Recipient identity is hidden
 - Transaction amount is hidden
@@ -34,6 +36,7 @@ The protocol architecture ensures that no party can reconstruct your balance or 
 No, Curvy is a privacy payments protocol.
 
 The ecosystem includes:
+
 - Curvy App – a privacy-focused non-custodial web application
 - Curvy SDK – an open-source developer toolkit
 - Curvy Smart Contracts – the on-chain infrastructure powering the protocol
@@ -65,7 +68,7 @@ Kohaku and Curvy address related privacy and compliance challenges in blockchain
 We are actively researching ways to integrate Curvy as one of the privacy providers within the Kohaku toolchain.
 :::
 
-::: details Is Curvy compliant? 
+::: details Is Curvy compliant?
 Yes. Compliance is a core design principle of Curvy.
 
 The protocol incorporates a compliance architecture in which designated Portal Broadcasters perform risk and compliance checks before funds are shielded into the Privacy Aggregator. This enables proactive blocking of sanctioned or malicious actors.
@@ -81,6 +84,7 @@ The audit report is expected to be published in Q2 2026.
 
 ::: details How does Curvy differ from Railgun?
 Unlike solutions such as Railgun, which primarily operate as ZK privacy pools, Curvy combines:
+
 - Stealth addresses for the best UX when privately receiving funds
 - ZK-based aggregation for private execution
 - Human-readable usernames
@@ -91,6 +95,7 @@ Unlike solutions such as Railgun, which primarily operate as ZK privacy pools, C
 
 ::: details On which networks is Curvy available?
 Curvy is currently available on:
+
 - Arbitrum
 - Base
 - Ethereum
