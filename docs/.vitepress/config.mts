@@ -1,9 +1,7 @@
 import { defineConfig } from 'vitepress'
-import { withMermaid } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
-export default withMermaid(
-  defineConfig({
+export default defineConfig({
     title: "Curvy Docs",
     description: "Curvy documentation portal",
     head: [
@@ -72,6 +70,9 @@ export default withMermaid(
                 { text: 'as a link', link: '/for-users/send-assets-privately#send-as-a-link' },
               ]
             },
+            {
+              text: 'Swap assets privately', link: '/for-users/swap-assets-privately'
+            },
           ]
         },
         {
@@ -130,5 +131,4 @@ export default withMermaid(
         },
       },
     },
-  })
-)
+})
