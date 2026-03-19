@@ -14,7 +14,6 @@ const { address } = useAccount();
 
 const password = "optional-password";
 const signatureParams = await getAuthenticationSignatureParams(
-  "evm",
   address,
   password,
 );
@@ -30,9 +29,7 @@ const signatureData = {
 
 await sdk.register(
   "my-awesome-id.curvy.name", // Curvy ID to register (it needs to end with .curvy.name domain)
-  "evm",
   signatureData,
-  password,
 );
 ```
 
@@ -43,5 +40,5 @@ If you already have a user's signature, you can use the SDK's `login` method.
 ```typescript
 // Logging in on the Curvy Protocol network uses the same `signatureData` process as registration
 
-await sdk.login("evm", signatureData, password);
+await sdk.login(signatureData);
 ```
