@@ -101,6 +101,7 @@ export default defineConfig({
         },
         {
           text: 'Curvy for Programmers',
+          link: '/for-programmers/',
           items: [
             { text: 'Installing the SDK', link: '/for-programmers/installing-the-sdk' },
             { text: 'Authentication', link: '/for-programmers/authentication' },
