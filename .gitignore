@@ -35,5 +35,3 @@ docs/.vitepress/cache
 # Environment files
 .env
 .env.*
-
-*.iml
