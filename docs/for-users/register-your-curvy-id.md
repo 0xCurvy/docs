@@ -15,7 +15,7 @@ Curvy never stores your password or private keys.
 
 ## Step 1: Choose your Curvy ID
 
-Upon opening [app.curvy.dev](https://app.curvy.dev) and clicking on **Create New Account**,
+Upon opening [app.curvy.box](https://app.curvy.box) and clicking on **Create New Account**,
 you will be prompted to choose the desired Curvy ID.
 
 A good way to choose a Curvy ID is to make sure it is:
