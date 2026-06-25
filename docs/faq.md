@@ -81,9 +81,10 @@ Additionally, Curvy is developing a structured framework for retroactive complia
 :::
 
 ::: details Is Curvy audited?
-Curvy’s smart contracts are currently undergoing an independent security audit.
+Yes. Curvy’s smart contracts have successfully completed an independent security audit.
 
-The audit report is expected to be published in Q2 2026.
+You can read the full audit report here:
+https://github.com/0xCurvy/contracts/blob/develop/audits/Curvy%202026%20Audit%20Report%20Final.pdf
 :::
 
 ::: details How does Curvy differ from Railgun?
