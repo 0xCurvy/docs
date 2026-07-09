@@ -1,44 +1,41 @@
 # Authentication
 
-Authentication with the Curvy Protocol relies on cryptographic signatures. You can log in an existing user or register a new one.
+Authentication with Curvy relies on EIP-712 signatures. Register new users with `register`, and log in existing users with `login`.
 
 ## Registration
 
-Registering a new Curvy ID providing the desired name alongside the signature data:
-
-```typescript
-import { getAuthenticationSignatureParams } from "@0xcurvy/curvy-sdk";
-import { useSignTypedData, useAccount } from "wagmi";
+```ts
+import { getAuthenticationSignatureParams, register } from "@0xcurvy/curvy-sdk";
+import { useAccount, useSignTypedData } from "wagmi";
 
 const { address } = useAccount();
+if (!address) throw new Error("Connect a wallet first");
 
-const password = "optional-password";
-const signatureParams = await getAuthenticationSignatureParams(
-  address,
-  password,
-);
+const signatureParams = await getAuthenticationSignatureParams(address, "optional-password");
 
 const { signTypedDataAsync } = useSignTypedData();
 const signatureResult = await signTypedDataAsync(signatureParams);
 
-const signatureData = {
-  signatureResult,
+const signature = {
   signatureParams,
+  signatureResult,
   signingAddress: address,
 };
 
-await sdk.register(
-  "my-awesome-id.curvy.name", // Curvy ID to register (it needs to end with .curvy.name domain)
-  signatureData,
-);
+const account = await register({
+  config,
+  handle: "my-awesome-id.curvy.name",
+  signature,
+});
 ```
 
 ## Logging In
 
-If you already have a user's signature, you can use the SDK's `login` method.
+```ts
+import { login } from "@0xcurvy/curvy-sdk/actions/auth";
 
-```typescript
-// Logging in on the Curvy Protocol network uses the same `signatureData` process as registration
-
-await sdk.login(signatureData);
+const account = await login({
+  config,
+  signature,
+});
 ```

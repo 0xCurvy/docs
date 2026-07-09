@@ -1,16 +1,27 @@
 # Installation
 
-Curvy SDK can be installed with a Node package manager:
-
-```
+```bash
 pnpm install @0xcurvy/curvy-sdk
 ```
 
-Before using the SDK, you must initialize the `CurvySDK` instance.
+Create a config before calling actions:
 
-```typescript
-import { CurvySDK } from "@0xcurvy/curvy-sdk";
+```ts
+import { createCurvyConfig, destroyConfig } from "@0xcurvy/curvy-sdk";
 
-// Initialize the SDK
-const sdk = await CurvySDK.init();
+const config = await createCurvyConfig({
+  environment: "mainnet",
+  apiBaseUrl: "https://api.curvy.box",
+});
+
+// Pass `config` explicitly in server or multi-config contexts.
+await destroyConfig({ config });
+```
+
+For browser apps, prefer the convenience helper:
+
+```ts
+import { createBrowserCurvyConfig } from "@0xcurvy/curvy-sdk/config/browser";
+
+const config = await createBrowserCurvyConfig({ apiBaseUrl });
 ```
