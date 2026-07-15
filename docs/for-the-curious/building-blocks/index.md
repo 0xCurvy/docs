@@ -11,7 +11,7 @@ The core building blocks of the Curvy privacy protocol are:
   - Delivers the best possible UX to senders, regardless of their wallet choice.
 
 - [Privacy Aggregator](./privacy-aggregator)
-  - Shields users funds by offerring complete opaqueness of the sender, receipient, token and currency in private transfers
+  - Shields users funds by offering complete opaqueness of the sender, recipient, amount and currency in private transfers
   - Utilizes ZK proofs and Sparse Merkle Trees
 
 - [Curvy SDK](./curvy-sdk)

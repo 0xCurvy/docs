@@ -1,28 +1,33 @@
 # Sending funds privately
 
-Bob needs to pay his subcontractor, Charlie, who also uses Curvy for the services he provided. 
+Alice needs to pay her subcontractor, Bob, who also uses Curvy, for the services he provided.
 
-Charlie has a registered Curvy ID: `charlie.curvy.name`
+Bob has a registered Curvy ID: `bob.curvy.name`
 
-![Sending funds privately](./sending-funds-privately.png)
+![Sending funds privately](./curvy-sender-flow.png)
 
 ## Steps explained in detail
 
-### 🔵 Bob
+### 🔵 Alice
 
-1. Bob queries charlie.curvy.name in the identity registry, fetching Charlie's public keys
-2. Using the **Curvy SDK**, a new note is created for which Charlie is the owner. This information is hidden from everyone except Bob and Charlie.
-3. Aggregation is requested so that Bob's notes are spent, and a new output note owned by Charlie is created, essentially using the aggregation process for transferring funds.
+**1.** Alice queries bob.curvy.name in the **Identity Registry**, fetching Bob's public keys.
+
+**2.** Using the **Curvy SDK**, a new note is created for which Bob is the owner. This information is hidden from everyone except Alice and Bob.
+
+**3.** The **Local ZK prover**, running entirely on Alice's device, generates a transfer proof that spends Alice's notes and creates the new output note owned by Bob. The proof is submitted to the **Relayer**, so Alice needs no gas tokens or on-chain identity.
 
 ### ⚫ Curvy
 
-4. Using the supplied notes and ownership proofs, the **ZK Prover** generates a new aggregation proof and submits it on-chain.
+**5b.** The **Relayer** relays the transfer proof on-chain to **Aggregator.sol**, which verifies it and marks the spent notes' nullifiers.
 
-### 🟢 Charlie
+**6.** The **Batch Prover** constructs a commitment proof for the new notes batch and commits it on-chain to **Aggregator.sol**. After successful verification, Bob's new note becomes part of the committed Notes tree.
 
-5. Some time later, after logging into the Curvy App, new notes are synced
-6. Simultaneously, notes are scanned for ownership by Charlie, and a new balance is detected.
+### 🟢 Bob
 
+**7.** Some time later, after logging into the Curvy App, Bob's **Curvy SDK** syncs its local Merkle tree from the **Indexer** and simultaneously scans the notes for ownership, detecting his new balance.
+
+> [!NOTE]
+> Step numbers match the [full protocol drawing](./receiving-funds-privately.md); steps **4** and **8** belong to the shielding and withdrawal flows.
 
 > [!IMPORTANT]
 > Although this is the simplest process in Curvy, it is also the most private, as the exact:

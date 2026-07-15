@@ -1,6 +1,6 @@
 # Querying Balances
 
-The SDK refreshes shielded balances on demand and stores the result in the configured storage adapter.
+The SDK refreshes shielded balances on demand and stores the result in the configured storage adapter (IndexedDB in the browser, in-memory on the server).
 
 ## Refreshing Balances
 
@@ -23,7 +23,9 @@ const freshBalances = await getBalances({ config, cached: false });
 console.log(`Found ${cachedBalances.length} balance(s).`);
 ```
 
-Aggregated totals are available from the storage surface:
+`getBalances` returns cached balances by default. Pass `cached: false` to refresh from chain first (equivalent to calling `refreshBalances` beforehand).
+
+Aggregated totals per currency are available from the storage surface:
 
 ```ts
 const activeAccountId = config.state.activeAccountId;

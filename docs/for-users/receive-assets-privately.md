@@ -6,7 +6,7 @@ People sending you assets never need to know what Curvy is, how it works, or to 
 They just need to copy and paste your public URL or ENS address (which is also ideally very easy to remember).
 
 > [!TIP]
-> You can receive assets on any network listed in the [supported networks](../introduction). Curvy will automatically bridge your funds using LiFi and shield them on Arbitrum.
+> You can receive assets on any network listed in the [supported networks](/for-users/#supported-networks-and-tokens). Curvy will automatically bridge your funds using LiFi and shield them on Arbitrum.
 
 Below are three ways you can share payment instructions with senders so that you can receive assets automatically shielded in Curvy.
 
