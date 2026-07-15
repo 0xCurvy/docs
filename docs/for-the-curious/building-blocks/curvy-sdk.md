@@ -8,10 +8,11 @@ The Curvy SDK facilitates:
 
 - Logging into Curvy
 - Key derivation
-- Announcement scanning
+- Syncing the local Merkle tree from the [Indexer](./privacy-aggregator#off-chain-services)
 - Note scanning
+- Portal scanning and recovery
 - Signing notes
-- Generating ZK proofs
+- Generating ZK proofs on the user's device (the **Local ZK prover**)
 - Planning intent execution
 - Executing intents
 - Retrying failed attempts
@@ -57,8 +58,6 @@ pools the funds together **without sacrificing privacy**.
 The smallest unit of execution within the SDK's Planner and Executor is called a **Command**.
 
 We are currently working on examples of third-party Commands you can add to the Curvy SDK to allow for custom dApp and DeFi interactions.
-
-![Curvy SDK Architecture](./sdk-architecture.png)
 
 > [!NOTE]
 > The Curvy SDK is 100% open-source and is used as-is in the [Curvy App](https://app.curvy.box) (we ❤️ dogfooding).

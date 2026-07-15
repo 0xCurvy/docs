@@ -109,6 +109,10 @@ Curvy is currently available on:
 - Binance Smart Chain
 - Linea
 - Gnosis
+- Solana
+- Tempo
+
+Supported tokens include ETH, WETH, USDT, UNI, WBTC, USDC, SOL, and PATHUSD — see the [full list of supported networks and tokens](/for-users/#supported-networks-and-tokens).
 
 The stealth address flow (without the ZK aggregator component) is currently available on Starknet.
 :::
