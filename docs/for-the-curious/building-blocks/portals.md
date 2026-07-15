@@ -44,5 +44,20 @@ Bridging is accomplished through Curvy's partnership with [LiFi](https://li.fi/)
 
 Deposits on Solana and Tempo are also bridged to Arbitrum before shielding. The received token is shielded as its Arbitrum counterpart — for example, SOL is shielded as SOL, while PathUSD arrives as USDC.
 
+## Exit Portals
+
+Entry and shielding Portals move funds *into* Curvy; **exit Portals** are the same mechanism pointed the other way — they let funds leave the Privacy Aggregator toward any supported network or currency, without linking the withdrawal to its owner.
+
+An exit Portal address is deterministically derived from the withdrawal's final destination (the *exit address*), the destination chain, and a `recoveryAddress`. Just like entry Portals, it is a valid address before any contract exists there. The flow:
+
+1. The user's SDK records an exit Portal and produces a regular withdrawal proof whose on-chain destination is the exit Portal address.
+2. The withdrawn funds land at the not-yet-deployed exit Portal address.
+3. A Portal Broadcaster deploys the exit Portal through the Portal Factory, passing it pre-built LiFi routing data. The Portal Factory verifies **on-chain** that the routing data's receiver equals the recorded exit address (and, for cross-chain exits, that the destination chain matches) — a Broadcaster cannot redirect the funds anywhere else.
+4. The exit Portal executes the LiFi route: a bridge when the destination is another network, or a swap when the destination is a different currency on the same network.
+
+Exit Portals are also the engine behind Curvy's **private swaps**: the SDK unshields into an exit Portal, LiFi swaps the asset, and the proceeds arrive at a fresh entry Portal that automatically shields them right back into the Privacy Aggregator.
+
+As with entry Portals, the `recoveryAddress` can transparently recover funds from an exit Portal if a route cannot be executed.
+
 > [!NOTE]
 > Curvy's contracts are 100% open-source and verified on block explorers. We invite you to examine the [0xCurvy/contracts](https://github.com/0xCurvy/contracts/) GitHub repository

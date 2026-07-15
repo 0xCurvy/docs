@@ -27,7 +27,7 @@ Bob has a registered Curvy ID: `bob.curvy.name`
 **7.** Some time later, after logging into the Curvy App, Bob's **Curvy SDK** syncs its local Merkle tree from the **Indexer** and simultaneously scans the notes for ownership, detecting his new balance.
 
 > [!NOTE]
-> Step numbers match the [full protocol drawing](./receiving-funds-privately.md); steps **4** and **8** belong to the shielding and withdrawal flows.
+> Steps **1**, **5b**, **6**, and **7** are shared with the [full protocol drawing](./receiving-funds-privately.md). Steps **2** and **3** are specific to this flow — in the full drawing, those numbers belong to the shielding flow, and step **8** to the withdrawal flow.
 
 > [!IMPORTANT]
 > Although this is the simplest process in Curvy, it is also the most private, as the exact:

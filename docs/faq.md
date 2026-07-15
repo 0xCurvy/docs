@@ -112,7 +112,7 @@ Curvy is currently available on:
 - Solana
 - Tempo
 
-Supported tokens include ETH, WETH, USDT, UNI, WBTC, USDC, SOL, and PATHUSD — see the [full list of supported networks and tokens](/for-users/#supported-networks-and-tokens).
+Supported tokens include ETH, WETH, USDT, WBTC, USDC, USDC.e, SOL, and PathUSD — see the [full list of supported networks and tokens](/for-users/#supported-networks-and-tokens).
 
-The stealth address flow (without the ZK aggregator component) is currently available on Starknet.
+The stealth address flow (without the ZK aggregator component) is also available on Starknet through the legacy Curvy protocol.
 :::

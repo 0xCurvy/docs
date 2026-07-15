@@ -58,3 +58,28 @@ const existing = await loginWithPasskey({ config, prfValue, credId });
 
 > [!TIP]
 > The passkey key-derivation flow is explained conceptually in [Curvy ID](/for-the-curious/building-blocks/curvy-id#passkey-authentication).
+
+## Session management
+
+`restoreSession` rehydrates the previous session from storage (useful on app startup), and `logout` clears the active account's session:
+
+```ts
+import { logout, restoreSession } from "@0xcurvy/curvy-sdk/actions/auth";
+
+await restoreSession({ config });
+// ...
+await logout({ config });
+```
+
+## Raw private keys (advanced)
+
+For flows where you already hold the derived spending and viewing private keys — for example, claiming a [send-as-a-link](/for-the-curious/walkthroughs/sending-funds-to-anyone) note — `loginWithPrivateKeys` and `registerWithPrivateKeys` skip the signature ceremony entirely:
+
+```ts
+import { loginWithPrivateKeys } from "@0xcurvy/curvy-sdk/actions/auth";
+
+const account = await loginWithPrivateKeys({ config, s, v, requestingAddress });
+```
+
+> [!WARNING]
+> Raw private keys bypass every deterministic key-derivation safeguard. Only use these actions when the keys come from a trusted source you control.

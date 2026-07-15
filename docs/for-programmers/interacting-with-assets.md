@@ -56,3 +56,67 @@ const executionResult = await executePlan({
 
 console.log(executionResult);
 ```
+
+## Cross-chain external transfers
+
+When the recipient should receive funds on a network other than the one hosting the Privacy Aggregator, first record an [exit Portal](/for-the-curious/building-blocks/portals#exit-portals) and use its address as the intent's recipient:
+
+```ts
+import { generateExitPortal } from "@0xcurvy/curvy-sdk/actions/portals";
+import type { ExternalTransferIntent } from "@0xcurvy/curvy-sdk";
+
+const { address: exitPortalAddress } = await generateExitPortal({
+  curvyId: account.curvyHandle,
+  currencyId: currency.id,
+  exitNetworkId: destinationNetwork.id,
+  exitAddress: recipientAddress,
+});
+
+const intent = {
+  type: "external-transfer",
+  amount,
+  currency,
+  network,               // the aggregator network the funds leave from
+  recipient: exitPortalAddress,
+  exitNetwork: destinationNetwork,
+  exitAddress: recipientAddress,
+} satisfies ExternalTransferIntent;
+```
+
+The plan will unshield into the exit Portal, wait for the Portal Broadcaster to deploy it, and let the Portal bridge the funds to the destination via LiFi. Estimations for such intents include a `bridgeFee` on top of `gas` and `curvyFee`.
+
+## Swaps
+
+A `curvy-swap` unshields into an exit Portal, swaps via LiFi, and auto-shields the proceeds back into Curvy through a fresh entry Portal. The plan waits for both Portal deployments before completing:
+
+```ts
+import type { SwapIntent } from "@0xcurvy/curvy-sdk";
+
+const intent = {
+  type: "curvy-swap",
+  amount,
+  currency,               // what you're swapping from
+  network,
+  exitCurrency,           // what you're swapping to
+  recipient: exitPortalAddress,  // from generateExitPortal with exitCurrencyId set
+  entryAddress,                  // from generateEntryPortal — receives the swapped asset
+} satisfies SwapIntent;
+```
+
+## Send to anyone
+
+A `send-to-anyone` intent addresses the output note to a single-use key pair instead of a Curvy ID — the basis of [claim links](/for-the-curious/walkthroughs/sending-funds-to-anyone):
+
+```ts
+import type { SendToAnyoneIntent } from "@0xcurvy/curvy-sdk";
+
+const intent = {
+  type: "send-to-anyone",
+  amount,
+  currency,
+  network,
+  recipientPublicKeys: { S, V, babyJubjubPublicKey }, // freshly generated, single-use
+} satisfies SendToAnyoneIntent;
+```
+
+You are responsible for delivering the corresponding private key to the recipient (Curvy App encodes it in the claim link's URL fragment).

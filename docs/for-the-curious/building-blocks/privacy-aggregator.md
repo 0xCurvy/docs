@@ -8,19 +8,30 @@ The Curvy Privacy Aggregator expands on the concepts introduced by other Note-ba
 
 Like those systems, the Privacy Aggregator verifies proofs that a state transition of an ordered list of tuples, called "Notes" and "Nullifiers," produced a valid end-state.
 
-Notes and Nullifiers are each arranged into a Sparse Merkle Tree, a data-structure that allows for proofs of integrity, inclusion and non-inclusion (like Merkle Trees) in a manner that is much more friendly to zk-SNARK protocols.
+Notes are arranged into an incremental Merkle tree built with zk-SNARK-friendly Poseidon hashes: spending a Note requires proving its inclusion under a committed tree root, without revealing which Note is being spent. Spent Notes are tracked through their Nullifiers — unique, one-way identifiers registered on-chain the moment a Note is consumed, making double spending impossible while keeping the Note itself hidden.
 
 Given a set of simple rules (no double spending, no negative balances, transactions can only affect a single token's balance, etc.), the state transition is validated. Proofs are generated **client-side** by the SDK and submitted to the Aggregator smart contract through the [Relayer](#off-chain-services). With each accepted proof,
-new Notes and/or Nullifiers are emitted through EVM events, and the roots of the SMT trees are updated on-chain.
+new Notes and/or Nullifiers are emitted through EVM events, and the root of the Notes tree advances on-chain with every committed batch of new Notes.
 
 Unlike systems that utilize a similar basic approach, such as Railgun, the Curvy Privacy Aggregator combines the best of both worlds: Stealth Addresses and ZK technology. This allows users to address notes to different recipients, not merely using the ZK pool as a crypto mixer. 
 
 *Utilizing ZK proofs allows for provable on-chain data and state transition rule integrity without exposing the exact state transitions that took place.*
 
+## The Vault
+
+On-chain, the Privacy Aggregator splits its responsibilities across two contracts:
+
+- **Aggregator** — verifies the zk-SNARK proofs and keeps the Notes tree and Nullifier bookkeeping.
+- **Vault** — holds the actual tokens. Funds can only move in or out of the Vault on the Aggregator's instruction, after a proof has been verified.
+
+Protocol fees are charged where the money moves: the Vault takes the shielding fee on deposit and the unshielding fee on withdrawal, while the aggregation fee is enforced by the aggregation proof itself (see [How does Curvy make money?](/faq) for the current rates). During a withdrawal, the Vault also reimburses the gas of the [Relayer](#off-chain-services) that submitted the proof — one of the mechanisms that keep Curvy gasless for its users.
+
+Throughout these docs, we refer to the Aggregator and the Vault together as **Aggregator.sol** for simplicity.
+
 ## Note Registry
 
 The Note Registry is the public API offered by Curvy, which can easily be used with the Curvy SDK to serve all the indexed data of emitted Notes and Nullifiers from the Aggregator smart contract.
-The Notes and Nullifiers data is essential so that every client can verify the validity of the SMTs and subsequently prove ownership of the Notes they wish to spend.
+The Notes and Nullifiers data is essential so that every client can verify the validity of the Notes tree and subsequently prove ownership of the Notes they wish to spend.
 
 ## Off-chain services
 
@@ -28,7 +39,7 @@ The Curvy backend is a set of independent, horizontally-scalable microservices. 
 
 | Service | Responsibility |
 | --- | --- |
-| **Indexer** | Watches Aggregator events, builds the Note/Nullifier shards and the Sparse Merkle Tree, and serves Note status — the engine behind the [Note Registry](#note-registry). |
+| **Indexer** | Watches Aggregator events, builds the Note/Nullifier shards and the Notes Merkle tree, and serves Note status — the engine behind the [Note Registry](#note-registry). |
 | **Relayer** | Accepts client-proved aggregation/withdrawal submissions and submits them on-chain, so users never need gas or an on-chain identity to transact — see [gasless & anonymous relaying](#gasless-and-anonymous-relaying). |
 | **Batch Prover** | Builds pending-notes-commitment proofs for uncommitted Notes and submits them on-chain, advancing the committed SMT state. |
 | **Metadata** | Owns network/contract metadata, currencies, [Curvy ID](./curvy-id) registration & resolution, JWT auth, and Privacy Pass token issuance. |

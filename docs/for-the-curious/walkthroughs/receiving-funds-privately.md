@@ -10,7 +10,7 @@ open https://bob.curvy.name and continue with payment there.
 Bob made it clear that **he only accepts payment in USDC, but hasn't specified which network to use**.
 
 Without asking, Alice sent the funds to Bob's private address on Ethereum, but was reassured by Bob that *the system
-he's using should pick up transfers on Polygon, BSC, Arbitrum, Optimism, Linea, Base, or Gnosis.*
+he's using should pick up transfers on any of the [supported networks](/for-users/#supported-networks-and-tokens) — Polygon, BSC, Arbitrum, Optimism, Linea, Base, Gnosis, or even Solana.*
 
 **Bob uses Curvy, but Alice, the sender, can keep using Ledger + MetaMask without knowing what Curvy is.**
 

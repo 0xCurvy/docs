@@ -16,11 +16,11 @@ Curvy currently supports:
 - ETH
 - WETH
 - USDT
-- UNI
 - WBTC
 - USDC
+- USDC.e
 - SOL
-- PATHUSD
+- PathUSD
 
 on the following networks:
 
