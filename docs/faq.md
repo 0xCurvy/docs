@@ -81,9 +81,10 @@ Additionally, Curvy is developing a structured framework for retroactive complia
 :::
 
 ::: details Is Curvy audited?
-Curvy’s smart contracts are currently undergoing an independent security audit.
+Yes. Curvy’s smart contracts have successfully completed an independent security audit.
 
-The audit report is expected to be published in Q2 2026.
+You can read the full audit report here:
+https://github.com/0xCurvy/contracts/blob/develop/audits/Curvy%202026%20Audit%20Report%20Final.pdf
 :::
 
 ::: details How does Curvy differ from Railgun?
@@ -108,6 +109,10 @@ Curvy is currently available on:
 - Binance Smart Chain
 - Linea
 - Gnosis
+- Solana
+- Tempo
 
-The stealth address flow (without the ZK aggregator component) is currently available on Starknet.
+Supported tokens include ETH, WETH, USDT, WBTC, USDC, USDC.e, SOL, and PathUSD — see the [full list of supported networks and tokens](/for-users/#supported-networks-and-tokens).
+
+The stealth address flow (without the ZK aggregator component) is also available on Starknet through the legacy Curvy protocol.
 :::

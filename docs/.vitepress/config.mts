@@ -84,7 +84,8 @@ export default defineConfig({
               text: 'In-depth walkthroughs', link: '/for-the-curious/walkthroughs/index.md', items: [
                 { text: 'Receiving funds privately', link: '/for-the-curious/walkthroughs/receiving-funds-privately' },
                 { text: 'Sending funds privately', link: '/for-the-curious/walkthroughs/sending-funds-privately' },
-                { text: 'Unshielding funds privately', link: '/for-the-curious/walkthroughs/unshielding-funds-privately' }
+                { text: 'Unshielding funds privately', link: '/for-the-curious/walkthroughs/unshielding-funds-privately' },
+                { text: 'Sending funds to anyone', link: '/for-the-curious/walkthroughs/sending-funds-to-anyone' }
               ]
             },
             {
@@ -106,7 +107,9 @@ export default defineConfig({
             { text: 'Installing the SDK', link: '/for-programmers/installing-the-sdk' },
             { text: 'Authentication', link: '/for-programmers/authentication' },
             { text: 'Querying balances', link: '/for-programmers/querying-balances' },
-            { text: 'Interacting with assets', link: '/for-programmers/interacting-with-assets' }
+            { text: 'Interacting with assets', link: '/for-programmers/interacting-with-assets' },
+            { text: 'Portals & recovery', link: '/for-programmers/portals-and-recovery' },
+            { text: 'Listening to events', link: '/for-programmers/listening-to-events' }
           ]
         },
         {
