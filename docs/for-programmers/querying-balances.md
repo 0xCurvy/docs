@@ -1,29 +1,35 @@
 # Querying Balances
 
-The Curvy SDK handles asset balances across multiple networks. You can refresh balances on-demand, which updates the SDK's internal storage.
+The SDK refreshes shielded balances on demand and stores the result in the configured storage adapter (IndexedDB in the browser, in-memory on the server).
 
 ## Refreshing Balances
 
-Depending on what you want to scan, you can refresh note balances, address balances, or both.
+```ts
+import { refreshBalances } from "@0xcurvy/curvy-sdk/actions/balances";
 
-```typescript
-// Scan for balances
-await sdk.refreshBalances();
+await refreshBalances({ config });
 ```
 
-## Retrieving Balances from Storage
+Pass `accountId` to target a specific account, or omit it to use the active account.
 
-Once refreshed, you can query balances directly from the SDK.
+## Reading Balances
 
-```typescript
-// Fetch all balances for the active wallet
-const balances = await sdk.getBalances();
+```ts
+import { getBalances } from "@0xcurvy/curvy-sdk/actions/balances";
 
-// Pass false to force a refresh before returning, same as calling `sdk.refreshBalances()` prior to this
-const freshBalances = await sdk.getBalances(false);
+const cachedBalances = await getBalances({ config });
+const freshBalances = await getBalances({ config, cached: false });
 
-console.log(`Found ${balances.length} balance(s).`);
+console.log(`Found ${cachedBalances.length} balance(s).`);
+```
 
-// Get aggregated totals per currency
-const totals = await sdk.getTotals();
+`getBalances` returns cached balances by default. Pass `cached: false` to refresh from chain first (equivalent to calling `refreshBalances` beforehand).
+
+Aggregated totals per currency are available from the storage surface:
+
+```ts
+const activeAccountId = config.state.activeAccountId;
+if (!activeAccountId) throw new Error("No active account");
+
+const totals = await config.storage.getTotals(activeAccountId, config.state.environment);
 ```

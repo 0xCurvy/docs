@@ -103,6 +103,8 @@ When unshielding funds from Curvy to a regular EOA address, **the recipient, the
 
 When splitting, aggregating, or simply performing a private transfer of funds between two users inside the Curvy Privacy Aggregators, **all qualities of the transaction remain completely private**.
 
+Even the act of submitting the transaction leaks nothing: proofs reach the chain through the [Relayer](/for-the-curious/building-blocks/privacy-aggregator#gasless-and-anonymous-relaying), which rate-limits submissions with anonymous, single-use Privacy Pass tokens instead of any user identity. A redeemed token cannot be linked to the Curvy ID it was issued to, nor to any other submission.
+
 ## Time locality
 
 Time locality is an issue that introduces simple analysis methods that can be utilized by anyone to de-anonymize senders and recipients of private transactions, even if they have used a privacy protocol.
