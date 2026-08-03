@@ -18,16 +18,16 @@ Bob has a registered Curvy ID: `bob.curvy.name`
 
 ### ⚫ Curvy
 
-**5b.** The **Relayer** relays the transfer proof on-chain to **Aggregator.sol**, which verifies it and marks the spent notes' nullifiers.
+**4.** The **Relayer** relays the transfer proof on-chain to **Aggregator.sol**, which verifies it and marks the spent notes' nullifiers.
 
-**6.** The **Batch Prover** constructs a commitment proof for the new notes batch and commits it on-chain to **Aggregator.sol**. After successful verification, Bob's new note becomes part of the committed Notes tree.
+**5.** The **Batch Prover** constructs a commitment proof for the new notes batch and commits it on-chain to **Aggregator.sol**. After successful verification, Bob's new note becomes part of the committed Notes tree.
 
 ### 🟢 Bob
 
-**7.** Some time later, after logging into the Curvy App, Bob's **Curvy SDK** syncs its local Merkle tree from the **Indexer** and simultaneously scans the notes for ownership, detecting his new balance.
+**6.** Some time later, after logging into the Curvy App, Bob's **Curvy SDK** syncs its local Merkle tree from the **Indexer** and simultaneously scans the notes for ownership, detecting his new balance.
 
 > [!NOTE]
-> Steps **1**, **5b**, **6**, and **7** are shared with the [full protocol drawing](./receiving-funds-privately.md). Steps **2** and **3** are specific to this flow — in the full drawing, those numbers belong to the shielding flow, and step **8** to the withdrawal flow.
+> The equivalent actions also appear in the [full protocol drawing](./receiving-funds-privately.md), where they use the combined flow's numbering. Steps **2** and **3** are specific to this flow.
 
 > [!IMPORTANT]
 > Although this is the simplest process in Curvy, it is also the most private, as the exact:
