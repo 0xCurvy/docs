@@ -32,8 +32,7 @@ The brains of the SDK is what we call the **Planner**.
 The Planner can execute simple intents such as:
 
 ```typescript
-import { estimateIntent, executePlan } from "@0xcurvy/curvy-sdk/actions/planner";
-import { refreshBalances } from "@0xcurvy/curvy-sdk/actions/balances";
+import { estimateIntent, executePlan, refreshBalances } from "@0xcurvy/curvy-sdk/actions";
 
 const estimation = await estimateIntent({
   config,
