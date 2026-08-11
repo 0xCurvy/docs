@@ -36,7 +36,7 @@ const account = await register({
 If you already have a user's signature, log them in with the same `signature` shape used for registration:
 
 ```ts
-import { login } from "@0xcurvy/curvy-sdk/actions/auth";
+import { login } from "@0xcurvy/curvy-sdk/actions";
 
 const account = await login({
   config,
@@ -49,7 +49,7 @@ const account = await login({
 Curvy also supports FIDO2 passkeys (WebAuthn PRF) as a deterministic key source. Once you've run the WebAuthn ceremony and obtained the PRF output, use the passkey-specific actions:
 
 ```ts
-import { registerWithPasskey, loginWithPasskey } from "@0xcurvy/curvy-sdk/actions/auth";
+import { registerWithPasskey, loginWithPasskey } from "@0xcurvy/curvy-sdk/actions";
 
 const account = await registerWithPasskey({ config, handle, prfValue, credId });
 // ...or, for an existing user:
@@ -64,7 +64,7 @@ const existing = await loginWithPasskey({ config, prfValue, credId });
 `restoreSession` rehydrates the previous session from storage (useful on app startup), and `logout` clears the active account's session:
 
 ```ts
-import { logout, restoreSession } from "@0xcurvy/curvy-sdk/actions/auth";
+import { logout, restoreSession } from "@0xcurvy/curvy-sdk/actions";
 
 await restoreSession({ config });
 // ...
@@ -76,7 +76,7 @@ await logout({ config });
 For flows where you already hold the derived spending and viewing private keys — for example, claiming a [send-as-a-link](/for-the-curious/walkthroughs/sending-funds-to-anyone) note — `loginWithPrivateKeys` and `registerWithPrivateKeys` skip the signature ceremony entirely:
 
 ```ts
-import { loginWithPrivateKeys } from "@0xcurvy/curvy-sdk/actions/auth";
+import { loginWithPrivateKeys } from "@0xcurvy/curvy-sdk/actions";
 
 const account = await loginWithPrivateKeys({ config, s, v, requestingAddress });
 ```

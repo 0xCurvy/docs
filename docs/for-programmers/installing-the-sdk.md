@@ -23,7 +23,7 @@ await destroyConfig({ config });
 For browser apps, prefer the convenience helper. It defaults to persistent IndexedDB storage plus session-scoped key rehydration:
 
 ```ts
-import { createBrowserCurvyConfig } from "@0xcurvy/curvy-sdk/config/browser";
+import { createBrowserCurvyConfig } from "@0xcurvy/curvy-sdk/config";
 
 const config = await createBrowserCurvyConfig({ apiBaseUrl });
 ```

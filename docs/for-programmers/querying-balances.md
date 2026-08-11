@@ -5,7 +5,7 @@ The SDK refreshes shielded balances on demand and stores the result in the confi
 ## Refreshing Balances
 
 ```ts
-import { refreshBalances } from "@0xcurvy/curvy-sdk/actions/balances";
+import { refreshBalances } from "@0xcurvy/curvy-sdk/actions";
 
 await refreshBalances({ config });
 ```
@@ -15,7 +15,7 @@ Pass `accountId` to target a specific account, or omit it to use the active acco
 ## Reading Balances
 
 ```ts
-import { getBalances } from "@0xcurvy/curvy-sdk/actions/balances";
+import { getBalances } from "@0xcurvy/curvy-sdk/actions";
 
 const cachedBalances = await getBalances({ config });
 const freshBalances = await getBalances({ config, cached: false });

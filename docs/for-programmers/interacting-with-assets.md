@@ -33,7 +33,7 @@ const intent: TransferIntent = {
 The SDK generates a local execution plan based on the user's current balances to fulfill the intent.
 
 ```ts
-import { estimateIntent } from "@0xcurvy/curvy-sdk/actions/planner";
+import { estimateIntent } from "@0xcurvy/curvy-sdk/actions";
 
 const estimation = await estimateIntent({ config, intent });
 
@@ -47,7 +47,7 @@ console.log("Effective amount:", estimation.effectiveAmount);
 Once estimated, execute the plan. The SDK handles generating zero-knowledge proofs and broadcasting transactions.
 
 ```ts
-import { executePlan } from "@0xcurvy/curvy-sdk/actions/planner";
+import { executePlan } from "@0xcurvy/curvy-sdk/actions";
 
 const executionResult = await executePlan({
   config,
@@ -62,7 +62,7 @@ console.log(executionResult);
 When the recipient should receive funds on a network other than the one hosting the Privacy Aggregator, first record an [exit Portal](/for-the-curious/building-blocks/portals#exit-portals) and use its address as the intent's recipient:
 
 ```ts
-import { generateExitPortal } from "@0xcurvy/curvy-sdk/actions/portals";
+import { generateExitPortal } from "@0xcurvy/curvy-sdk/actions";
 import type { ExternalTransferIntent } from "@0xcurvy/curvy-sdk";
 
 const { address: exitPortalAddress } = await generateExitPortal({
@@ -119,4 +119,4 @@ const intent = {
 } satisfies SendToAnyoneIntent;
 ```
 
-You are responsible for delivering the corresponding private key to the recipient (Curvy App encodes it in the claim link's URL fragment).
+You are responsible for delivering the claim capability to the recipient. Curvy App encodes the deployment ID, scan starting hint, lowercase `s` and `v` private keys, and derived note tag in the claim link's URL fragment.
