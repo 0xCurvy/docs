@@ -39,6 +39,12 @@ Accepts the same parameters as [`createCurvyConfig`](/sdk/config/createCurvyConf
 
 Browser session persistence is disabled.
 
+```ts
+const config = await createServerCurvyConfig({
+  enableKeystore: true, // [!code focus]
+});
+```
+
 ### `setAsActive`
 
 - **Type:** `boolean`
@@ -46,11 +52,16 @@ Browser session persistence is disabled.
 
 The config is not registered globally. Pass it explicitly to every action so concurrent requests cannot share ambient account state.
 
+```ts
+const config = await createServerCurvyConfig({
+  setAsActive: true, // [!code focus]
+});
+```
+
 ## Lifecycle
 
-Destroy request-scoped or tenant-scoped configs when their owner is released.
+Destroy request-scoped or tenant-scoped configs with [`destroyConfig`](/sdk/config/destroyConfig) when their owner is released.
 
 ```ts
 await config.destroy();
 ```
-

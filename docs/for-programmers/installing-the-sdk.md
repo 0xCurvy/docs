@@ -3,13 +3,13 @@
 Curvy SDK can be installed with a Node package manager:
 
 ```bash
-pnpm install @0xcurvy/curvy-sdk
+pnpm add @0xcurvy/curvy-sdk
 ```
 
-The v3 SDK is built around a **config object** and a set of **action functions** you import from focused subpaths, rather than a single class instance. Create a config before calling any action:
+The SDK exposes a **config object** and **action functions** through focused package exports. Create a config before calling an action:
 
 ```ts
-import { createCurvyConfig, destroyConfig } from "@0xcurvy/curvy-sdk";
+import { createCurvyConfig, destroyConfig } from "@0xcurvy/curvy-sdk/config";
 
 const config = await createCurvyConfig({
   environment: "mainnet",
@@ -41,4 +41,4 @@ const config = await createCurvyConfig({
 ```
 
 > [!TIP]
-> `createCurvyConfig` registers itself as the ambient/global config by default, so browser actions can resolve it without you threading `config` through every call. In multi-tenant (server) contexts, pass `setAsActive: false` and pass `config` explicitly to avoid cross-tenant bleed.
+> [`createCurvyConfig`](/sdk/config/createCurvyConfig) registers itself as the ambient/global config by default, so browser actions can resolve it without you threading `config` through every call. In multi-tenant contexts, prefer [`createServerCurvyConfig`](/sdk/config/createServerCurvyConfig), which disables ambient registration by default, and pass `config` explicitly to avoid cross-tenant bleed.

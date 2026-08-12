@@ -1,13 +1,14 @@
 # Authentication
 
-Authentication with Curvy relies on EIP-712 signatures. Register new users with `register`, and log in existing users with `login`. Both are action functions that take the `config` you created during [installation](./installing-the-sdk).
+Authentication with Curvy relies on EIP-712 signatures. Register new users with [`register`](/sdk/actions/auth/register), and log in existing users with [`login`](/sdk/actions/auth/login). Both are action functions that take the `config` you created during [installation](./installing-the-sdk).
 
 ## Registration
 
 Build the signature data from a connected wallet, then register the desired Curvy ID:
 
 ```ts
-import { getAuthenticationSignatureParams, register } from "@0xcurvy/curvy-sdk";
+import { register } from "@0xcurvy/curvy-sdk/actions";
+import { getAuthenticationSignatureParams } from "@0xcurvy/curvy-sdk/utils";
 import { useAccount, useSignTypedData } from "wagmi";
 
 const { address } = useAccount();
@@ -61,7 +62,7 @@ const existing = await loginWithPasskey({ config, prfValue, credId });
 
 ## Session management
 
-`restoreSession` rehydrates the previous session from storage (useful on app startup), and `logout` clears the active account's session:
+[`restoreSession`](/sdk/actions/auth/restoreSession) rehydrates the previous session from storage (useful on app startup), and [`logout`](/sdk/actions/auth/logout) clears the active account's session:
 
 ```ts
 import { logout, restoreSession } from "@0xcurvy/curvy-sdk/actions";
@@ -73,7 +74,7 @@ await logout({ config });
 
 ## Raw private keys (advanced)
 
-For flows where you already hold the derived spending and viewing private keys — for example, claiming a [send-as-a-link](/for-the-curious/walkthroughs/sending-funds-to-anyone) note — `loginWithPrivateKeys` and `registerWithPrivateKeys` skip the signature ceremony entirely:
+For flows where you already hold the derived spending and viewing private keys — for example, claiming a [send-as-a-link](/for-the-curious/walkthroughs/sending-funds-to-anyone) note — [`loginWithPrivateKeys`](/sdk/actions/auth/loginWithPrivateKeys) and [`registerWithPrivateKeys`](/sdk/actions/auth/registerWithPrivateKeys) skip the signature ceremony entirely:
 
 ```ts
 import { loginWithPrivateKeys } from "@0xcurvy/curvy-sdk/actions";

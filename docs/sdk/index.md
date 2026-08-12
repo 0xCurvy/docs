@@ -32,7 +32,7 @@ Parameters, results, events, plans, networks, and protocol values are TypeScript
 
 ### Composable
 
-High-level actions such as `aggregate` and `executePlan` cover common flows. Lower-level actions remain available when an application needs to inspect, submit, or relay intermediate results itself.
+High-level actions such as [`aggregate`](/sdk/actions/aggregator/aggregate) and [`executeIntent`](/sdk/actions/planner/executeIntent) cover common flows. Lower-level actions remain available when an application needs to inspect, submit, or relay intermediate results itself.
 
 ### Runtime-aware
 
@@ -49,4 +49,3 @@ A config can own timers, listeners, caches, and a proving runtime. Destroy it wh
 - [Actions](/sdk/actions/) introduces the action model and links to every public action.
 - [TypeScript](/sdk/typescript) covers inference, imports, literal types, and `bigint` values.
 - [Developer guides](/for-programmers/) combine actions into complete application flows.
-

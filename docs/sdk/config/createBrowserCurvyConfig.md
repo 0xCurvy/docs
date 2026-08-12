@@ -33,20 +33,37 @@ Accepts the same parameters as [`createCurvyConfig`](/sdk/config/createCurvyConf
 
 ### `storage`
 
-- **Type:** `StorageInterface | undefined`
+- **Type:** `CurvyStorage | undefined`
 - **Default:** `IndexedDBStorage`
+
+```ts
+const config = await createBrowserCurvyConfig({
+  storage, // [!code focus]
+});
+```
 
 ### `enableKeystore`
 
 - **Type:** `boolean`
 - **Default:** `true`
 
+```ts
+const config = await createBrowserCurvyConfig({
+  enableKeystore: false, // [!code focus]
+});
+```
+
 ### `notesSyncEngine`
 
 - **Type:** `"global" | "sharded"`
 - **Default:** `"sharded"`
 
+```ts
+const config = await createBrowserCurvyConfig({
+  notesSyncEngine: "global", // [!code focus]
+});
+```
+
 ## Lifecycle
 
-Call `config.destroy()` when the application instance is disposed.
-
+Call [`destroyConfig`](/sdk/config/destroyConfig) when the application instance is disposed.

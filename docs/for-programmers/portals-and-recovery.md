@@ -7,7 +7,7 @@ Most apps never call these APIs directly — the [Planner](./interacting-with-as
 
 ## Creating Portals
 
-`generateEntryPortal` records a fresh on-ramp address that shields incoming funds into Curvy. `generateExitPortal` records an off-ramp that unshields funds toward a destination address:
+[`generateEntryPortal`](/sdk/actions/portals/generateEntryPortal) records a fresh on-ramp address that shields incoming funds into Curvy. [`generateExitPortal`](/sdk/actions/portals/generateExitPortal) records an off-ramp that unshields funds toward a destination address:
 
 ```ts
 import { generateEntryPortal, generateExitPortal } from "@0xcurvy/curvy-sdk/actions";
@@ -71,4 +71,4 @@ const txHash = await recoverPortal({
 });
 ```
 
-`findPortal` performs the same ownership check for a single known address. Recovery is a transparent on-chain action signed with the recovery key; on Solana, pass a `solanaSigner` as well.
+[`findPortal`](/sdk/actions/recovery/findPortal) performs the same ownership check for a single known address. Recovery is a transparent on-chain action signed with the recovery key; on Solana, pass a `solanaSigner` as well.
