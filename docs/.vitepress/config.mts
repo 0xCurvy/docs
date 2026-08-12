@@ -2,7 +2,13 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type DefaultTheme, defineConfig } from "vitepress";
-import { actionGroups, actionReference, generatedReferencePages, renderActionPage } from "./sdk-reference.mts";
+import {
+  actionGroups,
+  actionReference,
+  configFunctionNames,
+  generatedReferencePages,
+  renderActionPage,
+} from "./sdk-reference.mts";
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const siteOrigin = "https://docs.curvy.box";
@@ -117,6 +123,31 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
   },
 ];
 
+const configSidebarItems = [
+  { text: "createCurvyConfig", link: "/sdk/config/createCurvyConfig" },
+  { text: "createBrowserCurvyConfig", link: "/sdk/config/createBrowserCurvyConfig" },
+  { text: "createServerCurvyConfig", link: "/sdk/config/createServerCurvyConfig" },
+  { text: "destroyConfig", link: "/sdk/config/destroyConfig" },
+  { text: "getCurvyConfig", link: "/sdk/config/getCurvyConfig" },
+  { text: "peekCurvyConfig", link: "/sdk/config/peekCurvyConfig" },
+  { text: "setCurvyConfig", link: "/sdk/config/setCurvyConfig" },
+  { text: "getActiveNetworks", link: "/sdk/config/getActiveNetworks" },
+  { text: "getEnvironment", link: "/sdk/config/getEnvironment" },
+  { text: "getProtocol", link: "/sdk/config/getProtocol" },
+] satisfies DefaultTheme.SidebarItem[];
+
+const documentedConfigFunctions = new Set(configSidebarItems.map((item) => item.text));
+for (const name of configFunctionNames) {
+  if (!documentedConfigFunctions.has(name)) {
+    throw new Error(`Public SDK config function "${name}" is missing from the documentation navigation.`);
+  }
+}
+for (const name of documentedConfigFunctions) {
+  if (!configFunctionNames.includes(name)) {
+    throw new Error(`Documented SDK config function "${name}" is not a public config export.`);
+  }
+}
+
 const sdkSidebar: DefaultTheme.SidebarItem[] = [
   {
     text: "Getting started",
@@ -129,11 +160,7 @@ const sdkSidebar: DefaultTheme.SidebarItem[] = [
   {
     text: "Config",
     link: "/sdk/config/",
-    items: [
-      { text: "createCurvyConfig", link: "/sdk/config/createCurvyConfig" },
-      { text: "createBrowserCurvyConfig", link: "/sdk/config/createBrowserCurvyConfig" },
-      { text: "createServerCurvyConfig", link: "/sdk/config/createServerCurvyConfig" },
-    ],
+    items: configSidebarItems,
   },
   {
     text: "Actions",

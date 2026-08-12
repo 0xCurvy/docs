@@ -1,9 +1,10 @@
 # Listening To Events
 
-The SDK emits typed events for its background work — balance scans, plan execution, session health, and account changes. Subscribe with `on`, which returns an unsubscribe function:
+The SDK emits typed events for its background work — balance scans, plan execution, session health, and account changes. Subscribe with [`on`](/sdk/actions/events/on), which returns an unsubscribe function:
 
 ```ts
-import { CURVY_EVENT_TYPES, on } from "@0xcurvy/curvy-sdk";
+import { CURVY_EVENT_TYPES } from "@0xcurvy/curvy-sdk";
+import { on } from "@0xcurvy/curvy-sdk/actions";
 
 const unsubscribe = on(CURVY_EVENT_TYPES.BALANCE_REFRESH_PROGRESS, (e) => {
   console.log(`Scanning... ${e.progress}%`);
@@ -30,6 +31,6 @@ controller.abort();
 | Group | Events |
 | --- | --- |
 | Balance refresh | `BALANCE_REFRESH_STARTED`, `BALANCE_REFRESH_PROGRESS`, `BALANCE_REFRESH_COMPLETE`, `BALANCE_REFRESH_CANCELLED`, `BALANCE_REFRESH_ERROR` |
-| Plan execution | `PLAN_EXECUTION_STARTED`, `PLAN_EXECUTION_PROGRESS`, `PLAN_COMMAND_EXECUTION_PROGRESS`, `PLAN_EXECUTION_COMPLETE`, `PLAN_EXECUTION_ERROR` |
+| Plan execution | `PLAN_EXECUTION_STARTED`, `PLAN_EXECUTION_PROGRESS`, `PLAN_EXECUTION_COMPLETE`, `PLAN_EXECUTION_ERROR` |
 | Session | `JWT_REFRESH_SUCCESS`, `JWT_REFRESH_ERROR`, `UNAUTHORIZED` |
 | Accounts | `ACCOUNT_ADDED`, `ACCOUNT_REMOVED`, `ACCOUNT_CHANGED` |

@@ -42,7 +42,7 @@ Prefer explicit config in shared libraries even when the host application uses t
 
 ## Lifecycle
 
-Always destroy a config when its owner is finished with it.
+Always call [`destroyConfig`](/sdk/config/destroyConfig) when a config's owner is finished with it.
 
 ```ts
 await config.destroy();
@@ -50,3 +50,9 @@ await config.destroy();
 
 Creating a replacement ambient config does not destroy the previous one automatically.
 
+## Reading config state
+
+- [`getCurvyConfig`](/sdk/config/getCurvyConfig) reads the ambient config and throws when none exists.
+- [`peekCurvyConfig`](/sdk/config/peekCurvyConfig) performs the same read without throwing.
+- [`getActiveNetworks`](/sdk/config/getActiveNetworks), [`getEnvironment`](/sdk/config/getEnvironment), and [`getProtocol`](/sdk/config/getProtocol) read commonly needed config state.
+- [`setCurvyConfig`](/sdk/config/setCurvyConfig) replaces or clears the ambient config; it does not destroy the previous value.

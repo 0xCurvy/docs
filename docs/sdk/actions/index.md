@@ -19,7 +19,7 @@ const balances = await getBalances({ config });
 Most actions use parameter objects so optional values remain explicit and signatures can evolve without positional arguments. Event subscription actions retain a natural listener signature.
 
 ```ts
-const balances = await getBalances({
+const balances = await getBalances({ // [!code focus:5]
   accountId,
   cached: false,
   config,
@@ -38,7 +38,7 @@ The `config` property is optional when an ambient browser config exists. Pass it
 | Networks | Read networks, switch environments, and resolve Curvy IDs. |
 | Events | Subscribe and unsubscribe from typed SDK events. |
 | History | Read user-facing transaction and intent history. |
-| Planner | Estimate intents and execute plan trees. |
+| Planner | Estimate intents, present sanitized steps, and execute prepared intents. |
 | Aggregator | Build, submit, relay, and price private transactions. |
 | Bridge | Estimate cross-chain bridge routes. |
 | Portals | Generate and inspect entry and exit Portals. |
@@ -51,7 +51,7 @@ Every public action is available in the Actions navigation. Each reference page 
 
 ## High-level and low-level actions
 
-Prefer high-level actions such as `aggregate`, `withdraw`, and `executePlan` for ordinary application flows. Builder, proving, submission, and tree-walking actions are available when an integration needs control over an intermediate step.
+Prefer high-level actions such as [`aggregate`](/sdk/actions/aggregator/aggregate), [`withdraw`](/sdk/actions/aggregator/withdraw), and [`executeIntent`](/sdk/actions/planner/executeIntent) for ordinary application flows. Builder, proving, and submission actions are available when an integration needs control over an intermediate step.
 
 ## Errors
 

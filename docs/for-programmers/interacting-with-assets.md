@@ -1,6 +1,6 @@
 # Interacting With Assets
 
-The Curvy SDK uses an `Intent -> estimateIntent -> executePlan` flow. This abstracts away the complexity of stealth addresses, bridging, and shielding/unshielding.
+The Curvy SDK uses an `Intent` → [`estimateIntent`](/sdk/actions/planner/estimateIntent) → [`executeIntent`](/sdk/actions/planner/executeIntent) flow. This abstracts away stealth addresses, bridging, and private-note execution.
 
 ## Step 1: Define An Intent
 
@@ -12,7 +12,7 @@ An intent describes _what_ the user wants to do. There are four intent types:
 - **`send-to-anyone`** — Generate a secure link that lets you send funds to anyone, prompting them to register or sign in
 
 ```ts
-import { getNetwork } from "@0xcurvy/curvy-sdk";
+import { getNetwork } from "@0xcurvy/curvy-sdk/actions";
 import type { TransferIntent } from "@0xcurvy/curvy-sdk";
 
 const network = getNetwork({ config, filter: "ethereum" });
@@ -30,7 +30,7 @@ const intent: TransferIntent = {
 
 ## Step 2: Estimate The Intent
 
-The SDK generates a local execution plan based on the user's current balances to fulfill the intent.
+The SDK prepares an in-memory execution handle based on the user's current balances.
 
 ```ts
 import { estimateIntent } from "@0xcurvy/curvy-sdk/actions";
@@ -40,18 +40,39 @@ const estimation = await estimateIntent({ config, intent });
 console.log("Gas fee:", estimation.gas);
 console.log("Curvy fee:", estimation.curvyFee);
 console.log("Effective amount:", estimation.effectiveAmount);
+console.log("Delivery reduced by fees:", estimation.degradedToFeesOnAmount);
+console.log("Steps:", estimation.prepared.steps);
 ```
 
-## Step 3: Execute The Plan
+If `degradedToFeesOnAmount` is true, show `effectiveAmount` before asking the
+user to confirm. It means protocol or submission fees made the deliverable
+amount lower than the amount in the intent.
 
-Once estimated, execute the plan. The SDK handles generating zero-knowledge proofs and broadcasting transactions.
+Planner submission uses the config's `submissionMode` (`"relay"` by default).
+You can override it for one estimate:
 
 ```ts
-import { executePlan } from "@0xcurvy/curvy-sdk/actions";
-
-const executionResult = await executePlan({
+const estimation = await estimateIntent({ config, intent, submissionMode: "direct" });
+await executeIntent({
   config,
-  plan: estimation.plan,
+  prepared: estimation.prepared,
+  directSubmitter: ({ network }) => getWalletClientForChain(network.chainId),
+});
+```
+
+The prepared handle retains the mode used for estimation. To change modes,
+estimate again so the delivered amount and proof outputs are recalculated.
+
+## Step 3: Execute The Intent
+
+Pass the prepared handle back to the SDK. Prepared handles are process-local and cannot be serialized; estimate again after a reload.
+
+```ts
+import { executeIntent } from "@0xcurvy/curvy-sdk/actions";
+
+const executionResult = await executeIntent({
+  config,
+  prepared: estimation.prepared,
 });
 
 console.log(executionResult);
