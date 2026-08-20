@@ -383,6 +383,7 @@ const referenceRoutes: Record<string, string> = {
   createServerCurvyConfig: "/sdk/config/createServerCurvyConfig",
   destroyConfig: "/sdk/config/destroyConfig",
   getActiveNetworks: "/sdk/config/getActiveNetworks",
+  getDefaultAggregatorNetwork: "/sdk/config/getDefaultAggregatorNetwork",
   getCurvyConfig: "/sdk/config/getCurvyConfig",
   getEnvironment: "/sdk/config/getEnvironment",
   getProtocol: "/sdk/config/getProtocol",
