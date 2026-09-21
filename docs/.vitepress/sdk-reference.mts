@@ -378,6 +378,7 @@ for (const category of discoveredCategories) {
 
 const referenceRoutes: Record<string, string> = {
   CurvyConfig: "/sdk/config/",
+  acceptsPortalShield: "/sdk/config/acceptsPortalShield",
   createBrowserCurvyConfig: "/sdk/config/createBrowserCurvyConfig",
   createCurvyConfig: "/sdk/config/createCurvyConfig",
   createServerCurvyConfig: "/sdk/config/createServerCurvyConfig",

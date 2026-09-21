@@ -135,6 +135,7 @@ const configSidebarItems = [
   { text: "setCurvyConfig", link: "/sdk/config/setCurvyConfig" },
   { text: "getActiveNetworks", link: "/sdk/config/getActiveNetworks" },
   { text: "getDefaultAggregatorNetwork", link: "/sdk/config/getDefaultAggregatorNetwork" },
+  { text: "acceptsPortalShield", link: "/sdk/config/acceptsPortalShield" },
   { text: "getEnvironment", link: "/sdk/config/getEnvironment" },
   { text: "getProtocol", link: "/sdk/config/getProtocol" },
 ] satisfies DefaultTheme.SidebarItem[];
