@@ -42,7 +42,7 @@ Portal Factories are deployed on each network, but in a different manner:
 
 Bridging is accomplished through Curvy's partnership with [LiFi](https://li.fi/).
 
-Deposits on Solana and Tempo are also bridged to Arbitrum before shielding. The received token is shielded as its Arbitrum counterpart — for example, SOL is shielded as SOL, while PathUSD arrives as USDC.
+Deposits on Solana, Tempo and Robinhood Chain are also bridged to Arbitrum before shielding. The received token is shielded as its Arbitrum counterpart — for example, SOL is shielded as SOL, while PathUSD and USDG arrive as USDC.
 
 ## Exit Portals
 
