@@ -1,6 +1,7 @@
 import DefaultTheme from "vitepress/theme";
 import { h } from "vue";
 import PageActions from "./PageActions.vue";
+import PaymentsBanner from "./PaymentsBanner.vue";
 import "./custom.css";
 
 export default {
@@ -8,5 +9,6 @@ export default {
   Layout: () =>
     h(DefaultTheme.Layout, null, {
       "doc-before": () => h(PageActions),
+      "home-hero-before": () => h(PaymentsBanner),
     }),
 };
