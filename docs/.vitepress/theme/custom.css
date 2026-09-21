@@ -178,3 +178,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+.sidebar-new-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 7px;
+  color: var(--vp-c-white);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  background: var(--vp-c-brand-1);
+  border-radius: 999px;
+}

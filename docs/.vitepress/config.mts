@@ -13,6 +13,8 @@ import {
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const siteOrigin = "https://docs.curvy.box";
 
+const newBadge = '<span class="sidebar-new-badge">New</span>';
+
 const generalSidebar: DefaultTheme.SidebarItem[] = [
   {
     text: "Introduction",
@@ -20,6 +22,15 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
     items: [
       { text: "Frequently asked questions", link: "/faq" },
       { text: "Get involved", link: "/get-involved" },
+    ],
+  },
+  {
+    text: `Payments SDK ${newBadge}`,
+    link: "/sdk/payments/",
+    items: [
+      { text: "Receive payments from humans", link: "/sdk/payments/human-checkout" },
+      { text: "Receive payments from agents", link: "/sdk/payments/x402" },
+      { text: "Getting started", link: "/sdk/payments/getting-started" },
     ],
   },
   {
@@ -109,7 +120,7 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Portals & recovery", link: "/for-programmers/portals-and-recovery" },
       { text: "Listening to events", link: "/for-programmers/listening-to-events" },
       { text: "Wallet SDK reference", link: "/sdk/" },
-      { text: "Payments SDK", link: "/sdk/payments/" },
+      { text: `Payments SDK ${newBadge}`, link: "/sdk/payments/" },
     ],
   },
   {
@@ -159,7 +170,7 @@ const sdkSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Introduction", link: "/sdk/" },
       { text: "Getting started", link: "/sdk/getting-started" },
       { text: "TypeScript", link: "/sdk/typescript" },
-      { text: "Payments SDK", link: "/sdk/payments/" },
+      { text: `Payments SDK ${newBadge}`, link: "/sdk/payments/" },
     ],
   },
   {
@@ -199,6 +210,7 @@ const paymentsSdkSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Introduction", link: "/sdk/payments/" },
       { text: "Getting started", link: "/sdk/payments/getting-started" },
       { text: "Human checkout", link: "/sdk/payments/human-checkout" },
+      { text: "x402 (agents)", link: "/sdk/payments/x402" },
       { text: "Confirming payments", link: "/sdk/payments/confirming-payments" },
       { text: "API surface", link: "/sdk/payments/api" },
     ],
