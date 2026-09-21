@@ -83,4 +83,5 @@ export default defineConfig({
 - [Browse public actions](/sdk/actions/)
 - [Authenticate a user](/for-programmers/authentication)
 - [Query private balances](/for-programmers/querying-balances)
+- [Accept payments as a merchant](/sdk/payments/) — separate `@0xcurvy/payments-sdk` package
 

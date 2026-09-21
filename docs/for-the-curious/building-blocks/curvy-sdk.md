@@ -3,6 +3,7 @@
 > [!TIP]
 > This page aims to explain the core concepts behind Curvy SDK.
 > If you're looking to build with Curvy SDK, visit the [Curvy for programmers](/for-programmers/installing-the-sdk.md) section.
+> Shops accepting Curvy checkout should use the [Payments SDK](/sdk/payments/) instead.
 
 The Curvy SDK facilitates:
 

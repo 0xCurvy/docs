@@ -49,3 +49,4 @@ A config can own timers, listeners, caches, and a proving runtime. Destroy it wh
 - [Actions](/sdk/actions/) introduces the action model and links to every public action.
 - [TypeScript](/sdk/typescript) covers inference, imports, literal types, and `bigint` values.
 - [Developer guides](/for-programmers/) combine actions into complete application flows.
+- [Payments SDK](/sdk/payments/) is a **separate** package for shops accepting Curvy checkout — not part of this wallet SDK.

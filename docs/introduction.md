@@ -18,6 +18,7 @@ Our approach to building Curvy is to follow these four principles without compro
 Curvy software ecosystem consists of:
 
 - **[Curvy App](https://app.curvy.box)** the non-custodial privacy interface developed and maintained by us, built on top of Curvy SDK.
-- **[Curvy SDK](https://github.com/0xCurvy/sdk/)** complete open-source framework for building privacy-enabled dApps and wallets
+- **[Curvy SDK](/sdk/)** open-source TypeScript framework for building privacy-enabled dApps and wallets
+- **[Payments SDK](/sdk/payments/)** merchant package for Curvy checkout intents and on-chain payment evidence
 - **[Curvy Smart Contracts](https://github.com/0xCurvy/contracts)** on-chain contracts that facilitate private payments.
 

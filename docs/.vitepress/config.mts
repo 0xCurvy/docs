@@ -108,7 +108,8 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Interacting with assets", link: "/for-programmers/interacting-with-assets" },
       { text: "Portals & recovery", link: "/for-programmers/portals-and-recovery" },
       { text: "Listening to events", link: "/for-programmers/listening-to-events" },
-      { text: "SDK reference", link: "/sdk/" },
+      { text: "Wallet SDK reference", link: "/sdk/" },
+      { text: "Payments SDK", link: "/sdk/payments/" },
     ],
   },
   {
@@ -116,6 +117,7 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
     link: "/for-businesses/",
     collapsed: true,
     items: [
+      { text: "Accepting payments", link: "/for-businesses/accepting-payments" },
       { text: "For enterprises and institutions", link: "/for-businesses/for-enterprises-and-institutions" },
       { text: "For networks", link: "/for-businesses/for-networks" },
       { text: "For wallets and Web3 products", link: "/for-businesses/for-wallets-and-web3-products" },
@@ -156,6 +158,7 @@ const sdkSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Introduction", link: "/sdk/" },
       { text: "Getting started", link: "/sdk/getting-started" },
       { text: "TypeScript", link: "/sdk/typescript" },
+      { text: "Payments SDK", link: "/sdk/payments/" },
     ],
   },
   {
@@ -184,6 +187,27 @@ const sdkSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Interacting with assets", link: "/for-programmers/interacting-with-assets" },
       { text: "Portals & recovery", link: "/for-programmers/portals-and-recovery" },
       { text: "Listening to events", link: "/for-programmers/listening-to-events" },
+    ],
+  },
+];
+
+const paymentsSdkSidebar: DefaultTheme.SidebarItem[] = [
+  {
+    text: "Payments SDK",
+    items: [
+      { text: "Introduction", link: "/sdk/payments/" },
+      { text: "Getting started", link: "/sdk/payments/getting-started" },
+      { text: "Human checkout", link: "/sdk/payments/human-checkout" },
+      { text: "Confirming payments", link: "/sdk/payments/confirming-payments" },
+      { text: "API surface", link: "/sdk/payments/api" },
+    ],
+  },
+  {
+    text: "Related",
+    items: [
+      { text: "Accepting payments", link: "/for-businesses/accepting-payments" },
+      { text: "Wallet SDK", link: "/sdk/" },
+      { text: "Portals", link: "/for-the-curious/building-blocks/portals" },
     ],
   },
 ];
@@ -283,7 +307,7 @@ function writeAiDocumentation(outDir: string): void {
   const index = [
     "# Curvy documentation",
     "",
-    "> Privacy infrastructure, application guides, and the Curvy TypeScript SDK reference.",
+    "> Privacy infrastructure, application guides, wallet SDK, and Payments SDK reference.",
     "",
     ...pages.map(
       (page) =>
@@ -301,7 +325,7 @@ function writeAiDocumentation(outDir: string): void {
 
 export default defineConfig({
   title: "Curvy Docs",
-  description: "Curvy protocol and TypeScript SDK documentation",
+  description: "Curvy protocol, wallet SDK, and Payments SDK documentation",
   lastUpdated: true,
   head: [
     ["script", { async: "", src: "https://www.googletagmanager.com/gtag/js?id=G-5ZV6R7929G" }],
@@ -349,9 +373,16 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Docs", link: "/introduction" },
-      { text: "SDK", link: "/sdk/" },
+      {
+        text: "SDK",
+        items: [
+          { text: "Wallet SDK", link: "/sdk/" },
+          { text: "Payments SDK", link: "/sdk/payments/" },
+        ],
+      },
     ],
     sidebar: {
+      "/sdk/payments": paymentsSdkSidebar,
       "/sdk/": sdkSidebar,
       "/": generalSidebar,
     },
