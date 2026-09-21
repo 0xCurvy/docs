@@ -23,7 +23,8 @@ hero:
       link: https://community.curvy.box/
     - theme: alt
       text: 🛡️ Audit
-      link: https://github.com/0xCurvy/contracts/blob/develop/audits/Curvy%202026%20Audit%20Report%20Final.pdf
+      link: https://github.com/0xCurvy/contracts/blob/main/audit/Curvy%202026%20Audit%20Report%20Final.pdf
+
   
 
 features:
