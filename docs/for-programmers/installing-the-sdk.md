@@ -6,6 +6,9 @@ Curvy SDK can be installed with a Node package manager:
 pnpm add @0xcurvy/curvy-sdk
 ```
 
+> [!TIP]
+> Accepting Curvy **checkout** payments as a shop uses a different package: [`@0xcurvy/payments-sdk`](/sdk/payments/). Do not pull the wallet SDK into a merchant backend for that product.
+
 The SDK exposes a **config object** and **action functions** through focused package exports. Create a config before calling an action:
 
 ```ts

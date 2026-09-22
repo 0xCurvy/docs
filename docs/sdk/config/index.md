@@ -56,4 +56,5 @@ Creating a replacement ambient config does not destroy the previous one automati
 - [`peekCurvyConfig`](/sdk/config/peekCurvyConfig) performs the same read without throwing.
 - [`getActiveNetworks`](/sdk/config/getActiveNetworks), [`getEnvironment`](/sdk/config/getEnvironment), and [`getProtocol`](/sdk/config/getProtocol) read commonly needed config state.
 - [`getDefaultAggregatorNetwork`](/sdk/config/getDefaultAggregatorNetwork) returns the network funds are shielded on when a deposit lands on a chain without its own aggregator.
+- [`acceptsPortalShield`](/sdk/config/acceptsPortalShield) tells whether portal deposits can be shielded on a network.
 - [`setCurvyConfig`](/sdk/config/setCurvyConfig) replaces or clears the ambient config; it does not destroy the previous value.
