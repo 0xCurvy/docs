@@ -31,6 +31,7 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
       { text: "Receive payments from humans", link: "/sdk/payments/human-checkout" },
       { text: "Receive payments from agents", link: "/sdk/payments/x402" },
       { text: "Getting started", link: "/sdk/payments/getting-started" },
+      { text: "Confirming payments", link: "/sdk/payments/confirming-payments" },
       { text: "Fees and minimums", link: "/sdk/payments/fees" },
     ],
   },

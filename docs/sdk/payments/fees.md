@@ -84,7 +84,7 @@ const floor = minimumPaymentAmount({ fees, rail: "portal", minNetAmount: 1n });
 To charge a price that nets you an exact amount, use `minimumPaymentAmount({ fees, rail, minNetAmount: desiredNet })` as the gross price.
 
 ::: tip Reconciling a payment
-The net amount actually credited is emitted in the aggregator's `PendingNotes` event. `findNoteInReceipt` from `@0xcurvy/payments-sdk/chain` returns it as `netAmount` for the shield transaction. See [Confirming payments](./confirming-payments).
+The net amount actually credited is emitted in the aggregator's `PendingNotes` event. `verifyPayment` from `@0xcurvy/payments-sdk/merchant` returns it as `payment.netAmount`, next to `minimumNetAmount`, the net that `request.amount` yields at the shield block's fees. (`findNoteInReceipt` from `/chain` reads it too, but matches only the payment reference, so it is a discovery hint, not proof.) See [Confirming payments](./confirming-payments).
 :::
 
 ## Minimum amount for the portal broadcaster
