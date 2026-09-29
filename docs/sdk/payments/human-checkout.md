@@ -55,7 +55,7 @@ const signed = await signPaymentIntent(request, (typedData) =>
 const checkoutUrl = buildCheckoutUrl(CURVY_CHECKOUT_URL, signed);
 ```
 
-The first argument to `buildCheckoutUrl` is the URL of Curvy's hosted checkout page, which Curvy provides during onboarding (locally: `http://127.0.0.1:4032`, see [Local development](./getting-started#local-development)). The signed package is written into the URL fragment. Any path and query on the checkout URL are kept.
+The first argument to `buildCheckoutUrl` is the URL of Curvy's hosted checkout page, which Curvy provides during onboarding. The signed package is written into the URL fragment. Any path and query on the checkout URL are kept.
 
 Store the payment reference (`ephemeralKeyX`, `ephemeralKeyY`) when you create the request — for example in your database or in an httpOnly session cookie, whichever fits your stack. Do not put your payment reference in the signed checkout package.
 
@@ -72,7 +72,7 @@ const confirmed = await sdk.verifyPayment({
 });
 ```
 
-See [Confirming payments](./confirming-payments) for optional `txHash` omission and retry guidance.
+`CURVY_AGGREGATOR` is the aggregator contract on your chain; see [Production values](./getting-started#production-values). See [Confirming payments](./confirming-payments) for optional `txHash` omission and retry guidance.
 
 ## Publishing your signing keys
 

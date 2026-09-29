@@ -46,8 +46,7 @@ You do **not** need the wallet SDK (`@0xcurvy/curvy-sdk`) to accept payments.
 
 - Hosted checkout (payment) page for humans
 - Portal broadcaster: screens, deploys and shields every payment portal, for human checkout and x402 alike
-
-Curvy does not run an x402 facilitator. `exact` payments settle through any x402 v2 facilitator you choose; `curvy-transfer` payments need none.
+- x402 facilitator: settles agents' `exact` payments and pays their gas; the Payments SDK uses it by default (any other x402 v2 facilitator can replace it, and `curvy-transfer` payments need none)
 
 Your shop keeps order state, session cookies, and fulfilment. Curvy does not decide when you mark an order finished.
 

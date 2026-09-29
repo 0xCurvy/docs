@@ -405,7 +405,7 @@ export default defineConfig({
     search: { provider: "local" },
     outline: { level: [2, 3], label: "On this page" },
     editLink: {
-      pattern: "https://github.com/0xCurvy/curvy-monorepo/edit/main/packages/docs/docs/:path",
+      pattern: "https://github.com/0xCurvy/docs/edit/main/docs/:path",
       text: "Suggest changes to this page",
     },
     socialLinks: [

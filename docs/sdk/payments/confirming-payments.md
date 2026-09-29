@@ -24,7 +24,7 @@ const confirmed = await sdk.verifyPayment({
 });
 ```
 
-Block confirmations are configured once on `initialize({ confirmations: … })` — you do not pass them again here.
+Block confirmations are configured once on `initialize({ confirmations: … })` — you do not pass them again here. `CURVY_AGGREGATOR` is the aggregator contract on your chain (`0xe51924cef003a654ec9735c4d97f5d4862cbcbb1` on Arbitrum One; see [Production values](./getting-started#production-values)).
 
 When `txHash` is omitted, the SDK checks only whether the payment reference’s note appears in aggregator `CommittedNotes` (batch settlement). When `txHash` is provided, the SDK validates the receipt, matches your payment reference in `PendingNotes`, checks block confirmations, and optionally detects batch commitment.
 

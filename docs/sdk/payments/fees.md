@@ -23,8 +23,8 @@ net = gross − floor(gross × depositFeeBps / 10 000) − portalDeployment (por
 
 The values are set on chain for each network and token, and they can change. Read them from the vault at runtime. Do not hard-code them.
 
-::: warning Local values are not production values
-On the local devnet (Anvil, chain `31337`) the vault is seeded with `depositFee = 10` bps, `portalDeployment = 50` and `pendingNoteCommitment = 100` base units of a 6-decimal test USDC. These numbers are for testing only. Use `readChainFees` against the network you actually accept payments on.
+::: warning Fees differ per network and token
+The three values are stored in the Curvy vault of each network and can be changed by governance. Always call `readChainFees` against the network and token you actually accept payments on (the vault address is in [Production values](./getting-started#production-values)).
 :::
 
 ## Which rail pays what
@@ -96,7 +96,7 @@ Curvy's portal broadcaster settles human-checkout portals. It fails any portal w
 
 Never create a human-checkout payment request worth less than $0.50. Add a margin if the token's USD price can move.
 
-The check is part of the broadcaster's compliance step. It applies on mainnets and on the local devnet. On a testnet whose compliance provider does not support testnets, the compliance step is skipped, and the minimum with it. Don't rely on that: size requests for the mainnet rule.
+The check is part of the broadcaster's compliance step and applies on mainnets. On a testnet whose compliance provider does not support testnets, the compliance step is skipped, and the minimum with it. Don't rely on that: size requests for the mainnet rule.
 :::
 
 The effective minimum on a rail is the larger of the on-chain floor and any off-chain minimum:
@@ -104,7 +104,7 @@ The effective minimum on a rail is the larger of the on-chain floor and any off-
 | Rail | Off-chain minimum | Effective minimum |
 | --- | --- | --- |
 | Human checkout | USD 0.50 (portal broadcaster) | max($0.50, on-chain floor) |
-| x402 (`exact` or `curvy-transfer`) | The broadcaster's `PORTAL_MIN_USD_VALUE` (0.5 USD by default; the local demo stack sets 0.001) | the larger of `PORTAL_MIN_USD_VALUE` in token units and the on-chain floor |
+| x402 (`exact` or `curvy-transfer`) | USD 0.50 (portal broadcaster; reported as `minPortalUsd` by `GET /portal/networks/:chainId` and as `x402.minimumPortalUsd`) | max($0.50 in token units, on-chain floor), which `x402.minimumPrice()` returns |
 
 After a human-checkout reclaim, the old portal address is permanently spent, so create a **fresh** payment request if the customer retries.
 

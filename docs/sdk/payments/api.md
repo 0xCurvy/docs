@@ -155,9 +155,9 @@ import { createX402Merchant, createMemoryPaymentStore, toResponse } from "@0xcur
 
 | Field | Required | Default | Description |
 | --- | --- | --- | --- |
-| `broadcaster` | yes | — | Curvy portal broadcaster URL or `BroadcasterClient`. Shields every funded portal into your note and reports the Curvy contract addresses |
-| `facilitator` | no | — | Any x402 v2 facilitator URL or `FacilitatorClient` that settles `exact` (EIP-3009). Without it only `curvy-transfer` is offered |
-| `schemes` | no | `["exact", "curvy-transfer"]` with a facilitator, else `["curvy-transfer"]` | `X402Scheme[]`; `exact` needs a facilitator |
+| `broadcaster` | no | `https://api.curvy.box` (`CURVY_BROADCASTER_URL`) | Curvy portal broadcaster URL or `BroadcasterClient`. Shields every funded portal into your note and reports the Curvy contract addresses |
+| `facilitator` | no | `<broadcaster>/portal/x402`, so `https://api.curvy.box/portal/x402` (`CURVY_FACILITATOR_URL`) | The x402 v2 facilitator that settles `exact` (EIP-3009): Curvy's by default, or any other facilitator URL or `FacilitatorClient`. `false` offers only `curvy-transfer` |
+| `schemes` | no | `["exact", "curvy-transfer"]`, or `["curvy-transfer"]` when `facilitator` is `false` | `X402Scheme[]`; `exact` needs a facilitator |
 | `rpcUrl` or `publicClient` | one | — | Chain access (`X402MerchantClient` is the subset of viem's `PublicClient` used) |
 | `recipient` | yes | — | Your public receiving keys |
 | `token` | yes | — | Token address, registered in the Curvy vault (EIP-3009 for `exact`) |
@@ -197,15 +197,17 @@ import {
 | Export | Role |
 | --- | --- |
 | `X402_VERSION` | `2`, the x402 protocol version the SDK speaks |
+| `CURVY_BROADCASTER_URL` / `CURVY_FACILITATOR_URL` | `https://api.curvy.box` / `https://api.curvy.box/portal/x402`: Curvy's production endpoints, the defaults of the clients and of `createX402Merchant` |
+| `CURVY_FACILITATOR_PATH` / `facilitatorUrlFor(broadcasterUrl)` | `/portal/x402`; the facilitator a given portal broadcaster serves |
 | `EXACT_SCHEME` / `TRANSFER_SCHEME` | `"exact"` / `"curvy-transfer"` |
 | `ASSET_TRANSFER_METHOD` / `TRANSFER_METHOD` | `"eip3009"`, the token authorization payers sign for `exact`; `"erc20-transfer"`, the `curvy-transfer` method |
 | `NO_RECOVERY_ADDRESS` | `0x…dEaD`, the default portal recovery address nobody controls |
 | `PAYMENT_REQUIRED_HEADER`, `PAYMENT_SIGNATURE_HEADER`, `PAYMENT_RESPONSE_HEADER` | The x402 v2 header names |
 | `x402Network` / `parseX402Network` | `chainId` ↔ CAIP-2 `eip155:<chainId>` |
 | `X402PaymentRequired`, `X402PaymentRequirements`, `X402PaymentPayload`, `X402ResourceInfo`, `X402VerifyResponse`, `X402SettleResponse`, `X402SupportedResponse`, `X402SupportedKind`, `Eip3009Authorization`, `ExactPaymentPayload`, `TransferPaymentPayload`, `CurvyDeployment` | x402 v2 wire types, plus the Curvy contract addresses the broadcaster reports |
-| `createBroadcasterClient({ url, fetch?, timeoutMs?, headers? })` | `network(chainId)` (`GET /portal/networks/:chainId`), `registerPayment` (`POST /portal/payments`), `status` (`GET /portal/status`) on the portal broadcaster; throws `BroadcasterError`. Types: `BroadcasterClient`, `CurvyNetwork`, `CurvyCurrency`, `PortalPaymentRegistration`, `PortalPaymentStatus`, `PortalPaymentState` |
+| `createBroadcasterClient({ url?, fetch?, timeoutMs?, headers? })` | `network(chainId)` (`GET /portal/networks/:chainId`), `registerPayment` (`POST /portal/payments`), `status` (`GET /portal/status`) on the portal broadcaster; throws `BroadcasterError`. Types: `BroadcasterClient`, `CurvyNetwork`, `CurvyCurrency`, `PortalPaymentRegistration`, `PortalPaymentStatus`, `PortalPaymentState` |
 | `TERMINAL_PORTAL_FAILURES` | Portal states the broadcaster never leaves (`compliance_failed`, `expired`, `failed`) |
-| `createFacilitatorClient({ url, fetch?, timeoutMs?, headers? })` | `supported`, `verify`, `settle` against any x402 v2 facilitator on plain `fetch`; throws `FacilitatorError` on unexpected replies |
+| `createFacilitatorClient({ url?, fetch?, timeoutMs?, headers? })` | `supported`, `verify`, `settle` against an x402 v2 facilitator (Curvy's by default) on plain `fetch`; throws `FacilitatorError` on unexpected replies |
 | `createX402Payer({ signer?, send?, maxAmount, fetch?, network?, asset?, now?, retryForMs?, retryEveryMs? })` | Agent-side `fetch` that pays one 402 up to `maxAmount`: `exact` with `signer`, `curvy-transfer` with `send` (`exact` preferred when both are offered); also `pay(required)`. `now` is the clock for `validBefore` |
 | `selectExactRequirements`, `createExactPayment`, `selectTransferRequirements`, `createTransferPayment`, `encodePaymentSignature`, `decodePaymentRequired`, `decodePaymentResponse`, `paymentRequiredFrom`, `paymentResponseFrom` | Payer building blocks. Types: `X402Signer`, `X402TransferSender`, `Eip3009TypedData` |
 | `parsePaymentRequired`, `parsePaymentRequirements`, `parseResourceInfo`, `parsePaymentPayload`, `parseExactPayload`, `parseTransferPayload`, `parseVerifyResponse`, `parseSettleResponse`, `parseSupportedResponse`, `parseCurvyDeployment` | Validate untrusted JSON into the wire types |

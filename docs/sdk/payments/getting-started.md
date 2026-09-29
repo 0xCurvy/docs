@@ -100,32 +100,50 @@ Serve `GET https://shop.example/.well-known/curvy-payments.json` with CORS so Cu
 
 Call `sdk.verifyPayment` with the stored **payment reference** (`ephemeralKeyX`, `ephemeralKeyY`). When checkout returns `#txHash=…`, pass that hash as well — it speeds up confirmation by checking the shield transaction directly. If you do not have a hash yet, omit `txHash` and the SDK queries on-chain logs for batch commitment of that payment reference. Retry on your own schedule until the call returns `true`. See [Confirming payments](./confirming-payments).
 
-## Local development
+## Production values
 
-You can run the whole payments stack locally from the Curvy monorepo: Anvil, Curvy contracts, the portal broadcaster, the demo merchant and the hosted checkout page. Follow `packages/demo/README.md` (`pnpm demo:payments`). Then use these **local** values:
+Curvy runs one production stack, and the SDK points at it by default:
 
-| Setting | Local devnet value |
+| Setting | Production value |
 | --- | --- |
-| `chainId` | `31337` (Anvil) |
-| RPC URL | `http://127.0.0.1:8545` |
-| Checkout page (`buildCheckoutUrl` first argument) | `http://127.0.0.1:4032` |
-| Portal broadcaster (`broadcaster` for `createX402Merchant`) | `http://127.0.0.1:4035` |
-| Token | "Local USDC" mock (6 decimals, vault token id `3`) |
-| Contract addresses | `packages/contracts/evm/ignition/deployments/local_anvil/deployed_addresses.json`, written by `pnpm run deploy:local` |
+| Portal broadcaster | `https://api.curvy.box`, the default `broadcaster` of `createX402Merchant` and of `createBroadcasterClient` |
+| x402 facilitator | `https://api.curvy.box/portal/x402`, served by the broadcaster; the default `facilitator` |
+| Network | Arbitrum One, `chainId` `42161` |
+| USDC (`token`) | `0xaf88d065e77c8cC2239327C5EDb3A432268e5831`, 6 decimals, vault token id `2` |
+| USDT | `0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9`, 6 decimals, vault token id `3` |
+| Aggregator (`aggregatorAddress` for `verifyPayment`) | `0xe51924cef003a654ec9735c4d97f5d4862cbcbb1` |
+| Vault (`vaultAddress` for `readChainFees`) | `0xcc8d5c60a8fb15aa3793647ef531f1ba7df24f00` |
+| Portal factory | `0x4f32082C5647F8fE0f0Fb567b98F2a5516361389` |
+| Minimum per payment | USD 0.50 (see [Fees and minimum amounts](./fees)) |
+| Checkout page (`buildCheckoutUrl` first argument) | Provided during onboarding |
 
-The keys to read from `deployed_addresses.json`:
+The broadcaster serves the same values live, for every network it shields on:
 
-| Contract | Key |
-| --- | --- |
-| Aggregator (`aggregatorAddress` for `verifyPayment`) | `CurvyAggregator#CurvyAggregatorAlphaV2` |
-| Vault (`vaultAddress` for `readChainFees`) | `CurvyVault#CurvyVaultV2` |
-| Portal factory | `PortalFactory#PortalFactory` |
-| Token (`token` for `createPaymentRequest`) | `Devenv#EIP3009TokenMock` |
+```bash
+curl https://api.curvy.box/portal/networks/42161
+```
 
-`deploy:local` can reassign addresses, so read them from that file after each deploy instead of hard-coding them. The demo merchant on `http://127.0.0.1:4031` is a working end-to-end example of this page.
+```json
+{
+  "data": {
+    "chainId": 42161,
+    "name": "Arbitrum",
+    "testnet": false,
+    "aggregator": "0xe51924cef003a654ec9735c4d97f5d4862cbcbb1",
+    "portalFactory": "0x4f32082C5647F8fE0f0Fb567b98F2a5516361389",
+    "vault": "0xcc8d5c60a8fb15aa3793647ef531f1ba7df24f00",
+    "minPortalUsd": 0.5,
+    "currencies": [
+      { "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", "symbol": "USDC", "decimals": 6, "vaultTokenId": "2" }
+    ]
+  }
+}
+```
 
-::: warning Local only
-These values exist only on your machine. Curvy provides production checkout URLs and contract addresses during onboarding. Contact **<hey@curvy.box>**.
+`GET /portal/networks/<chainId>` answers 404 for a chain Curvy does not shield on. Read the addresses once, from this table or that endpoint, and pin them in your configuration, so that confirming a payment never depends on what a service advertises.
+
+::: tip Onboarding
+The hosted checkout URL for human checkout comes with onboarding. Contact **<hey@curvy.box>**.
 :::
 
 ## Next steps

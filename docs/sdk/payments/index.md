@@ -23,7 +23,7 @@ Do **not** put your payment reference in the signed checkout package. Curvy conf
 ## Products that use this package
 
 1. **[Human checkout](./human-checkout)** — customer pays on Curvy’s hosted payment page; your backend creates and signs the deposit request.
-2. **[Agent / x402](./x402)** — an agent pays per request, through any x402 facilitator (`exact`) or with a plain transfer (`curvy-transfer`); your resource server uses the Payments SDK with Curvy’s portal broadcaster.
+2. **[Agent / x402](./x402)** — an agent pays per request, through Curvy’s x402 facilitator (`exact`; any other x402 v2 facilitator works too) or with a plain transfer (`curvy-transfer`); your resource server uses the Payments SDK with Curvy’s portal broadcaster, both preconfigured.
 
 You do **not** need Curvy spending or viewing keys on the shop or API server. Public receiving keys plus (for checkout) a request signing key are enough to accept money.
 
