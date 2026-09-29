@@ -57,18 +57,20 @@ do {
 When an unsupported token lands on a Portal address, or a Portal is blocked by compliance, the funds can be recovered to any address by the owner of the Portal's recovery key — a stealth address only the recipient controls:
 
 ```ts
-import { findOwnedPortals, recoverPortal } from "@0xcurvy/curvy-sdk/actions";
+import { estimatePortalRecovery, findOwnedPortals, recoverPortal } from "@0xcurvy/curvy-sdk/actions";
 
 // Enumerate every portal (entry and exit) owned by the active account on a network
 const owned = await findOwnedPortals({ network });
+const recovery = { networkId: network.id, tokenAddress: "0x...", portalRecord: owned[0], destinationAddress: "0x..." };
 
-// Sweep a token from one of them
-const txHash = await recoverPortal({
-  networkId: network.id,
-  tokenAddress: "0x...",
-  portalRecord: owned[0],
-  destinationAddress: "0x...",
-});
+// On EVM the recovery address pays the gas: fund it with estimate.required of estimate.gasAsset first
+const estimate = await estimatePortalRecovery(recovery);
+if (estimate.available < estimate.required) {
+  // ask the user to send the difference to estimate.fundingAddress
+}
+
+// Sweep the token
+const txHash = await recoverPortal(recovery);
 ```
 
-[`findPortal`](/sdk/actions/recovery/findPortal) performs the same ownership check for a single known address. Recovery is a transparent on-chain action signed with the recovery key; on Solana, pass a `solanaSigner` as well.
+[`findPortal`](/sdk/actions/recovery/findPortal) performs the same ownership check for a single known address. Recovery is a transparent on-chain action signed with the recovery key. On EVM that key's address pays the gas, in the chain's native currency or pathUSD on Tempo; `estimatePortalRecovery` prices the exact transaction `recoverPortal` sends. On Solana, pass a `solanaSigner`, which pays the fee.
