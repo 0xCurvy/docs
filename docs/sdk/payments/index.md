@@ -23,7 +23,7 @@ Do **not** put your payment reference in the signed checkout package. Curvy conf
 ## Products that use this package
 
 1. **[Human checkout](./human-checkout)** — customer pays on Curvy’s hosted payment page; your backend creates and signs the deposit request.
-2. **[Agent / x402](./x402)** — shopper uses a standard x402 client; resource server uses Payments SDK against Curvy’s facilitator.
+2. **[Agent / x402](./x402)** — an agent pays per request, through any x402 facilitator (`exact`) or with a plain transfer (`curvy-transfer`); your resource server uses the Payments SDK with Curvy’s portal broadcaster.
 
 You do **not** need Curvy spending or viewing keys on the shop or API server. Public receiving keys plus (for checkout) a request signing key are enough to accept money.
 
@@ -36,6 +36,9 @@ You do **not** need Curvy spending or viewing keys on the shop or API server. Pu
 | `@0xcurvy/payments-sdk/transport` | Browser and Node | Fragment encode/decode and checkout URLs |
 | `@0xcurvy/payments-sdk/chain` | Browser and Node | Portal prediction and payment verification |
 | `@0xcurvy/payments-sdk/contracts` | Browser and Node | Payment contract ABIs |
+| `@0xcurvy/payments-sdk/economics` | Browser and Node | Protocol fee reads, quotes, and minimum amounts |
+| `@0xcurvy/payments-sdk/x402` | Browser and Node | x402 wire types, broadcaster and facilitator clients, payer helper, EIP-712 types, parsers, header codec |
+| `@0xcurvy/payments-sdk/x402/merchant` | Node only | `createX402Merchant`: charge agents per request over x402 (`exact` and `curvy-transfer`) |
 | `@0xcurvy/payments-sdk/merchant/keys` | Browser and Node | Build and parse `/.well-known/curvy-payments.json` |
 | `@0xcurvy/payments-sdk/merchant` | **Node only** | `initialize`, `createPaymentRequest` |
 
@@ -45,7 +48,8 @@ The request signing key and `@0xcurvy/rs-core-wasm` stay on the **backend**. Che
 
 - [Getting started](./getting-started) — install and create your first signed checkout URL
 - [Human checkout](./human-checkout) — request fields, well-known signers, return URL
-- [x402](./x402) — exact rail roles and how to run merchant integrator tests
+- [x402](./x402) — accept agent payments with the `exact` and `curvy-transfer` schemes
+- [Fees and minimum amounts](./fees) — protocol fees per rail, the portal broadcaster's minimum, choosing a rail for small amounts
 - [Confirming payments](./confirming-payments) — verify received payments
 - [API surface](./api) — exports by entry point
 

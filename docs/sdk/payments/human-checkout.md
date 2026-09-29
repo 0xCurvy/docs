@@ -7,6 +7,12 @@ description: Create signed Curvy payment requests, publish signers, and confirm 
 
 Curvy hosts the **payment page**. Your shop creates a signed deposit request (without a recovery address), redirects the buyer to Curvy, and confirms the payment with `verifyPayment` using the attempt’s **payment reference**.
 
+::: warning Minimum amount: USD 0.50
+Curvy's portal broadcaster settles human checkout. It fails any payment worth less than **USD 0.50**, and it only checks this *after* the buyer has sent the funds. The buyer then has to reclaim them to their recovery wallet from the checkout page, and you are not paid. Only create requests of $0.50 or more. For smaller amounts, see [choosing a rail for small amounts](./fees#choosing-a-rail-for-small-amounts).
+
+Protocol fees (a percentage fee plus fixed portal-deployment and note-commitment fees) are deducted from the note, so you receive slightly less than `amount`. Use `quotePayment({ …, rail: "portal" })` to see how much. See [Fees and minimum amounts](./fees).
+:::
+
 ## Keys
 
 | Material | Where | Purpose |
@@ -46,8 +52,10 @@ const signed = await signPaymentIntent(request, (typedData) =>
   yourSigner.signTypedData(typedData),
 );
 
-const checkoutUrl = buildCheckoutUrl(CURVY_CHECKOUT_ORIGIN, signed);
+const checkoutUrl = buildCheckoutUrl(CURVY_CHECKOUT_URL, signed);
 ```
+
+The first argument to `buildCheckoutUrl` is the URL of Curvy's hosted checkout page, which Curvy provides during onboarding (locally: `http://127.0.0.1:4032`, see [Local development](./getting-started#local-development)). The signed package is written into the URL fragment. Any path and query on the checkout URL are kept.
 
 Store the payment reference (`ephemeralKeyX`, `ephemeralKeyY`) when you create the request — for example in your database or in an httpOnly session cookie, whichever fits your stack. Do not put your payment reference in the signed checkout package.
 
@@ -130,4 +138,5 @@ The hash is a hint. Confirm with `verifyPayment` on your server — see [Confirm
 
 - [Getting started](./getting-started)
 - [Confirming payments](./confirming-payments)
+- [Fees and minimum amounts](./fees)
 - [Accepting payments for businesses](/for-businesses/accepting-payments)

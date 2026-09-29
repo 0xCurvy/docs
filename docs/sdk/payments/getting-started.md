@@ -69,6 +69,10 @@ const request = await sdk.createPaymentRequest({
 
 Each request includes a fresh **payment reference** (`ephemeralKeyX`, `ephemeralKeyY`). Store these values — you need them later to call `verifyPayment`.
 
+::: warning Minimum amount
+Human checkout payments must be worth **at least USD 0.50**. Curvy's portal broadcaster fails smaller payments *after* the customer has paid, and the customer then has to reclaim the funds. Protocol fees are deducted from the amount you receive. See [Fees and minimum amounts](./fees).
+:::
+
 Omitted `checkoutCompletePath` defaults to `/checkout/complete` and is always included in the EIP-712 typed data.
 
 For one-off or advanced use, the standalone `createPaymentRequest({ recipient, amount, token, chainId, merchantOrigin, ... })` export remains available on `/merchant`.
@@ -83,10 +87,10 @@ const payment = await signPaymentIntent(request, (typedData) =>
   merchantSigner.signTypedData(typedData),
 );
 
-const checkoutUrl = buildCheckoutUrl(CURVY_CHECKOUT_ORIGIN, payment);
+const checkoutUrl = buildCheckoutUrl(CURVY_CHECKOUT_URL, payment);
 ```
 
-Redirect the customer to `checkoutUrl`. The signed package travels in the URL **fragment**, not the query string.
+The first argument is the URL of Curvy's hosted checkout page. `buildCheckoutUrl` keeps its origin, path and query and puts the signed package in the URL **fragment**, not the query string. Redirect the customer to `checkoutUrl`.
 
 ## 4. Publish your signers
 
@@ -96,8 +100,37 @@ Serve `GET https://shop.example/.well-known/curvy-payments.json` with CORS so Cu
 
 Call `sdk.verifyPayment` with the stored **payment reference** (`ephemeralKeyX`, `ephemeralKeyY`). When checkout returns `#txHash=…`, pass that hash as well — it speeds up confirmation by checking the shield transaction directly. If you do not have a hash yet, omit `txHash` and the SDK queries on-chain logs for batch commitment of that payment reference. Retry on your own schedule until the call returns `true`. See [Confirming payments](./confirming-payments).
 
+## Local development
+
+You can run the whole payments stack locally from the Curvy monorepo: Anvil, Curvy contracts, the portal broadcaster, the demo merchant and the hosted checkout page. Follow `packages/demo/README.md` (`pnpm demo:payments`). Then use these **local** values:
+
+| Setting | Local devnet value |
+| --- | --- |
+| `chainId` | `31337` (Anvil) |
+| RPC URL | `http://127.0.0.1:8545` |
+| Checkout page (`buildCheckoutUrl` first argument) | `http://127.0.0.1:4032` |
+| Portal broadcaster (`broadcaster` for `createX402Merchant`) | `http://127.0.0.1:4035` |
+| Token | "Local USDC" mock (6 decimals, vault token id `3`) |
+| Contract addresses | `packages/contracts/evm/ignition/deployments/local_anvil/deployed_addresses.json`, written by `pnpm run deploy:local` |
+
+The keys to read from `deployed_addresses.json`:
+
+| Contract | Key |
+| --- | --- |
+| Aggregator (`aggregatorAddress` for `verifyPayment`) | `CurvyAggregator#CurvyAggregatorAlphaV2` |
+| Vault (`vaultAddress` for `readChainFees`) | `CurvyVault#CurvyVaultV2` |
+| Portal factory | `PortalFactory#PortalFactory` |
+| Token (`token` for `createPaymentRequest`) | `Devenv#EIP3009TokenMock` |
+
+`deploy:local` can reassign addresses, so read them from that file after each deploy instead of hard-coding them. The demo merchant on `http://127.0.0.1:4031` is a working end-to-end example of this page.
+
+::: warning Local only
+These values exist only on your machine. Curvy provides production checkout URLs and contract addresses during onboarding. Contact **<hey@curvy.box>**.
+:::
+
 ## Next steps
 
 - [Human checkout integration](./human-checkout)
+- [Fees and minimum amounts](./fees)
 - [API surface](./api)
 - [Wallet SDK](/sdk/) if you are building a private-balance app instead of a shop
