@@ -141,6 +141,7 @@ const configSidebarItems = [
   { text: "createCurvyConfig", link: "/sdk/config/createCurvyConfig" },
   { text: "createBrowserCurvyConfig", link: "/sdk/config/createBrowserCurvyConfig" },
   { text: "createServerCurvyConfig", link: "/sdk/config/createServerCurvyConfig" },
+  { text: "createNativeCurvyConfig", link: "/sdk/config/createNativeCurvyConfig" },
   { text: "destroyConfig", link: "/sdk/config/destroyConfig" },
   { text: "getCurvyConfig", link: "/sdk/config/getCurvyConfig" },
   { text: "peekCurvyConfig", link: "/sdk/config/peekCurvyConfig" },

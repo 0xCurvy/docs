@@ -90,6 +90,11 @@ const groupMetadata: Array<Omit<ActionGroup, "actions">> = [
   { id: "notes", label: "Note actions", description: "Synchronize notes and resolve spend witnesses." },
   { id: "proving", label: "Proving actions", description: "Generate aggregation and withdrawal proofs." },
   { id: "storage", label: "Storage actions", description: "Reset and reconstruct SDK-derived storage." },
+  {
+    id: "views",
+    label: "View actions",
+    description: "Read portfolio, activity, quotes and in-flight operations as UI-ready views.",
+  },
 ];
 
 const configPath = resolve(sdkRoot, "tsconfig.json");
@@ -443,6 +448,7 @@ const categoryGuides: Record<string, { label: string; path: string }> = {
   events: { label: "Listening to events guide", path: "/for-programmers/listening-to-events" },
   networks: { label: "Config guide", path: "/sdk/config/" },
   storage: { label: "Config guide", path: "/sdk/config/" },
+  views: { label: "Interacting with assets guide", path: "/for-programmers/interacting-with-assets" },
 };
 
 function relatedActions(action: ActionReference): ActionReference[] {
@@ -639,6 +645,78 @@ const parameterDescriptionOverrides: Record<string, string> = {
   "recoverPortal.portalRecord": "The matched portal record containing the recovery announcement.",
   "recoverPortal.destinationAddress": "The public address that should receive the recovered funds.",
   "recoverPortal.solanaSigner": "The connected signer required to submit a Solana recovery transaction.",
+  // Added 2026-09-29 for the SDK actions merged from develop (views, planner, recovery, auth, account).
+  "authenticateAccount.action": 'Whether to `"login"` to an existing account or `"register"` a new one.',
+  "authenticateAccount.credential":
+    'The credential kind the remaining parameters describe: `"signature"`, `"privateKeys"` or `"passkey"`.',
+  "dismissOperation.accountId": "The account that owns the operation. Defaults to the active account.",
+  "dismissOperation.operationId": "The operation whose transfer notice should be hidden.",
+  "estimateExternalTransfer.signal": "Aborts the estimate; an aborted estimate is never published.",
+  "estimatePortalDeposit.amount": "The gross deposit amount in the vault token's base units.",
+  "estimatePortalDeposit.networkSlug": "The network whose vault fees should be applied, by slug.",
+  "estimatePortalDeposit.signal": "Aborts the fee reads.",
+  "estimatePortalDeposit.token": "The vault token id of the deposited currency.",
+  "estimatePortalEntry.amount": "The deposited amount in the currency's base units.",
+  "estimatePortalEntry.currency": "The currency the deposit is sent in on `network`.",
+  "estimatePortalEntry.signal": "Aborts the route and fee reads.",
+  "estimatePortalRecovery.destinationAddress": "The address the recovered assets are sent to.",
+  "estimatePortalRecovery.networkId": "The EVM network the portal lives on, by network id.",
+  "estimatePortalRecovery.tokenAddress": "The token contract the portal holds and the recovery moves.",
+  "exportActivity.accountId": "The account whose activity is exported. Defaults to the active account.",
+  "exportActivity.batchSize": "How many rich history rows are hydrated at a time. Defaults to 100.",
+  "exportActivity.filters": "Restrict the export by free-text query, kinds, network slug or vault token id.",
+  "exportActivity.format": 'The output format, `"csv"` or `"json"`.',
+  "exportActivity.signal": "Aborts the export before later batches are hydrated.",
+  "getAccountProfile.accountId": "The account whose profile snapshot is returned. Defaults to the active account.",
+  "getAccountProfiles.includeTemporary":
+    "Whether to include temporary swap and recovery identities alongside registered accounts.",
+  "getActivityPage.accountId": "The account whose history is paged. Defaults to the active account.",
+  "getActivityPage.cursor":
+    "A cursor from a previous page. Reusing a page's own `cursor` refreshes statuses without changing membership.",
+  "getActivityPage.filters": "Restrict the page by free-text query, kinds, network slug or vault token id.",
+  "getActivityPage.pageSize": "The number of items per page.",
+  "getActivityPage.signal": "Aborts the read.",
+  "getAssetOptions.accountId": "The account whose balances decide which options are selectable. Defaults to the active account.",
+  "getAssetOptions.inputFinalityPolicy": "Which balance buckets count as spendable when evaluating private inputs.",
+  "getAssetOptions.metadataMaxAgeMs": "How old registry metadata may be before it is refreshed. Defaults to thirty minutes.",
+  "getAssetOptions.networkSlug": "Only return options on this network.",
+  "getAssetOptions.priceMaxAgeMs": "How old prices may be before they are refreshed. Defaults to five minutes.",
+  "getAssetOptions.purpose":
+    'What the picker selects: `"private-input"`, `"public-input"` or `"public-output"`. Decides which reasons make an option unavailable.',
+  "getAssetOptions.query": "A free-text filter on asset names and symbols.",
+  "getAssetOptions.signal": "Aborts the read.",
+  "getOperationRecovery.accountId": "The account that owns the operation. Defaults to the active account.",
+  "getOperationRecovery.operationId": "The swap operation whose stopped portals are located.",
+  "getOperationRecovery.signal": "Aborts the portal lookup.",
+  "getOperations.accountId": "The account whose operations are reconstructed. Defaults to the active account.",
+  "getPortalDeposit.accountId": "The account that owns the portal. Defaults to the active account.",
+  "getPortalDeposit.signal": "Aborts the read.",
+  "getPortfolio.accountId": "The account whose portfolio is built. Defaults to the active account.",
+  "getPortfolio.balanceMaxAgeMs": "How old balance data may be before it is refreshed.",
+  "getPortfolio.inputFinalityPolicy": "Which balance buckets count as spendable.",
+  "getPortfolio.signal": "Aborts the read.",
+  "getQuote.intent": "The transfer intent to estimate for the review screen.",
+  "getScanProgress.accountId": "The account whose scan progress is read. Defaults to the active account.",
+  "getTransactionHistory.signal": "Aborts the history read.",
+  "iterateActivity.accountId": "The account whose activity is iterated. Defaults to the active account.",
+  "iterateActivity.filters": "Restrict the iteration by free-text query, kinds, network slug or vault token id.",
+  "iterateActivity.signal": "Aborts the iteration before later batches are hydrated.",
+  "markActivitySeen.accountId": "The account whose activity is acknowledged. Defaults to the active account.",
+  "markActivitySeen.ids": "The activity entries to acknowledge explicitly. Mutually exclusive with `watermark`.",
+  "markActivitySeen.watermark":
+    "A `watermark` captured from an activity page; acknowledges everything present when that page was created. Mutually exclusive with `ids`.",
+  "reconcileOperation.accountId": "The account that owns the operation. Defaults to the active account.",
+  "reconcileOperation.operationId": "The interrupted operation whose chain evidence is rechecked.",
+  "reconcileOperation.signal": "Aborts the chain reads.",
+  "resetStorage.signal": "Aborts the rebuild after the cache has been cleared.",
+  "restoreSession.accounts":
+    "Host-supplied accounts (`id`, `s`, `v`) to restore. When omitted, accounts come from the session keystore.",
+  "reviewForResume.accountId": "The account that owns the operation. Defaults to the active account.",
+  "reviewForResume.operationId": "The interrupted operation to inspect.",
+  "watchOperations.accountId": "The account whose operations are watched. Defaults to the active account.",
+  "watchOperations.onChange": "Called immediately and on every change with the current operation snapshots.",
+  "watchOperations.onError": "Called when a background read fails.",
+  "watchOperations.signal": "Stops the subscription; the returned function does the same.",
 };
 
 function parameterDescription(action: ActionReference, parameter: ReferenceParameter, heading: string): string {
