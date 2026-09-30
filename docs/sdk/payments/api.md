@@ -39,7 +39,7 @@ import {
 | Export | Role |
 | --- | --- |
 | `initialize(config)` | Binds the receiving keys, chainId, merchantOrigin, confirmations, paidWhen and TTL. Returns `{ createPaymentRequest, verifyPayment }`. |
-| `createPaymentRequest(parameters)` | Standalone: derives a note and returns an unsigned request. `ttlSeconds` is optional (default `600`, at most `86400`). |
+| `createPaymentRequest(parameters)` | Standalone: derives a note and returns an unsigned request. `ttlSeconds` is optional (default `600`, at most `86400`). `description` is optional: what the buyer is paying for, at most 120 characters of plain text, signed with the payment and shown at checkout and on the buyer's receipt. |
 | `buildPaymentRequest(parameters)` | Same as `createPaymentRequest`, but `ttlSeconds` is required |
 | `verifyPayment(parameters)` | Decides whether a stored request has been paid on chain. See [Confirming payments](./confirming-payments). |
 | `PaymentVerificationError` | Thrown by `verifyPayment` when it cannot produce a status. It has a `code`. |
@@ -63,7 +63,7 @@ Signatures:
 
 ```ts
 interface PaymentSDK {
-  createPaymentRequest(parameters: { amount: bigint; token: Address }): Promise<PaymentIntent>;
+  createPaymentRequest(parameters: { amount: bigint; token: Address; description?: string }): Promise<PaymentIntent>;
   verifyPayment(parameters: BoundVerifyPaymentParameters): Promise<PaymentVerification>;
 }
 type BoundVerifyPaymentParameters = Omit<VerifyPaymentParameters, "confirmations" | "paidWhen">;
@@ -109,7 +109,7 @@ interface PaymentVerifyClient
     "getChainId" | "getBlockNumber" | "getLogs" | "getTransaction" | "getTransactionReceipt" | "readContract"> {}
 ```
 
-The standalone `createPaymentRequest` takes `{ receivingKeys | recipient, amount, token, chainId, merchantOrigin, checkoutCompletePath?, ttlSeconds? }`: exactly one of `receivingKeys` (preferred) or `recipient`, as in `initialize`. `buildPaymentRequest` and `createX402Merchant` take the same choice.
+The standalone `createPaymentRequest` takes `{ receivingKeys | recipient, amount, token, chainId, merchantOrigin, checkoutCompletePath?, description?, ttlSeconds? }`: exactly one of `receivingKeys` (preferred) or `recipient`, as in `initialize`. `buildPaymentRequest` and `createX402Merchant` take the same choice.
 
 ## Request signing (`/intent`)
 
@@ -191,7 +191,7 @@ const keySet = buildMerchantKeySet([{ address: signer.address, notAfter: "2027-0
 
 | Export | Role |
 | --- | --- |
-| `buildMerchantKeySet(signers)` / `parseMerchantKeySet(value)` | Produce and validate the `/.well-known/curvy-payments.json` document (`version: 1`, `alg: eip712-secp256k1`). `notAfter` is an ISO string or a `Date`. |
+| `buildMerchantKeySet(signers, options?)` / `parseMerchantKeySet(value)` | Produce and validate the `/.well-known/curvy-payments.json` document (`version: 1`, `alg: eip712-secp256k1`). `notAfter` is an ISO string or a `Date`. `options.icon` adds the optional checkout icon: an absolute `.png` or `.webp` path on the merchant origin, at most `MAX_MERCHANT_ICON_PATH_LENGTH` (256) characters. `options.name` adds the optional shop name checkout shows beside your domain: plain text, trimmed, at most `MAX_MERCHANT_NAME_LENGTH` (60) characters, no control or text-direction characters. |
 | `generateCheckoutSigningKey()` | Returns `{ privateKey, address }`: a new random secp256k1 key used only to sign checkout requests. It holds no funds, pays no gas and is independent of any wallet or Curvy key. Keep `privateKey` in your secret store; publish `address` with `buildMerchantKeySet`. |
 | `encodeReceivingKeys` / `parseReceivingKeys` / `RECEIVING_KEYS_VERSION` | The receiving-keys value (below) |
 

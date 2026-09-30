@@ -10,7 +10,7 @@ In human checkout, Curvy hosts the **payment page** and your shop never shows a 
 1. Your backend creates a payment request: a one-time destination for an amount and token. It signs the request and stores it.
 2. You redirect the buyer to Curvy’s page. The signed request travels in the URL fragment.
 3. Curvy’s page checks your signature against `/.well-known/curvy-payments.json` on your origin. The buyer then sends one ERC-20 transfer to a one-time payment address.
-4. Once the page sees the funds, it registers the payment with Curvy’s operator, which screens the funds and shields them into a note that only you can spend. The buyer should keep the page open until it says the payment is registered.
+4. Before any money is sent, the page registers the payment with Curvy’s operator: when it shows the payment address for an exchange, or just before the buyer’s wallet sends. The operator waits for the funds, so the buyer can close the page. It then screens them and shields exactly your amount into a note that only you can spend. Anything sent above the amount stays at the payment address, and the buyer takes it back on the checkout page.
 5. The buyer returns to your site with the shield transaction hash as a hint. Your backend confirms the payment with `verifyPayment` against the stored request.
 6. Later, Curvy’s batch prover commits the note, and from then on your wallet can spend it. By default (`paidWhen: "shielded"`) `verifyPayment` says `paid` at step 5, once the money is safe in the vault; with `paidWhen: "committed"` it says `confirming` until this step. See [When a payment counts as paid](./confirming-payments#when-a-payment-counts-as-paid-paidwhen).
 
@@ -73,8 +73,8 @@ Storage rules:
 
 `ttlSeconds` (default `600`) sets `expiry` on the signed request. The whole flow must finish before that time:
 
+- the checkout page registers the payment with Curvy, before the buyer sends anything;
 - the buyer’s transfer arrives;
-- the checkout page registers the payment with Curvy;
 - Curvy screens the funds and shields them.
 
 After `expiry`, Curvy no longer registers or shields the payment, and Curvy’s checkout gets the money back to the buyer. Exchange withdrawals are often slow. If you expect them, use a longer TTL, for example 30–60 minutes. The cost is that a signed link stays usable for longer.
@@ -107,6 +107,10 @@ Cache-Control: public, max-age=60
 ```
 
 Build the document with `buildMerchantKeySet([{ address, notAfter }])` from `@0xcurvy/payments-sdk/merchant/keys`. `notAfter` is an ISO timestamp string or a `Date`. Checkout accepts a request only when its signer is listed and `notAfter` has not passed.
+
+Optionally, name your shop's icon so checkout shows it next to your name: `buildMerchantKeySet(signers, { icon: "/curvy-icon.png" })` adds `"icon": "/curvy-icon.png"`. It must be an absolute path on the same origin to a square `.png` or `.webp` image (no SVG, no other host, no query), at most 256 characters; keep the image small. `parseMerchantKeySet` refuses any other value, and checkout then can't verify the link, so check the file after adding it. Without an icon, checkout shows the first letter of your name, or of your domain.
+
+Optionally, give your shop's name too: `buildMerchantKeySet(signers, { name: "Overprint" })` adds `"name": "Overprint"`. Checkout shows it in the payment card, with your domain beside it, and uses it in its text ("Return to Overprint"); the receipt reads `Overprint (shop.example)`. The name is your own claim, so checkout never shows it without the domain it verified your signature against. It must be plain text of at most 60 characters, without leading or trailing spaces or control and text-direction characters. Without a name, checkout uses your domain.
 
 Checkout fetches this file from the buyer’s browser, uncached, before it shows anything. Serve it over `https:` from a publicly reachable host, directly (no redirect), as small JSON, and test the URL from outside your network.
 
@@ -226,6 +230,8 @@ The primary type, with the fields in this order:
 PaymentIntent(address token,uint256 amount,uint256 chainId,uint256 ownerHash,uint256 ephemeralKeyX,uint256 ephemeralKeyY,uint16 viewTag,string merchantOrigin,string checkoutCompletePath,uint64 expiry)
 ```
 
+With a `description`, the primary type is `DescribedPaymentIntent`: the same fields in the same order, then `string description`. It is a separate type so that a description can't be added to a signed intent or removed from one.
+
 If you sign outside TypeScript, for example through a KMS, reproduce this exactly. `buildPaymentIntentTypedData(request)` from `/intent` returns the payload `signPaymentIntent` signs.
 
 | Field | Type | Meaning |
@@ -239,6 +245,7 @@ If you sign outside TypeScript, for example through a KMS, reproduce this exactl
 | `merchantOrigin` | `string` | Your origin for the return |
 | `checkoutCompletePath` | `string` | Absolute path on that origin (default `/checkout/complete`) |
 | `expiry` | `uint64` | Unix seconds: the end of the funding window |
+| `description` | `string` | Optional. What the buyer is paying for, at most 120 characters of plain text. Checkout shows it and prints it on the buyer's receipt. |
 
 There is no refund field and no `paymentId`. What happens to the money if a payment cannot complete is handled on Curvy’s checkout page, not in your signed package.
 
@@ -289,9 +296,9 @@ These gaps block real merchants today:
 
 - **Hosted checkout comes from onboarding.** The checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding.
 - **The SDK is not released.** The released versions (`@0xcurvy/payments-sdk@0.1.0` to `0.1.2`) have the old R-only `verifyPayment`. The API documented here is unreleased.
-- **Curvy’s operator does not yet check your signature.** Only the checkout page verifies the signed request. Someone who registers a funded payment with Curvy first can choose its payment reference, so a real payment may never show up for your request (`verifyPayment` reports `not_found`); it cannot make a fake payment pass. *Planned for Curvy’s portal upgrade.*
-- **The buyer must keep the checkout open until the payment is registered.** Checkout registers the payment only after it sees the funds. If the buyer closes the page first, nothing shields the payment until they reopen the link before `expiry`; after that the payment cannot complete and the money goes back to the buyer. *Planned for Curvy’s portal upgrade.*
-- **Extra transfers are not screened.** Curvy screens the address that sent the largest transfer and shields the whole balance, including tokens that arrive later. *Planned for Curvy’s portal upgrade.*
+- **Curvy’s operator does not yet check your signature.** Only the checkout page verifies the signed request. The first registration of a payment address holds, and checkout registers before any money is sent, but someone who holds the link and registers a payment address first can still choose its payment reference. A real payment may then never show up for your request (`verifyPayment` reports `not_found`); it cannot make a fake payment pass. *Planned for Curvy’s portal upgrade.*
+- **Early registration is bounded.** Curvy watches a limited number of unpaid payments at once. When it is full, checkout registers the payment once it sees the funds instead, and the buyer must keep the page open until then.
+- **Extra transfers are not screened.** Curvy screens only the address that sent the largest transfer, though several transfers can make up the amount. It shields exactly your amount; anything above it stays at the payment address for the buyer to take back. *Planned for Curvy’s portal upgrade.*
 - **Networks are not checked for direct shielding at registration.** A payment on a network whose aggregator cannot shield portals would be moved to another chain instead of shielded where you verify. *Planned for Curvy’s portal upgrade.*
 
 - **No separate business accounts yet.** The first release pays into the account you are signed in with, next to your personal funds. Business accounts, derived from your account or created on their own, come later.

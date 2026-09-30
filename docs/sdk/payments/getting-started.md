@@ -101,6 +101,7 @@ const fromBlock = await publicClient.getBlockNumber();
 const request = await sdk.createPaymentRequest({
   amount: 10_000_000n, // token base units: 10 USDC with 6 decimals
   token: TOKEN_ADDRESS,
+  description: "Order #1048 · Blue hour print", // optional; shown at checkout and on the buyer's receipt
 });
 
 // 3. Sign it.
