@@ -1,0 +1,146 @@
+# Curvy documentation
+
+> Privacy infrastructure, application guides, wallet SDK, and Payments SDK reference.
+
+- [Frequently asked questions](https://docs.curvy.box/_raw/faq.md): No. Curvy builds on the stealth address approach and expands it by combining stealth addresses with ZK-SNARKs and programmable execution flows to enable end-to-end private and compliant transactions.
+- [Accepting Curvy payments](https://docs.curvy.box/_raw/for-businesses/accepting-payments.md): How shops and APIs take private Curvy payments with the Payments SDK.
+- [Curvy for Enterprises & Institutions](https://docs.curvy.box/_raw/for-businesses/for-enterprises-and-institutions.md): Curvy enables enterprises and institutions to deploy privacy-enabled payment infrastructure with full branding, compliance alignment, and operational control.
+- [Curvy for networks](https://docs.curvy.box/_raw/for-businesses/for-networks.md): Curvy provides native privacy infrastructure that can be integrated at the network level, enabling private, compliant, and programmable payment flows for your ecosystem participants.
+- [Curvy for wallets & Web3 product builders](https://docs.curvy.box/_raw/for-businesses/for-wallets-and-web3-products.md): Curvy enables wallets and Web3 applications to integrate privacy flows directly into their product with **zero upfront cost** and minimal engineering effort.
+- [Curvy for businesses](https://docs.curvy.box/_raw/for-businesses/index.md): Reach out to <hey@curvy.box> if one of these describe you:
+- [Authentication](https://docs.curvy.box/_raw/for-programmers/authentication.md): Authentication with Curvy relies on EIP-712 signatures. Register new users with [`register`](/sdk/actions/auth/register), and log in existing users with [`login`](/sdk/actions/auth/login). Both are action functions that take the `config` you created during [installation](./installing-the-sdk).
+- [Developer guides](https://docs.curvy.box/_raw/for-programmers/index.md): Use Curvy’s TypeScript packages to add private balances **or** accept private payments.
+- [Installation](https://docs.curvy.box/_raw/for-programmers/installing-the-sdk.md): Curvy SDK can be installed with a Node package manager:
+- [Interacting With Assets](https://docs.curvy.box/_raw/for-programmers/interacting-with-assets.md): The Curvy SDK uses an `Intent` → [`estimateIntent`](/sdk/actions/planner/estimateIntent) → [`executeIntent`](/sdk/actions/planner/executeIntent) flow. This abstracts away stealth addresses, bridging, and private-note execution.
+- [Listening To Events](https://docs.curvy.box/_raw/for-programmers/listening-to-events.md): The SDK emits typed events for its background work — balance scans, plan execution, session health, and account changes. Subscribe with [`on`](/sdk/actions/events/on), which returns an unsubscribe function:
+- [Portals & Recovery](https://docs.curvy.box/_raw/for-programmers/portals-and-recovery.md): Most apps never call these APIs directly — the [Planner](./interacting-with-assets) creates and tracks Portals automatically when it executes an intent. Use them when you're building custom receive flows, a portal dashboard, or an asset-recovery tool.
+- [Querying Balances](https://docs.curvy.box/_raw/for-programmers/querying-balances.md): The SDK refreshes shielded balances on demand with [`refreshBalances`](/sdk/actions/balances/refreshBalances) and stores the result in the configured storage adapter (IndexedDB in the browser, in-memory on the server).
+- [Curvy ID](https://docs.curvy.box/_raw/for-the-curious/building-blocks/curvy-id.md): A Curvy user is identified by the following tuple:
+- [Curvy SDK](https://docs.curvy.box/_raw/for-the-curious/building-blocks/curvy-sdk.md): The Curvy SDK facilitates:
+- [Building blocks](https://docs.curvy.box/_raw/for-the-curious/building-blocks/index.md): The core building blocks of the Curvy privacy protocol are:
+- [Portals](https://docs.curvy.box/_raw/for-the-curious/building-blocks/portals.md): Portals are a cornerstone of UX and an elegant solution to time-based privacy leaks within Curvy.
+- [Privacy aggregator](https://docs.curvy.box/_raw/for-the-curious/building-blocks/privacy-aggregator.md): The Privacy Aggregator is the set of on-chain and off-chain components that allow for complete privacy when transacting with other Curvy users.
+- [Compliance model](https://docs.curvy.box/_raw/for-the-curious/compliance-model.md): Curvy's compliance model is two-sided, offering both pre-emptive compliance checks and retroactive compliance mechanisms.
+- [Curvy for the curious](https://docs.curvy.box/_raw/for-the-curious/index.md): This section explains Curvy's components and design choices in a technical manner.
+- [Privacy](https://docs.curvy.box/_raw/for-the-curious/privacy-model.md): Privacy is one of the core principles of the Curvy protocol.
+- [In-depth walkthroughs](https://docs.curvy.box/_raw/for-the-curious/walkthroughs/index.md): We will explain the entirety of the Curvy Protocol by covering three main processes in detail:
+- [Receiving funds privately](https://docs.curvy.box/_raw/for-the-curious/walkthroughs/receiving-funds-privately.md): Alice uses MetaMask with Ledger to manage her company's treasury, while Bob, a privacy-savvy crypto professional, uses Curvy to ensure his clients don't get unnecessary insight into his earnings and spending.
+- [Sending funds privately](https://docs.curvy.box/_raw/for-the-curious/walkthroughs/sending-funds-privately.md): Alice needs to pay her subcontractor, Bob, who also uses Curvy, for the services he provided.
+- [Sending funds to anyone (send as a link)](https://docs.curvy.box/_raw/for-the-curious/walkthroughs/sending-funds-to-anyone.md): Bob wants to send his nephew Charlie some crypto for his birthday. Charlie doesn't have a Curvy ID — in fact, he doesn't have a crypto wallet at all.
+- [Unshielding funds privately](https://docs.curvy.box/_raw/for-the-curious/walkthroughs/unshielding-funds-privately.md): After some time and many privately and securely received payments from his clients, Bob is ready to sell a portion of his crypto on a centralized exchange (CEX) to buy a house.
+- [Curvy for users](https://docs.curvy.box/_raw/for-users/index.md): The Curvy App is a privacy-first application that provides a familiar set of features, similar to any crypto wallet.
+- [Make Your Existing Assets Private](https://docs.curvy.box/_raw/for-users/make-your-existing-assets-private.md): To use Curvy for private payments, you first need to get some assets into your Curvy App.
+- [Receive assets privately](https://docs.curvy.box/_raw/for-users/receive-assets-privately.md): One of the most unique things about Curvy is how easy it is to share payment instructions with senders.
+- [Register Your Curvy ID](https://docs.curvy.box/_raw/for-users/register-your-curvy-id.md): To set up your Curvy Wallet, the first step is to register your Curvy ID.
+- [Send assets privately](https://docs.curvy.box/_raw/for-users/send-assets-privately.md): There are three ways to send assets from your Curvy web app, depending on whether the recipient:
+- [Swap assets privately](https://docs.curvy.box/_raw/for-users/swap-assets-privately.md): To access the Curvy's builtin swap feature, click on the Swap button in the bottom right corner of your portfolio balance:
+- [Get involved](https://docs.curvy.box/_raw/get-involved.md): 1. Join our [Telegram community](https://t.me/CurvyProtocol) and ask us anything
+- [index](https://docs.curvy.box/_raw/index.md)
+- [Introduction](https://docs.curvy.box/_raw/introduction.md): Curvy is a privacy solution for secure, fast, and compliant cryptocurrency payments.
+- [addAccount](https://docs.curvy.box/_raw/sdk/actions/account/addAccount.md): Decompose a CurvyAccount DTO into the runtime stores, make it active, and persist it.
+- [addPartialAccount](https://docs.curvy.box/_raw/sdk/actions/account/addPartialAccount.md): Add a partial (handle-less, owner-less) account built from a subset of keypairs and make it active.
+- [getAccountById](https://docs.curvy.box/_raw/sdk/actions/account/getAccountById.md): Get a single account's serializable metadata by id, or undefined if unknown.
+- [getAccountProfile](https://docs.curvy.box/_raw/sdk/actions/account/getAccountProfile.md): Safe, referentially stable profile snapshot; never includes keys, pending notes or scan state.
+- [getAccountProfiles](https://docs.curvy.box/_raw/sdk/actions/account/getAccountProfiles.md): Registered profiles by default; opt into temporary swap/recovery identities explicitly.
+- [getAccounts](https://docs.curvy.box/_raw/sdk/actions/account/getAccounts.md): Get the serializable metadata for every known account.
+- [getActiveAccount](https://docs.curvy.box/_raw/sdk/actions/account/getActiveAccount.md): Get the active account's registered profile metadata.
+- [getActiveAccountId](https://docs.curvy.box/_raw/sdk/actions/account/getActiveAccountId.md): Get the selected account ID, including temporary swap/recovery accounts.
+- [getBabyJubjubPublicKey](https://docs.curvy.box/_raw/sdk/actions/account/getBabyJubjubPublicKey.md): Derive the BabyJubjub public key for an account's spending key.
+- [hasAccount](https://docs.curvy.box/_raw/sdk/actions/account/hasAccount.md): Check whether an account with the given id is known.
+- [hasActiveAccount](https://docs.curvy.box/_raw/sdk/actions/account/hasActiveAccount.md): Check whether an account is currently active.
+- [removeAccount](https://docs.curvy.box/_raw/sdk/actions/account/removeAccount.md): Evict an account from the runtime without re-pointing the session.
+- [setActiveAccount](https://docs.curvy.box/_raw/sdk/actions/account/setActiveAccount.md): Make accountId the active account.
+- [signMessageWithBabyJubjub](https://docs.curvy.box/_raw/sdk/actions/account/signMessageWithBabyJubjub.md): Sign a message with an account's BabyJubjub spending key.
+- [watchAccounts](https://docs.curvy.box/_raw/sdk/actions/account/watchAccounts.md): Subscribe to changes of the known accounts; returns an unsubscribe function.
+- [watchActiveAccount](https://docs.curvy.box/_raw/sdk/actions/account/watchActiveAccount.md): Subscribe to changes of the active account; returns an unsubscribe function.
+- [aggregate](https://docs.curvy.box/_raw/sdk/actions/aggregator/aggregate.md): One-call AGGREGATE: build the proof from committed notes and send it in one shot, either via the user's wallet (via.kind === "wallet") or the relay service (via.kind === "relay").
+- [buildAggregateRequest](https://docs.curvy.box/_raw/sdk/actions/aggregator/buildAggregateRequest.md): Build a submit-ready aggregation proof from committed notes.
+- [buildWithdrawRequest](https://docs.curvy.box/_raw/sdk/actions/aggregator/buildWithdrawRequest.md): Build a submit-ready withdrawal proof from committed notes.
+- [directShield](https://docs.curvy.box/_raw/sdk/actions/aggregator/directShield.md): Shield wallet funds directly into the active (or selected) Curvy account.
+- [estimateAggregationCosts](https://docs.curvy.box/_raw/sdk/actions/aggregator/estimateAggregationCosts.md): Load the inputs needed to allocate an aggregation.
+- [relaySubmission](https://docs.curvy.box/_raw/sdk/actions/aggregator/relaySubmission.md): Relay a built proof via the SDK's relay service — no EVM wallet, no gas.
+- [submitToChain](https://docs.curvy.box/_raw/sdk/actions/aggregator/submitToChain.md): Submit a built aggregator proof on-chain with the caller's wallet client.
+- [waitForRelay](https://docs.curvy.box/_raw/sdk/actions/aggregator/waitForRelay.md): Poll a relayed submission to the requested lifecycle milestone.
+- [withdraw](https://docs.curvy.box/_raw/sdk/actions/aggregator/withdraw.md): One-call WITHDRAW: build the proof from committed notes and send it in one shot, via the user's wallet or the relay service.
+- [authenticateAccount](https://docs.curvy.box/_raw/sdk/actions/auth/authenticateAccount.md): Login/register facade for application state: returns only a safe profile, retaining keys in the config.
+- [login](https://docs.curvy.box/_raw/sdk/actions/auth/login.md): Log in (add an existing account) from an account signature.
+- [loginWithPasskey](https://docs.curvy.box/_raw/sdk/actions/auth/loginWithPasskey.md): Log in via a passkey PRF output.
+- [loginWithPrivateKeys](https://docs.curvy.box/_raw/sdk/actions/auth/loginWithPrivateKeys.md): Log in from raw spending/viewing private keys.
+- [logout](https://docs.curvy.box/_raw/sdk/actions/auth/logout.md): Remove an account and re-point (or clear) the active account.
+- [register](https://docs.curvy.box/_raw/sdk/actions/auth/register.md): Register a new Curvy handle from an account signature.
+- [registerWithPasskey](https://docs.curvy.box/_raw/sdk/actions/auth/registerWithPasskey.md): Register a new Curvy handle via a passkey PRF output.
+- [registerWithPrivateKeys](https://docs.curvy.box/_raw/sdk/actions/auth/registerWithPrivateKeys.md): Register a new Curvy handle from raw spending and viewing private keys.
+- [restoreSession](https://docs.curvy.box/_raw/sdk/actions/auth/restoreSession.md): Rehydrate authenticated accounts from host-supplied private key material or, when no accounts are supplied, from the optional session keystore.
+- [getBalances](https://docs.curvy.box/_raw/sdk/actions/balances/getBalances.md): Get an account's shielded balances from storage, optionally refreshing first.
+- [getScanProgress](https://docs.curvy.box/_raw/sdk/actions/balances/getScanProgress.md): Read the current balance-scan progress from 0 to 100.
+- [pauseBalanceRefresh](https://docs.curvy.box/_raw/sdk/actions/balances/pauseBalanceRefresh.md): Pause new balance refreshes for an account.
+- [refreshBalances](https://docs.curvy.box/_raw/sdk/actions/balances/refreshBalances.md): Re-sync and persist an account's shielded balances.
+- [resumeBalanceRefresh](https://docs.curvy.box/_raw/sdk/actions/balances/resumeBalanceRefresh.md): Allow balance refreshes for an account after a matching pause.
+- [estimateBridge](https://docs.curvy.box/_raw/sdk/actions/bridge/estimateBridge.md): Quote a bridge/swap before committing — for the swap UI (in-app/public) and send-with-exit-bridge.
+- [off](https://docs.curvy.box/_raw/sdk/actions/events/off.md): Unsubscribe a previously-registered listener.
+- [on](https://docs.curvy.box/_raw/sdk/actions/events/on.md): Subscribe to a Curvy event.
+- [getTransactionHistory](https://docs.curvy.box/_raw/sdk/actions/history/getTransactionHistory.md): Merge local actions and chain fallbacks using account-wide ordering and deduplication.
+- [Introduction to actions](https://docs.curvy.box/_raw/sdk/actions/index.md): Understand and browse the Curvy SDK's public actions.
+- [ensResolveCurvyId](https://docs.curvy.box/_raw/sdk/actions/networks/ensResolveCurvyId.md): Resolve a Curvy handle to an on-chain address via ENS for the active environment.
+- [getNetwork](https://docs.curvy.box/_raw/sdk/actions/networks/getNetwork.md): Get exactly one network matching the filter, throwing if zero or many match.
+- [getNetworks](https://docs.curvy.box/_raw/sdk/actions/networks/getNetworks.md): Get the known networks, optionally narrowed by a filter.
+- [switchNetworkEnvironment](https://docs.curvy.box/_raw/sdk/actions/networks/switchNetworkEnvironment.md): Switch the active network environment, recomputing the active network set.
+- [watchEnvironment](https://docs.curvy.box/_raw/sdk/actions/networks/watchEnvironment.md): Subscribe to changes of the config's network environment.
+- [getSpendWitnesses](https://docs.curvy.box/_raw/sdk/actions/notes/getSpendWitnesses.md): Produce inclusion proofs for a spend from the synced notes tree.
+- [resolveNoteWitness](https://docs.curvy.box/_raw/sdk/actions/notes/resolveNoteWitness.md): Resolve a note by scanning forward from a public lower-bound hint.
+- [syncNotes](https://docs.curvy.box/_raw/sdk/actions/notes/syncNotes.md): Run one notes-tree sync pass per network: pull the indexer delta, discover owned notes, reconcile spends, verify the assembled root against a DIRECT chain read, persist, and apply the account-facing effects (balance entries + tx history).
+- [estimateExternalTransfer](https://docs.curvy.box/_raw/sdk/actions/planner/estimateExternalTransfer.md): Pre-deposit estimate for a swap-public-style external transfer.
+- [estimateIntent](https://docs.curvy.box/_raw/sdk/actions/planner/estimateIntent.md): Select spendable notes and return fees, delivered amount, a sanitized route, and an in-memory handle that can be passed to executeIntent.
+- [estimatePortalDeposit](https://docs.curvy.box/_raw/sdk/actions/planner/estimatePortalDeposit.md): Estimate a portal deposit that shields in place.
+- [estimatePortalEntry](https://docs.curvy.box/_raw/sdk/actions/planner/estimatePortalEntry.md): Estimate a deposit sent to an entry portal, end to end: where it shields and what it costs to get there.
+- [executeIntent](https://docs.curvy.box/_raw/sdk/actions/planner/executeIntent.md): Execute a handle returned by estimateIntent.
+- [getPlanSteps](https://docs.curvy.box/_raw/sdk/actions/planner/getPlanSteps.md): Return the ordered, sanitized steps an integrator can present to a user.
+- [generateEntryPortal](https://docs.curvy.box/_raw/sdk/actions/portals/generateEntryPortal.md): Generate (insert) an entry portal — the on-ramp address that shields funds into Curvy.
+- [generateExitPortal](https://docs.curvy.box/_raw/sdk/actions/portals/generateExitPortal.md): Generate (insert) an exit portal — the off-ramp that unshields funds out of Curvy to a destination address.
+- [getPortalRecords](https://docs.curvy.box/_raw/sdk/actions/portals/getPortalRecords.md): Fetch a page of global portal records via keyset pagination.
+- [getPortalStatus](https://docs.curvy.box/_raw/sdk/actions/portals/getPortalStatus.md): Fetch the lifecycle status of a single portal by address.
+- [proveAggregation](https://docs.curvy.box/_raw/sdk/actions/proving/proveAggregation.md): Prove an aggregation: resolve the network's aggregation circuit artifacts (from its CircuitConfig), flatten the supplied witness, and run it through the config's prover (default Rust/arkworks).
+- [proveWithdrawal](https://docs.curvy.box/_raw/sdk/actions/proving/proveWithdrawal.md): Prove a withdrawal: resolve the network's withdrawal circuit artifacts (from its CircuitConfig), flatten the supplied witness, and run it through the config's prover (default Rust/arkworks).
+- [estimatePortalRecovery](https://docs.curvy.box/_raw/sdk/actions/recovery/estimatePortalRecovery.md): Prices the transaction recoverPortal will send for an EVM portal, from the same factory call, and reads what its recovery address holds to pay for it.
+- [findOwnedPortals](https://docs.curvy.box/_raw/sdk/actions/recovery/findOwnedPortals.md): Enumerate every portal owned by the active account's keys on the given network.
+- [findPortal](https://docs.curvy.box/_raw/sdk/actions/recovery/findPortal.md): Find the portal owned by the active account at a specific on-chain address.
+- [recoverPortal](https://docs.curvy.box/_raw/sdk/actions/recovery/recoverPortal.md): Recover (sweep) the funds held in a portal to destinationAddress.
+- [resetStorage](https://docs.curvy.box/_raw/sdk/actions/storage/resetStorage.md): Clear chain-derived cache and rebuild it from the live account registry:
+- [dismissOperation](https://docs.curvy.box/_raw/sdk/actions/views/dismissOperation.md): Hide a transfer notice durably without deleting its history or changing fund reservations.
+- [exportActivity](https://docs.curvy.box/_raw/sdk/actions/views/exportActivity.md): Collect the full matching local export.
+- [getActivityPage](https://docs.curvy.box/_raw/sdk/actions/views/getActivityPage.md): Query the complete local private history, keeping page membership stable as new entries arrive.
+- [getAssetOptions](https://docs.curvy.box/_raw/sdk/actions/views/getAssetOptions.md): Full current-environment registry for pickers, retaining zero balances and unavailable choices.
+- [getOperationRecovery](https://docs.curvy.box/_raw/sdk/actions/views/getOperationRecovery.md): Locate only this swap's stopped, owned portals.
+- [getOperations](https://docs.curvy.box/_raw/sdk/actions/views/getOperations.md): Reconstruct durable progress and merge the config's live jobs without exposing proofs or note commitments.
+- [getPortalDeposit](https://docs.curvy.box/_raw/sdk/actions/views/getPortalDeposit.md): Read the SDK's note evidence for one portal.
+- [getPortfolio](https://docs.curvy.box/_raw/sdk/actions/views/getPortfolio.md): Storage-independent, note-free portfolio including pending-only assets and recovery ownership.
+- [getQuote](https://docs.curvy.box/_raw/sdk/actions/views/getQuote.md): Estimate a review screen without exposing note inputs, bearer outputs, or mutable plans.
+- [iterateActivity](https://docs.curvy.box/_raw/sdk/actions/views/iterateActivity.md): Iterate local activity in globally deduplicated newest-first order, without acknowledging rows.
+- [markActivitySeen](https://docs.curvy.box/_raw/sdk/actions/views/markActivitySeen.md): Acknowledge explicit entries, or the rows a captured watermark's view held (its filters and search).
+- [reconcileOperation](https://docs.curvy.box/_raw/sdk/actions/views/reconcileOperation.md): Recheck chain evidence before releasing intermediate outputs from an interrupted operation.
+- [reviewForResume](https://docs.curvy.box/_raw/sdk/actions/views/reviewForResume.md): Inspect an interrupted operation without submitting or replaying it.
+- [watchOperations](https://docs.curvy.box/_raw/sdk/actions/views/watchOperations.md): Subscribe with immediate delivery; stale async reads cannot overwrite a newer account or revision.
+- [acceptsPortalShield](https://docs.curvy.box/_raw/sdk/config/acceptsPortalShield.md): Returns whether portals may be shielded on a network.
+- [createBrowserCurvyConfig](https://docs.curvy.box/_raw/sdk/config/createBrowserCurvyConfig.md): Creates a Curvy config with browser-safe persistence and session defaults.
+- [createCurvyConfig](https://docs.curvy.box/_raw/sdk/config/createCurvyConfig.md): Creates and initializes a Curvy SDK config.
+- [createNativeCurvyConfig](https://docs.curvy.box/_raw/sdk/config/createNativeCurvyConfig.md): Creates a Curvy config for React Native and other hosts that supply their own core, crypto, prover and storage.
+- [createServerCurvyConfig](https://docs.curvy.box/_raw/sdk/config/createServerCurvyConfig.md): Creates an isolated Curvy config with server-safe defaults.
+- [destroyConfig](https://docs.curvy.box/_raw/sdk/config/destroyConfig.md): Destroys a Curvy config and clears it when it is the ambient config.
+- [getActiveNetworks](https://docs.curvy.box/_raw/sdk/config/getActiveNetworks.md): Returns the networks active for a Curvy config's current environment.
+- [getCurvyConfig](https://docs.curvy.box/_raw/sdk/config/getCurvyConfig.md): Returns the ambient Curvy config and throws when none is registered.
+- [getDefaultAggregatorNetwork](https://docs.curvy.box/_raw/sdk/config/getDefaultAggregatorNetwork.md): Returns the active network funds are shielded on by default.
+- [getEnvironment](https://docs.curvy.box/_raw/sdk/config/getEnvironment.md): Returns a Curvy config's current network environment.
+- [getProtocol](https://docs.curvy.box/_raw/sdk/config/getProtocol.md): Returns an aggregator deployment's ZK proving configuration.
+- [Introduction to config](https://docs.curvy.box/_raw/sdk/config/index.md): Understand CurvyConfig, runtime defaults, ambient state, and lifecycle.
+- [peekCurvyConfig](https://docs.curvy.box/_raw/sdk/config/peekCurvyConfig.md): Reads the ambient Curvy config without throwing.
+- [setCurvyConfig](https://docs.curvy.box/_raw/sdk/config/setCurvyConfig.md): Replaces or clears the ambient Curvy config.
+- [Getting started](https://docs.curvy.box/_raw/sdk/getting-started.md): Install the Curvy SDK, create a config, and call your first action.
+- [Curvy SDK](https://docs.curvy.box/_raw/sdk/index.md): A typed, functional SDK for building private asset flows with Curvy.
+- [Payments SDK API surface](https://docs.curvy.box/_raw/sdk/payments/api.md): Entry points and exports of @0xcurvy/payments-sdk.
+- [Confirming payments](https://docs.curvy.box/_raw/sdk/payments/confirming-payments.md): Verify Curvy payments with verifyPayment, reconcile in the background, and understand fees and net amounts.
+- [Fees and minimum amounts](https://docs.curvy.box/_raw/sdk/payments/fees.md): How Curvy protocol fees are charged per payment rail, how to quote them with @0xcurvy/payments-sdk/economics, and the portal broadcaster's minimum amount for human checkout and x402.
+- [Getting started with the Payments SDK](https://docs.curvy.box/_raw/sdk/payments/getting-started.md): Install @0xcurvy/payments-sdk, create a signed Curvy checkout URL on your backend, and confirm the payment.
+- [Human checkout with the Payments SDK](https://docs.curvy.box/_raw/sdk/payments/human-checkout.md): Create signed Curvy payment requests, publish signers, and confirm payments on your shop.
+- [Payments SDK](https://docs.curvy.box/_raw/sdk/payments/index.md): Merchant payment primitives for Curvy checkout and payment evidence — separate from the wallet SDK.
+- [x402 and the Payments SDK](https://docs.curvy.box/_raw/sdk/payments/x402.md): Accept Curvy payments from AI agents over HTTP 402 with @0xcurvy/payments-sdk. Covers createX402Merchant, the exact and curvy-transfer schemes, the portal broadcaster and paying from an agent.
+- [TypeScript](https://docs.curvy.box/_raw/sdk/typescript.md): Type inference and TypeScript conventions in the Curvy SDK.
