@@ -13,7 +13,7 @@ description: Merchant payment primitives for Curvy checkout and payment evidence
 | `@0xcurvy/payments-sdk` | Merchants and checkout | Create signed payment requests, verify them, confirm payments on-chain |
 
 ::: warning Preview
-The API on these pages is **not yet on npm**. The released versions (`0.1.0` to `0.1.2`) still export an older `verifyPayment` from `/chain`. That version matches only the payment reference and returns a boolean, so do not use it to credit orders. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding. See [What is not ready yet](./human-checkout#what-is-not-ready-yet).
+The API on these pages is a **release candidate**: `@0xcurvy/payments-sdk@0.2.0-rc.1`, published under npm's `next` tag. A plain install still gets `0.1.2` (`latest`), which exports an older `verifyPayment` from `/chain`. That version matches only the payment reference and returns a boolean, so do not use it to credit orders: install `0.2.0-rc.1` exactly. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding. See [What is not ready yet](./human-checkout#what-is-not-ready-yet).
 :::
 
 A payment counts as confirmed when an on-chain note matches the **whole request you stored**: the right owner, token and amount. A transaction hash sent by a browser or a facilitator does not confirm a payment by itself.

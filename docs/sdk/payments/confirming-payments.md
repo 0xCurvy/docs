@@ -189,7 +189,7 @@ const url = buildCheckoutCompleteUrl(request, shieldTxHash);
 
 ## Upgrading from 0.1.x
 
-These changes apply to the released `0.1.0` and `0.1.1`:
+Moving from `0.1.x` to `0.2.0-rc.1` brings these changes:
 
 - `verifyPayment` moved from `/chain` and the root entry to `/merchant`. `PaymentVerifyClient` moved with it, and it now also needs `getChainId` and `readContract`. A viem `PublicClient` has all of these.
 - It takes the stored `request` in place of `ephemeralKey`, and it returns `{ status, payment }` instead of a boolean.

@@ -198,7 +198,7 @@ const keySet = buildMerchantKeySet([{ address: signer.address, notAfter: "2027-0
 The same key from the command line, on the backend:
 
 ```sh
-npx @0xcurvy/payments-sdk create-signer [--out <file>]
+npx @0xcurvy/payments-sdk@0.2.0-rc.1 create-signer [--out <file>]
 ```
 
 It prints the public address and writes the private key to an owner-only file (default `curvy-checkout-signer.secret.json`), refusing to replace an existing one. A KMS or HSM can hold the key instead (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)).

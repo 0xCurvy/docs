@@ -15,7 +15,7 @@ With Curvy, a shop ends up with a **private shielded balance**, and it never has
 In both cases the payment evidence is the same: a note that pays the destination **you** created. It must carry the token and amount you asked for, and it appears in the Curvy aggregator’s `PendingNotes`. Your backend checks this itself with `verifyPayment`, against the request it stored.
 
 ::: warning Status
-Checkout is not yet generally available: the SDK release with the API in these docs is not yet on npm. Curvy's hosted payment page is the Curvy web app's `/checkout` route, and Curvy provides its URL during onboarding. For production onboarding, contact us.
+Checkout is not yet generally available: the SDK with the API in these docs is a release candidate (`@0xcurvy/payments-sdk@0.2.0-rc.1`, npm tag `next`). Curvy's hosted payment page is the Curvy web app's `/checkout` route, and Curvy provides its URL during onboarding. For production onboarding, contact us.
 :::
 
 ## Payments SDK
