@@ -8,7 +8,7 @@ description: Install @0xcurvy/payments-sdk, create a signed Curvy checkout URL o
 Accept Curvy checkout payments from a Node backend.
 
 ::: warning Preview
-This page describes `@0xcurvy/payments-sdk@0.2.0-rc.1`, a release candidate under npm's `next` tag. The `latest` tag still points to `0.1.2`, whose older `verifyPayment` is unsafe, so install the exact version below. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding. See [What is not ready yet](./human-checkout#what-is-not-ready-yet).
+This page describes `@0xcurvy/payments-sdk@0.2.0-rc.1`, a release candidate under npm's `next` tag. The `latest` tag still points to `0.1.2`, whose older `verifyPayment` is unsafe, so install the exact version below. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding.
 :::
 
 ## What you need

@@ -169,7 +169,7 @@ Consequences for pricing:
 - **Set `amount` to the gross price the buyer pays.** You receive less. The fixed gas fees make up a larger share of small orders.
 - Curvy’s broadcaster refuses to shield portals worth less than USD 0.50, and it checks only after the buyer has paid. Never create a smaller request (see [Fees and minimum amounts](./fees#minimum-amount-for-the-portal-broadcaster)).
 - Fees are read at the shield block. If Curvy changes them after you created the request, the minimum follows the new fees.
-- A buyer who pays more than `amount` gets `paid`, and the larger note is yours. Today Curvy shields the whole balance of the payment address when it shields, including tokens that arrived after screening (see [What is not ready yet](./human-checkout#what-is-not-ready-yet)).
+- A buyer who sends more than `amount` still gets `paid`: Curvy shields exactly `amount`, and the rest stays at the payment address for the buyer to take back on checkout.
 - The percentage fee is rounded down. In rare cases a buyer who sends one base unit less than `amount` gets the same net amount, so the payment passes.
 
 ## Discovery hints (`/chain`)

@@ -272,7 +272,7 @@ After a successful shield, checkout navigates the top-level window to:
 
 If Curvy refuses the funding source, or the link expires before shielding, the payment cannot complete: your order stays unpaid, and Curvy’s checkout gets the money back to the buyer. Your shop never holds those funds. A retry needs a **new** attempt with a new request; never reuse the old one.
 
-Today Curvy screens the address that sent the largest transfer, and shields the whole balance of the payment address, including tokens that arrive later (see [What is not ready yet](#what-is-not-ready-yet)). `verifyPayment` reports the note that was actually shielded.
+Curvy screens the address that sent the largest transfer, then shields exactly the request's `amount`. Anything sent above it stays at the payment address, and checkout lets the buyer take it back. `verifyPayment` reports the note that was actually shielded.
 
 ### Fresh payment attempts
 
@@ -289,19 +289,6 @@ After a payment that could not complete, or an expired link, checkout’s **Retu
 3. otherwise show the order as usual, with a retry button. Any site can link to `#retry`, so never create an attempt for an `R` that is not the latest one.
 
 Require a JSON body on the route that creates attempts, so a cross-site form post cannot create them.
-
-## What is not ready yet
-
-These gaps block real merchants today:
-
-- **Hosted checkout comes from onboarding.** The checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding.
-- **The SDK is a release candidate.** `@0xcurvy/payments-sdk@0.2.0-rc.1` is on npm under the `next` tag. `latest` is still `0.1.2`, with the old R-only `verifyPayment`, so install the exact version.
-- **Curvy’s operator does not yet check your signature.** Only the checkout page verifies the signed request. The first registration of a payment address holds, and checkout registers before any money is sent, but someone who holds the link and registers a payment address first can still choose its payment reference. A real payment may then never show up for your request (`verifyPayment` reports `not_found`); it cannot make a fake payment pass. *Planned for Curvy’s portal upgrade.*
-- **Early registration is bounded.** Curvy watches a limited number of unpaid payments at once. When it is full, checkout registers the payment once it sees the funds instead, and the buyer must keep the page open until then.
-- **Extra transfers are not screened.** Curvy screens only the address that sent the largest transfer, though several transfers can make up the amount. It shields exactly your amount; anything above it stays at the payment address for the buyer to take back. *Planned for Curvy’s portal upgrade.*
-- **Networks are not checked for direct shielding at registration.** A payment on a network whose aggregator cannot shield portals would be moved to another chain instead of shielded where you verify. *Planned for Curvy’s portal upgrade.*
-
-- **No separate business accounts yet.** The first release pays into the account you are signed in with, next to your personal funds. Business accounts, derived from your account or created on their own, come later.
 
 Always confirm payments with `verifyPayment`, never with checkout’s status.
 

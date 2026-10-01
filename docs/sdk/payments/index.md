@@ -13,7 +13,7 @@ description: Merchant payment primitives for Curvy checkout and payment evidence
 | `@0xcurvy/payments-sdk` | Merchants and checkout | Create signed payment requests, verify them, confirm payments on-chain |
 
 ::: warning Preview
-The API on these pages is a **release candidate**: `@0xcurvy/payments-sdk@0.2.0-rc.1`, published under npm's `next` tag. A plain install still gets `0.1.2` (`latest`), which exports an older `verifyPayment` from `/chain`. That version matches only the payment reference and returns a boolean, so do not use it to credit orders: install `0.2.0-rc.1` exactly. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding. See [What is not ready yet](./human-checkout#what-is-not-ready-yet).
+The API on these pages is a **release candidate**: `@0xcurvy/payments-sdk@0.2.0-rc.1`, published under npm's `next` tag. A plain install still gets `0.1.2` (`latest`), which exports an older `verifyPayment` from `/chain`. That version matches only the payment reference and returns a boolean, so do not use it to credit orders: install `0.2.0-rc.1` exactly. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding.
 :::
 
 A payment counts as confirmed when an on-chain note matches the **whole request you stored**: the right owner, token and amount. A transaction hash sent by a browser or a facilitator does not confirm a payment by itself.
@@ -57,7 +57,7 @@ The request signing key and `@0xcurvy/rs-core-wasm` stay on the **backend**. Che
 ## Documentation
 
 - [Getting started](./getting-started): install, create a signed checkout URL, confirm the payment
-- [Human checkout](./human-checkout): keys, request fields, signers, the return URL, and what is not ready yet
+- [Human checkout](./human-checkout): keys, request fields, signers and the return URL
 - [Confirming payments](./confirming-payments): `verifyPayment` statuses, reconciliation, fees
 - [x402](./x402): accept agent payments with the `exact` and `curvy-transfer` schemes
 - [Fees and minimum amounts](./fees): protocol fees per rail, the portal broadcaster's minimum, choosing a rail for small amounts
