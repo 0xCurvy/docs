@@ -189,7 +189,7 @@ const url = buildCheckoutCompleteUrl(request, shieldTxHash);
 
 ## Upgrading from 0.1.x
 
-Moving from `0.1.x` to `0.2.0-rc.2` brings these changes, and then those in [Upgrading from 0.2.0-rc.1](#upgrading-from-0-2-0-rc-1):
+Moving from `0.1.x` to `0.2.0-rc.3` brings these changes, and then those in [Upgrading from 0.2.0-rc.1](#upgrading-from-0-2-0-rc-1) and [Upgrading from 0.2.0-rc.2](#upgrading-from-0-2-0-rc-2):
 
 - `verifyPayment` moved from `/chain` and the root entry to `/merchant`. `PaymentVerifyClient` moved with it, and it now also needs `getChainId` and `readContract`. A viem `PublicClient` has all of these.
 - It takes the stored `request` in place of `ephemeralKey`, and it returns `{ status, payment }` instead of a boolean.
@@ -207,6 +207,14 @@ Moving from `0.2.0-rc.1` to `0.2.0-rc.2`:
 - `buildCheckoutUrl(signed)` uses Curvy’s checkout page, `https://app.curvy.box/checkout` (`CURVY_CHECKOUT_URL`). `buildCheckoutUrl(checkoutUrl, signed)` still works for another page.
 - `readChainFees` takes `chainId` in place of `vaultAddress` on Curvy’s networks.
 - `createX402Merchant` takes `token` as a symbol or an address, and on Curvy’s networks uses the SDK’s own contract addresses before the broadcaster’s.
+
+## Upgrading from 0.2.0-rc.2 {#upgrading-from-0-2-0-rc-2}
+
+Moving from `0.2.0-rc.2` to `0.2.0-rc.3` changes x402 only:
+
+- `createX402Merchant` takes `tokens` in place of `token`: symbols or addresses, by default USDC and USDT on Arbitrum One. `tokenDomains` (by address) replaces `tokenDomain`, and Curvy's tokens have their EIP-712 domains built in. `X402Merchant.tokens` replaces `token`, `tokenId` and `tokenDomain`.
+- New, optional: `otherNetworks`, to also take USDC on Base, Ethereum, Optimism, Polygon or Linea, bridged to Arbitrum One (see [Taking payments on other networks](./x402#taking-payments-on-other-networks)).
+- x402 payments made on your own network must arrive in full. rc.2 counted them paid up to 3% short on Arbitrum One. `verifyPayment` has `allowBridgeShortfall` (default `true`) for the same choice in your own code.
 
 ## Related
 

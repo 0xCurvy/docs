@@ -8,7 +8,7 @@ description: Install @0xcurvy/payments-sdk, create a signed Curvy checkout URL o
 Accept Curvy checkout payments from a Node backend.
 
 ::: warning Preview
-This page describes `@0xcurvy/payments-sdk@0.2.0-rc.2`, a release candidate under npm's `next` tag. The `latest` tag still points to `0.1.2`, whose older `verifyPayment` is unsafe, so install the exact version below. Curvy's hosted checkout page is the Curvy web app's `/checkout` route, `https://app.curvy.box/checkout`, and the SDK sends buyers there by default.
+This page describes `@0xcurvy/payments-sdk@0.2.0-rc.3`, a release candidate under npm's `next` tag. The `latest` tag still points to `0.1.2`, whose older `verifyPayment` is unsafe, so install the exact version below. Curvy's hosted checkout page is the Curvy web app's `/checkout` route, `https://app.curvy.box/checkout`, and the SDK sends buyers there by default.
 :::
 
 ## What you need
@@ -18,7 +18,7 @@ Collect these values before you write any code. The snippets on this page read t
 | Value | Env var used here | Where it comes from |
 | --- | --- | --- |
 | Public key for payments | `CURVY_PAYMENTS_PUBLIC_KEY` | In the Curvy web app: **Payments** setup, step 3, the `CURVY_PAYMENTS_PUBLIC_KEY` line of the `.env` block. It is one line of about 268 characters, such as `01Q1JL…f57Q`: your three public receiving keys (`S`, `V` and the BabyJubjub key) packed into one value. It is public: packing is not encryption, and the value lets people pay you but not spend or see your funds. The first two characters are the format version (`01` today); an SDK that does not know a newer version refuses it and asks you to upgrade. The value ends in a checksum, so a typo or a cut-off copy is refused instead of paying the wrong keys. A business account exports only these public keys. The web app computes the value locally from your own keys, so it is the source to trust. Every business account must have a registered Curvy handle before it goes live, so you can cross-check with `GET <metadata API>/user/resolve/<full handle>`, where the handle includes its parent domain (for example `bakery.<parent domain>`; any other form returns `400 Unsupported parent domain`): pass the response's `data.publicKeys.spendingKey`, `viewingKey` and `babyJubjubPublicKey` as `S`, `V` and `babyJubjubPublicKey` to `encodeReceivingKeys` and compare the result with the value from Payments setup. If `data` is `null`, the handle is not registered: register it first. If `babyJubjubPublicKey` is `null`, Payments setup offers no value and says the account can't receive checkout payments: the account cannot receive private payments to its own name, so it is not acceptable as a business account; use a separate account for the business. Configure the value on your backend; do not resolve the handle at runtime, because a name can be repointed. |
-| Checkout signing key | `MERCHANT_INTENT_SIGNING_KEY` | A new secp256k1 key used only to sign checkout requests. Create it with `npx @0xcurvy/payments-sdk@0.2.0-rc.2 create-signer [--out <file>]`, which prints the public address and writes the key to an owner-only file (default `curvy-checkout-signer.secret.json`), or with `generateCheckoutSigningKey()` from `@0xcurvy/payments-sdk/merchant/keys`. Move the key into your secret store, or keep it in a KMS/HSM (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)). Never use a wallet or Curvy spending key. |
+| Checkout signing key | `MERCHANT_INTENT_SIGNING_KEY` | A new secp256k1 key used only to sign checkout requests. Create it with `npx @0xcurvy/payments-sdk@0.2.0-rc.3 create-signer [--out <file>]`, which prints the public address and writes the key to an owner-only file (default `curvy-checkout-signer.secret.json`), or with `generateCheckoutSigningKey()` from `@0xcurvy/payments-sdk/merchant/keys`. Move the key into your secret store, or keep it in a KMS/HSM (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)). Never use a wallet or Curvy spending key. |
 | Environment | `CURVY_ENVIRONMENT` | `mainnet` to take real money on Arbitrum One, or `testnet` to take test money on Ethereum Sepolia. Payments setup fills it in for the network you pick. The SDK knows Curvy’s contracts on both; see [Networks](#production-values). |
 | Tokens | `TOKENS` | Optional. What buyers may pay in, comma-separated: `USDC`, `USDT` or token addresses. Default: USDC and USDT on mainnet, USDC on testnet. |
 | Your origin | `MERCHANT_ORIGIN` | Your shop’s bare origin, such as `https://shop.example`. Checkout returns the buyer there. |
@@ -36,15 +36,15 @@ Install the Payments SDK on the **server**, at this exact release-candidate vers
 ::: code-group
 
 ```bash [pnpm]
-pnpm add @0xcurvy/payments-sdk@0.2.0-rc.2 @0xcurvy/rs-core-wasm@0.1.0-rc.4
+pnpm add @0xcurvy/payments-sdk@0.2.0-rc.3 @0xcurvy/rs-core-wasm@0.1.0-rc.4
 ```
 
 ```bash [npm]
-npm install @0xcurvy/payments-sdk@0.2.0-rc.2 @0xcurvy/rs-core-wasm@0.1.0-rc.4
+npm install @0xcurvy/payments-sdk@0.2.0-rc.3 @0xcurvy/rs-core-wasm@0.1.0-rc.4
 ```
 
 ```bash [yarn]
-yarn add @0xcurvy/payments-sdk@0.2.0-rc.2 @0xcurvy/rs-core-wasm@0.1.0-rc.4
+yarn add @0xcurvy/payments-sdk@0.2.0-rc.3 @0xcurvy/rs-core-wasm@0.1.0-rc.4
 ```
 
 :::

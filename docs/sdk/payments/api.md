@@ -83,6 +83,7 @@ interface VerifyPaymentParameters {
   request: PaymentIntent;            // exactly what createPaymentRequest returned, stored server-side
   confirmations: number;             // positive safe integer
   paidWhen?: PaidWhen;               // default "shielded"; "committed" also waits for the batch commit
+  allowBridgeShortfall?: boolean;    // default true: on Arbitrum One up to 3% short counts (a payment bridged from another network); false wants it in full
   txHash?: Hex;                      // untrusted hint
   fromBlock?: bigint;                // required when txHash is omitted; ignored with txHash
 }
@@ -256,7 +257,7 @@ const keySet = buildMerchantKeySet([{ address: signer.address, notAfter: "2027-0
 The same key from the command line, on the backend:
 
 ```sh
-npx @0xcurvy/payments-sdk@0.2.0-rc.2 create-signer [--out <file>]
+npx @0xcurvy/payments-sdk@0.2.0-rc.3 create-signer [--out <file>]
 ```
 
 It prints the public address and writes the private key to an owner-only file (default `curvy-checkout-signer.secret.json`), refusing to replace an existing one. A KMS or HSM can hold the key instead (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)).
@@ -309,11 +310,11 @@ import { createX402Merchant, createMemoryPaymentStore, toResponse } from "@0xcur
 
 | Export | Role |
 | --- | --- |
-| `createX402Merchant(config)` | Async. Reads the chain id, takes the Curvy addresses built into the SDK on Curvy's networks (from the broadcaster on any other chain), reads the broadcaster's minimum per portal, the token's vault id and EIP-712 domain, checks the facilitator's `/supported` if one is set, returns an `X402Merchant` |
-| `X402Merchant.charge(request, { price, description?, mimeType?, resource? })` | One call per request: `{ status: "payment-required", response, payment, error? }` or `{ status: "paid", payment, headers }`. `paid` only once `payTo` holds the amount on chain |
+| `createX402Merchant(config)` | Async. Reads the chain id, takes the Curvy addresses built into the SDK on Curvy's networks (from the broadcaster on any other chain), reads the broadcaster's minimum per portal, each token's vault id and EIP-712 domain (built in for Curvy's tokens), checks the facilitator's `/supported` (on `otherNetworks` too) if one is set, returns an `X402Merchant` |
+| `X402Merchant.charge(request, { price, description?, mimeType?, resource? })` | One call per request: `{ status: "payment-required", response, payment, error? }` or `{ status: "paid", payment, headers }`. `paid` only once `payTo` holds the amount on chain, or, on one of `otherNetworks`, once the facilitator reports it settled |
 | `X402Merchant.getPayment` / `listPayments` | Read stored `X402Payment` records by `payTo` |
 | `X402Merchant.shield` / `confirm` | Retry the background steps by hand: register the funded portal with the broadcaster and read its status; one `verifyPayment` attempt (the `/merchant` check: the note must pay this request's owner, token and amount after fees) |
-| `X402Merchant.fees` / `quote(price)` / `minimumPrice` | Portal-rail fee reads for this token; `minimumPrice` is the on-chain floor or the broadcaster's USD minimum in token units, whichever is higher |
+| `X402Merchant.fees(token?)` / `quote(price, token?)` / `minimumPrice` | Portal-rail fee reads for one of your tokens (the first by default); `minimumPrice` is the highest on-chain floor among your tokens or the broadcaster's USD minimum in token units, whichever is higher |
 | `X402Merchant.minimumPortalUsd` | The broadcaster's USD minimum per portal, when it reports one |
 | `X402Merchant.close` | Stop background shield and confirmation work |
 | `toResponse(response)` | Turn a 402 result into a Fetch `Response` |
@@ -329,8 +330,9 @@ import { createX402Merchant, createMemoryPaymentStore, toResponse } from "@0xcur
 | `schemes` | no | `["exact", "curvy-transfer"]`, or `["curvy-transfer"]` when `facilitator` is `false` | `X402Scheme[]`; `exact` needs a facilitator |
 | `rpcUrl` or `publicClient` | one | — | Chain access (`X402MerchantClient` is the subset of viem's `PublicClient` used) |
 | `receivingKeys` or `recipient` | one | — | Your public receiving keys: the one `01…` value (`CURVY_PAYMENTS_PUBLIC_KEY`, preferred) or `{ S, V, babyJubjubPublicKey }`. Passing both, or neither, throws |
-| `token` | yes | — | A symbol Curvy takes on the chain (`"USDC"`, or `"USDT"` on Arbitrum One) or a token address, registered in the Curvy vault (EIP-3009 for `exact`) |
-| `tokenDomain` | no | read on chain | `{ name, version }` for tokens without `version()` |
+| `tokens` | no | every token Curvy takes there (USDC and USDT on Arbitrum One, USDC on Sepolia); required on other chains | Symbols Curvy takes on the chain or token addresses, preferred first, each registered in the Curvy vault (EIP-3009 for `exact`), all with the same decimals. The 402 offers each |
+| `tokenDomains` | no | built in for Curvy's tokens, else read on chain | `{ [address]: { name, version } }` for tokens without `version()` |
+| `otherNetworks` | no | none | Chain ids where `exact` is also offered in USDC, bridged to Arbitrum One: Ethereum `1`, Base `8453`, Optimism `10`, Polygon `137`, Linea `59144` (`X402_BRIDGED_TOKENS`). Arbitrum One merchants only. Offered per price only while the bridge is quoted under 3%; the facilitator's settlement is the go-ahead there. See [Taking payments on other networks](./x402#taking-payments-on-other-networks) |
 | `addresses` | no | built into the SDK on Curvy's networks; elsewhere from the broadcaster's `GET /portal/networks/:chainId` | `aggregator`, `portalFactory`, `vault`. Each one you pass comes first. On any other chain, pass them in production |
 | `recovery` | no | `NO_RECOVERY_ADDRESS` | Portal recovery address every `payTo` is derived with. The default can never reclaim funds |
 | `shieldDeadlineSeconds` | no | `86400` | How long the broadcaster keeps trying to shield a funded portal, and how long the SDK polls it |
@@ -346,7 +348,7 @@ import { createX402Merchant, createMemoryPaymentStore, toResponse } from "@0xcur
 | `confirmPollMs` / `confirmTimeoutMs` | no | `2000` / `600000` | Background polling cadence and confirmation give-up time |
 | `fetch` | no | global `fetch` | Used for the broadcaster and facilitator clients created from URLs |
 
-`X402Payment` fields: `payTo`, `status` (`pending`, `settling` = settlement requested and possibly landed, `settled`, `shielded`, `confirmed`, `failed` = refused by the facilitator with an empty portal, `expired`), `amount`, `resource`, `createdAt`, `expiresAt`, `accepts` (the 402 rows, one per scheme), `note` (your private payment reference), `payer?`, `settleTxHash?`, `shieldTxHash?`, `noteId?`, `netAmount?`, `portalState?` (the broadcaster's last reported state), `error?`. `X402Merchant` also exposes `chainId`, `network`, `token`, `tokenId`, `tokenDomain`, `addresses`, `schemes`, `recovery`, `broadcaster` and `facilitator?`.
+`X402Payment` fields: `payTo`, `status` (`pending`, `settling` = settlement requested and possibly landed, `settled`, `shielded`, `confirmed`, `failed` = refused by the facilitator with an empty portal, `expired`), `amount`, `resource`, `createdAt`, `expiresAt`, `accepts` (the 402 rows, one per scheme), `note` (your private payment reference), `payer?`, `token?` (the token on your network it counts in), `paidOn?` (the network it was paid on, when another), `settleTxHash?`, `shieldTxHash?`, `noteId?`, `netAmount?`, `portalState?` (the broadcaster's last reported state), `error?`. `X402Merchant` also exposes `chainId`, `network`, `tokens` (each `{ address, symbol?, decimals, vaultTokenId, domain? }`), `otherNetworks`, `addresses`, `schemes`, `recovery`, `broadcaster` and `facilitator?`.
 
 ## x402
 
