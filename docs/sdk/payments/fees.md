@@ -27,6 +27,12 @@ The values are set on chain for each network and token, and they can change. Rea
 The three values are stored in the Curvy vault of each network and can be changed by governance. Always call `readChainFees` against the network and token you actually accept payments on (the vault address is in [Production values](./getting-started#production-values)).
 :::
 
+## Payments from other networks
+
+On mainnet, buyers can pay in one of [your tokens](./human-checkout#payments-from-other-networks) on another network. Bridging the same token to Arbitrum One has a cost: the bridge and Curvy's gas for running it.
+
+**You absorb it, like a card fee.** The buyer always pays your price. What arrives is your price minus that cost, and the vault fees above apply to what arrives. Checkout offers another network only when its bridge is expected to cost less than 3% of the price, and `verifyPayment` counts a payment up to 3% short as paid. It reports the cost as `payment.shortfall`.
+
 ## Which rail pays what
 
 The SDK calls the route a payment takes to the aggregator a `PaymentRail`:
@@ -52,10 +58,11 @@ import {
 
 const publicClient = createPublicClient({ chain, transport: http(RPC_URL) });
 
-// 1. Read the vault's current fees for the token you accept.
+// 1. Read the vault's current fees for the token you accept. On Curvy's networks the SDK knows the vault;
+//    pass vaultAddress instead of chainId on any other chain.
 const fees = await readChainFees({
   publicClient,
-  vaultAddress: CURVY_VAULT,
+  chainId: 42_161, // Arbitrum One; 11_155_111 for Ethereum Sepolia
   token: usdcAddress,
   // blockNumber: shieldBlock, // optional: fees as of a past block
 });
@@ -76,7 +83,7 @@ const floor = minimumPaymentAmount({ fees, rail: "portal", minNetAmount: 1n });
 
 | Export | Returns |
 | --- | --- |
-| `readChainFees({ publicClient, vaultAddress, token, blockNumber? })` | `ChainFees` (`depositFeeBps`, `portalDeployment`, `pendingNoteCommitment`, all `bigint`) |
+| `readChainFees({ publicClient, chainId \| vaultAddress, token, blockNumber? })` | `ChainFees` (`depositFeeBps`, `portalDeployment`, `pendingNoteCommitment`, all `bigint`) |
 | `quotePayment({ grossAmount, fees, rail })` | `FeeBreakdown` for that rail. The portal fee is only included when `rail` is `"portal"` |
 | `feeBreakdown(gross, depositFeeBps, portalDeployment, pendingNoteCommitment)` | The same `FeeBreakdown` from positional values. Pass `0n` as `portalDeployment` for the direct rail |
 | `minimumPaymentAmount({ fees, rail, minNetAmount? })` | Smallest gross `bigint` whose net is at least `minNetAmount` (default `1n`) |

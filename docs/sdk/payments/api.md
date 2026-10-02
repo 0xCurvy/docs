@@ -5,7 +5,7 @@ description: Entry points and exports of @0xcurvy/payments-sdk.
 
 # API surface
 
-All public APIs are typed TypeScript exports. Browser and chain helpers are explicit: you pass addresses and viem clients on each call. SDK settings are bound once through `initialize`; there are no globals.
+All public APIs are typed TypeScript exports. Browser and chain helpers are explicit: you pass viem clients on each call, and contract addresses wherever the SDK does not know them. It knows Curvy's own networks (see [Curvy networks](#curvy-networks)). SDK settings are bound once through `initialize`; there are no globals.
 
 ## Entry points
 
@@ -13,8 +13,8 @@ All public APIs are typed TypeScript exports. Browser and chain helpers are expl
 | --- | --- | --- |
 | `@0xcurvy/payments-sdk` | Browser and Node | Re-exports browser-safe helpers, types and constants |
 | `@0xcurvy/payments-sdk/intent` | Browser and Node | Request parse / sign / verify |
-| `@0xcurvy/payments-sdk/transport` | Browser and Node | Fragment and URL helpers |
-| `@0xcurvy/payments-sdk/chain` | Browser and Node | Receipt discovery hints; portal prediction (internal and unstable) |
+| `@0xcurvy/payments-sdk/transport` | Browser and Node | Fragment and URL helpers; `CURVY_CHECKOUT_URL` |
+| `@0xcurvy/payments-sdk/chain` | Browser and Node | Curvy's built-in networks; receipt discovery hints; portal prediction (internal and unstable) |
 | `@0xcurvy/payments-sdk/contracts` | Browser and Node | ABIs |
 | `@0xcurvy/payments-sdk/economics` | Browser and Node | Fee reads, quotes, minimum amounts |
 | `@0xcurvy/payments-sdk/x402` | Browser and Node | x402 wire types, broadcaster and facilitator clients, payer helper, EIP-712 types, parsers, header codec |
@@ -38,10 +38,10 @@ import {
 
 | Export | Role |
 | --- | --- |
-| `initialize(config)` | Binds the receiving keys, chainId, merchantOrigin, confirmations, paidWhen and TTL. Returns `{ createPaymentRequest, verifyPayment }`. |
+| `initialize(config)` | Binds the environment (or `network`), the default tokens, the receiving keys, merchantOrigin, confirmations, paidWhen and TTL. Returns `{ chainId, tokens, aggregatorAddress, createPaymentRequest, verifyPayment }`. |
 | `createPaymentRequest(parameters)` | Standalone: derives a note and returns an unsigned request. `ttlSeconds` is optional (default `600`, at most `86400`). `description` is optional: what the buyer is paying for, at most 120 characters of plain text, signed with the payment and shown at checkout and on the buyer's receipt. |
 | `buildPaymentRequest(parameters)` | Same as `createPaymentRequest`, but `ttlSeconds` is required |
-| `verifyPayment(parameters)` | Decides whether a stored request has been paid on chain. See [Confirming payments](./confirming-payments). |
+| `verifyPayment(parameters)` | Decides whether a stored request has been paid on chain. `aggregatorAddress` defaults to Curvy's aggregator on `request.chainId` and is required on a chain the SDK does not know. See [Confirming payments](./confirming-payments). |
 | `PaymentVerificationError` | Thrown by `verifyPayment` when it cannot produce a status. It has a `code`. |
 | `serializePaymentRecord(record)` / `parsePaymentRecord(value)` | The one value to store per payment attempt: `{ payment, fromBlock, verification }` (the signed package, the scan start and the latest `verifyPayment` result) as a versioned JSON string. Store it whole; `parsePaymentRecord` refuses unknown versions and fields. `PAYMENT_RECORD_VERSION` is `1` today. |
 | `buildMerchantKeySet`, `parseMerchantKeySet`, `encodeReceivingKeys`, `parseReceivingKeys`, `RECEIVING_KEYS_VERSION` | Also re-exported from `/merchant/keys` and the root entry |
@@ -52,7 +52,9 @@ import {
 | --- | --- | --- | --- |
 | `receivingKeys` | one of `receivingKeys` or `recipient` | — | **Preferred.** Your public receiving keys as one value, your public key for payments (`CURVY_PAYMENTS_PUBLIC_KEY` in the `.env` block of the web app's **Payments** setup, step 3), such as `01Q1JL…f57Q`. `initialize` parses it with `parseReceivingKeys` and throws if it is edited, cut off or from a newer format version. The SDK derives a fresh one-time destination from the keys for every request. See [Receiving keys](#receiving-keys-value). |
 | `recipient` | one of `receivingKeys` or `recipient` | — | The same public keys as `{ S, V, babyJubjubPublicKey }`, each a decimal `x.y` string. Passing both, or neither, throws `pass exactly one of receivingKeys (preferred) or recipient`. Use only public material. |
-| `chainId` | yes | — | EVM network where customers pay and where you call `verifyPayment`. It must be a positive safe integer. |
+| `environment` | yes | — | `"mainnet"` (Arbitrum One, `42161`, real money) or `"testnet"` (Ethereum Sepolia, `11155111`, test money). There is no default, so nobody takes real money, or runs a test, by accident. Anything else throws. The SDK knows Curvy's contracts on both networks; see [Curvy networks](#curvy-networks). |
+| `network` | no | the environment's network | `{ chainId, aggregatorAddress? }` for any other chain: a staging or local Curvy deployment, or a Curvy network this SDK version does not know. `chainId` must be a positive safe integer. `aggregatorAddress` defaults to Curvy's aggregator on a chain the SDK knows, and is required on any other chain: without it, `sdk.aggregatorAddress` is `undefined` and `verifyPayment` throws `INVALID_INPUT`. A known chain must match the environment: `environment: "mainnet"` with chain id `11155111` throws. |
+| `tokens` | no | every token Curvy takes on the network | The tokens requests take, preferred first: symbols Curvy takes on the network (`"USDC"`, and `"USDT"` on mainnet) or token addresses, each once, all with the same decimals. Any other symbol throws. The default is USDC and USDT on mainnet and USDC on testnet. On a chain the SDK does not know there is no default: pass addresses here, or `tokens` on every `createPaymentRequest`. See [Tokens and other networks](./human-checkout#payments-from-other-networks). |
 | `merchantOrigin` | yes | — | Your shop’s bare origin (`https://shop.example`): scheme and host only. It is signed into every request and is the base of the return URL. |
 | `confirmations` | yes | — | Blocks, counting the shield block, before bound `verifyPayment` returns `paid` instead of `confirming`. It must be a positive safe integer. |
 | `paidWhen` | no | `"shielded"` | When bound `verifyPayment` returns `paid`. `"shielded"`: once the note has `confirmations` blocks (the money is safe in the vault). `"committed"`: also once the note is in a `CommittedNotes` batch (the money is spendable); until then it returns `confirming`. Anything else throws. Bound at init; there is no per-call override. See [When a payment counts as paid](./confirming-payments#when-a-payment-counts-as-paid-paidwhen). |
@@ -63,16 +65,21 @@ Signatures:
 
 ```ts
 interface PaymentSDK {
-  createPaymentRequest(parameters: { amount: bigint; token: Address; description?: string }): Promise<PaymentIntent>;
+  readonly chainId: number;                        // requests are made for it; your RPC must serve it
+  readonly tokens: readonly Address[];             // the default tokens; empty on an unknown chain unless configured
+  readonly aggregatorAddress: Address | undefined; // undefined on an unknown chain unless configured
+  // amount in the tokens' base units (4 USDC is 4_000_000n); tokens default to sdk.tokens
+  createPaymentRequest(parameters: { amount: bigint; tokens?: string[]; description?: string }): Promise<PaymentIntent>;
   verifyPayment(parameters: BoundVerifyPaymentParameters): Promise<PaymentVerification>;
 }
 type BoundVerifyPaymentParameters = Omit<VerifyPaymentParameters, "confirmations" | "paidWhen">;
+// the bound verifyPayment uses sdk.aggregatorAddress unless you pass aggregatorAddress
 
 type PaidWhen = "shielded" | "committed";
 
 interface VerifyPaymentParameters {
   publicClient: PaymentVerifyClient; // a viem PublicClient works
-  aggregatorAddress: Address;        // Curvy aggregator proxy
+  aggregatorAddress?: Address;       // default: Curvy's aggregator on request.chainId; required on other chains
   request: PaymentIntent;            // exactly what createPaymentRequest returned, stored server-side
   confirmations: number;             // positive safe integer
   paidWhen?: PaidWhen;               // default "shielded"; "committed" also waits for the batch commit
@@ -93,8 +100,10 @@ interface VerifiedPayment {
   confirmations: bigint;
   noteId: bigint;
   vaultTokenId: bigint;
+  token: Address | null;             // which of the request's tokens the note is in; null for wrong_token
   netAmount: bigint;
-  minimumNetAmount: bigint;
+  minimumNetAmount: bigint;          // what amount yields after the vault fees, less up to 3% of it on Arbitrum One
+  shortfall: bigint;                 // how much less the note carries than the full amount would have: the bridge cost you absorbed
   portalShield: boolean;
   committed: boolean;                // in a CommittedNotes batch (spendable); required for paid only with paidWhen "committed"
   siblingNoteIds: bigint[];          // other notes seen under this request's ownerHash; only one can ever be spent
@@ -109,7 +118,7 @@ interface PaymentVerifyClient
     "getChainId" | "getBlockNumber" | "getLogs" | "getTransaction" | "getTransactionReceipt" | "readContract"> {}
 ```
 
-The standalone `createPaymentRequest` takes `{ receivingKeys | recipient, amount, token, chainId, merchantOrigin, checkoutCompletePath?, description?, ttlSeconds? }`: exactly one of `receivingKeys` (preferred) or `recipient`, as in `initialize`. `buildPaymentRequest` and `createX402Merchant` take the same choice.
+The standalone `createPaymentRequest` takes `{ receivingKeys | recipient, amount, token, tokens?, chainId, merchantOrigin, checkoutCompletePath?, description?, ttlSeconds? }`: exactly one of `receivingKeys` (preferred) or `recipient`, as in `initialize`. Here `token` is an address, `tokens` (optional) lists every token the request takes with `token` first, and `chainId` is passed directly. `buildPaymentRequest` and `createX402Merchant` take the same choice.
 
 ## Request signing (`/intent`)
 
@@ -117,6 +126,7 @@ The EIP-712 export names keep `PaymentIntent` for wire compatibility.
 
 ```ts
 import {
+  acceptedTokens,
   buildPaymentIntentTypedData,
   parsePaymentIntent,
   parseSignedPaymentIntent,
@@ -131,7 +141,8 @@ import {
 | `signPaymentIntent(request, signer)` | Returns `{ intent, signature }`. `signer` is any `(typedData) => Promise<Hex>`, such as a viem account’s `signTypedData` or a KMS adapter. It checks only that the result is a 65-byte signature, not who signed it (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)). It refuses a request whose `expiry` is more than `86400` seconds (24 h) away, however the request was built. |
 | `verifyPaymentIntent(payment, { keySet, expectedChainId, expectedToken, nowSeconds? })` | Recovers the signer and checks it is in `keySet` and before its `notAfter`. Also checks `expiry`, chain and token, and refuses a request whose `expiry` is more than 24 h plus 5 minutes (clock skew) after `nowSeconds`. Returns `{ intent, signer }`. |
 | `parsePaymentIntent` / `parseSignedPaymentIntent` | Canonicalize untrusted input |
-| `buildPaymentIntentTypedData` / `paymentIntentTypes` | EIP-712 payload: domain `{ name: "Curvy Payments", version: "1", chainId }`. The version is part of the format: a later checkout can refuse a retired one. |
+| `acceptedTokens(intent)` | Every token the request takes: `intent.tokens`, or `[intent.token]` when it takes one |
+| `buildPaymentIntentTypedData` / `paymentIntentTypes` / `describedPaymentIntentTypes` / `multiTokenPaymentIntentTypes` | EIP-712 payload: domain `{ name: "Curvy Payments", version: "1", chainId }`. The version is part of the format: a later checkout can refuse a retired one. See [What you sign](./human-checkout#what-you-sign). |
 
 `parsePaymentIntent` rejects:
 
@@ -141,7 +152,8 @@ import {
 - an `ownerHash` outside `[1, r)`, where `r` is the BN254 scalar field;
 - `ephemeralKeyX` or `ephemeralKeyY` at or above the BN254 base field;
 - a `viewTag` outside `uint16`;
-- a `chainId` or `expiry` that is not a positive safe integer.
+- a `chainId` or `expiry` that is not a positive safe integer;
+- a `tokens` list that doesn't start with `token`, lists a token twice, or has fewer than 2 or more than 8 tokens.
 
 An omitted `checkoutCompletePath` becomes `/checkout/complete`.
 
@@ -152,6 +164,7 @@ import {
   buildCheckoutCompleteUrl,
   buildCheckoutRetryUrl,
   buildCheckoutUrl,
+  CURVY_CHECKOUT_URL,
   decodePaymentIntentFragment,
   encodePaymentIntentFragment,
 } from "@0xcurvy/payments-sdk/transport";
@@ -159,7 +172,8 @@ import {
 
 | Export | Role |
 | --- | --- |
-| `buildCheckoutUrl(checkoutUrl, signed)` | Puts the signed package in the fragment of Curvy’s checkout page URL (`CHECKOUT_URL`, provided during onboarding). Keeps the URL’s origin, path and query. |
+| `buildCheckoutUrl(signed)` / `buildCheckoutUrl(checkoutUrl, signed)` | Puts the signed package in the fragment of Curvy’s checkout page, `CURVY_CHECKOUT_URL`, or of `checkoutUrl`: another checkout page, such as a staging app’s `https://app.curvy.dev/checkout`. Keeps that URL’s origin, path and query. |
+| `CURVY_CHECKOUT_URL` | `https://app.curvy.box/checkout`, Curvy’s hosted checkout page. Also exported from the root entry. |
 | `encodePaymentIntentFragment` / `decodePaymentIntentFragment` | Unpadded base64url JSON fragment codec |
 | `buildCheckoutCompleteUrl(request, txHash)` | `{merchantOrigin}{path}#txHash=…`: the return after a successful shield |
 | `buildCheckoutRetryUrl(request)` | `{merchantOrigin}{path}#retry=<ephemeralKeyX>`: the return that asks the merchant for a fresh attempt (see [Fresh payment attempts](./human-checkout#fresh-payment-attempts)) |
@@ -167,15 +181,59 @@ import {
 ## Chain (`/chain`, browser-safe)
 
 ```ts
-import { findNoteInReceipt } from "@0xcurvy/payments-sdk/chain";
+import {
+  CURVY_NETWORKS,
+  findNoteInReceipt,
+  getCurvyNetwork,
+  getDefaultCurvyNetwork,
+} from "@0xcurvy/payments-sdk/chain";
 ```
 
 | Export | Role |
 | --- | --- |
+| `CURVY_NETWORKS` | Curvy's networks built into the SDK, as frozen `CurvyNetwork` objects: Arbitrum One and Ethereum Sepolia (see [Curvy networks](#curvy-networks)) |
+| `getCurvyNetwork(chainId)` | The `CurvyNetwork` for `chainId`, or `undefined` for a chain the SDK does not know |
+| `getDefaultCurvyNetwork(environment)` | The network an environment pays into: Arbitrum One for `"mainnet"`, Ethereum Sepolia for `"testnet"`. Throws for any other value. |
 | `predictPortalAddress({ publicClient, portalFactoryAddress, ownerHash, recovery })` | **Internal and unstable**, for Curvy's checkout: `PortalFactory.getEntryPortalAddress(ownerHash, recovery)`. Its inputs change when Curvy migrates portal factories. Merchants do not compute portal addresses; x402 merchants use `createX402Merchant`. |
 | `findNoteInReceipt(receipt, [ephemeralKeyX, ephemeralKeyY], aggregatorAddress)` | Returns `{ noteId, netAmount, token }` or `null`. `token` is the **vault token id**. It matches only `R`, so it is a **discovery hint, not proof of payment**. |
 
 `verifyPayment` is no longer exported from `/chain` or from the root entry. Import it from `/merchant`.
+
+### Curvy networks {#curvy-networks}
+
+```ts
+type CurvyEnvironment = "mainnet" | "testnet"; // "mainnet" takes real money, "testnet" test money
+
+interface CurvyDeployment {
+  aggregator: Address;
+  portalFactory: Address;
+  vault: Address;
+}
+
+interface CurvyCurrency {
+  address: Address;
+  symbol: string;
+  decimals: number;
+  vaultTokenId: string; // the token's id in the Curvy vault
+}
+
+interface CurvyNetwork extends CurvyDeployment {
+  chainId: number;
+  name?: string;
+  testnet?: boolean;
+  minPortalUsd?: number; // portals worth less than this many USD are failed instead of shielded
+  currencies: CurvyCurrency[];
+}
+```
+
+| `environment` | Network | Tokens |
+| --- | --- | --- |
+| `"mainnet"` | Arbitrum One (`42161`), real money | USDC (default), USDT |
+| `"testnet"` | Ethereum Sepolia (`11155111`), test money | USDC |
+
+The addresses are listed in [Getting started](./getting-started#production-values). They are built into the SDK rather than read from a Curvy service at runtime, because whoever controls the aggregator address decides what counts as a payment. The aggregator and the vault are upgradeable proxies, so their addresses stay the same across upgrades. A `CurvyNetwork` has the shape of the portal broadcaster's `GET /portal/networks/:chainId`.
+
+`CURVY_NETWORKS`, `getCurvyNetwork`, `getDefaultCurvyNetwork` and the types `CurvyEnvironment`, `CurvyNetwork`, `CurvyCurrency` and `CurvyDeployment` are exported from the root entry and `/chain`. `/x402` also re-exports `CurvyNetwork`, `CurvyCurrency` and `CurvyDeployment`.
 
 ## Merchant keys (`/merchant/keys`)
 
@@ -198,7 +256,7 @@ const keySet = buildMerchantKeySet([{ address: signer.address, notAfter: "2027-0
 The same key from the command line, on the backend:
 
 ```sh
-npx @0xcurvy/payments-sdk@0.2.0-rc.1 create-signer [--out <file>]
+npx @0xcurvy/payments-sdk@0.2.0-rc.2 create-signer [--out <file>]
 ```
 
 It prints the public address and writes the private key to an owner-only file (default `curvy-checkout-signer.secret.json`), refusing to replace an existing one. A KMS or HSM can hold the key instead (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)).
@@ -236,7 +294,7 @@ import {
 
 | Export | Role |
 | --- | --- |
-| `readChainFees` | Read `ChainFees` (`depositFeeBps`, `portalDeployment`, `pendingNoteCommitment`) for a token from the vault, optionally at a past `blockNumber` |
+| `readChainFees({ publicClient, token, chainId?, vaultAddress?, blockNumber? })` | Read `ChainFees` (`depositFeeBps`, `portalDeployment`, `pendingNoteCommitment`) for a token address from the vault, optionally at a past `blockNumber`. Pass `chainId` to use Curvy's vault on that network, or `vaultAddress`, which is required on a chain the SDK does not know. |
 | `quotePayment` | `FeeBreakdown` for a gross amount on a `PaymentRail` (`"portal"` or `"direct"`) |
 | `feeBreakdown` | The same breakdown from positional values `(gross, depositFeeBps, portalDeployment, pendingNoteCommitment)` |
 | `minimumPaymentAmount` | Smallest gross amount whose net is at least `minNetAmount` (on-chain floor only) |
@@ -251,7 +309,7 @@ import { createX402Merchant, createMemoryPaymentStore, toResponse } from "@0xcur
 
 | Export | Role |
 | --- | --- |
-| `createX402Merchant(config)` | Async. Reads the chain id, discovers the Curvy addresses from the broadcaster, reads the token's vault id and EIP-712 domain, checks the facilitator's `/supported` if one is set, returns an `X402Merchant` |
+| `createX402Merchant(config)` | Async. Reads the chain id, takes the Curvy addresses built into the SDK on Curvy's networks (from the broadcaster on any other chain), reads the broadcaster's minimum per portal, the token's vault id and EIP-712 domain, checks the facilitator's `/supported` if one is set, returns an `X402Merchant` |
 | `X402Merchant.charge(request, { price, description?, mimeType?, resource? })` | One call per request: `{ status: "payment-required", response, payment, error? }` or `{ status: "paid", payment, headers }`. `paid` only once `payTo` holds the amount on chain |
 | `X402Merchant.getPayment` / `listPayments` | Read stored `X402Payment` records by `payTo` |
 | `X402Merchant.shield` / `confirm` | Retry the background steps by hand: register the funded portal with the broadcaster and read its status; one `verifyPayment` attempt (the `/merchant` check: the note must pay this request's owner, token and amount after fees) |
@@ -266,14 +324,14 @@ import { createX402Merchant, createMemoryPaymentStore, toResponse } from "@0xcur
 
 | Field | Required | Default | Description |
 | --- | --- | --- | --- |
-| `broadcaster` | no | `https://api.curvy.box` (`CURVY_BROADCASTER_URL`) | Curvy portal broadcaster URL or `BroadcasterClient`. Shields every funded portal into your note and reports the Curvy contract addresses |
+| `broadcaster` | no | `https://api.curvy.box` (`CURVY_BROADCASTER_URL`) | Curvy portal broadcaster URL or `BroadcasterClient`. Shields every funded portal into your note, reports its minimum per portal, and reports the Curvy contract addresses on chains the SDK does not know |
 | `facilitator` | no | `<broadcaster>/portal/x402`, so `https://api.curvy.box/portal/x402` (`CURVY_FACILITATOR_URL`) | The x402 v2 facilitator that settles `exact` (EIP-3009): Curvy's by default, or any other facilitator URL or `FacilitatorClient`. `false` offers only `curvy-transfer` |
 | `schemes` | no | `["exact", "curvy-transfer"]`, or `["curvy-transfer"]` when `facilitator` is `false` | `X402Scheme[]`; `exact` needs a facilitator |
 | `rpcUrl` or `publicClient` | one | — | Chain access (`X402MerchantClient` is the subset of viem's `PublicClient` used) |
 | `receivingKeys` or `recipient` | one | — | Your public receiving keys: the one `01…` value (`CURVY_PAYMENTS_PUBLIC_KEY`, preferred) or `{ S, V, babyJubjubPublicKey }`. Passing both, or neither, throws |
-| `token` | yes | — | Token address, registered in the Curvy vault (EIP-3009 for `exact`) |
+| `token` | yes | — | A symbol Curvy takes on the chain (`"USDC"`, or `"USDT"` on Arbitrum One) or a token address, registered in the Curvy vault (EIP-3009 for `exact`) |
 | `tokenDomain` | no | read on chain | `{ name, version }` for tokens without `version()` |
-| `addresses` | no | from the broadcaster's `GET /portal/networks/:chainId` | `aggregator`, `portalFactory`, `vault`; pin them in production |
+| `addresses` | no | built into the SDK on Curvy's networks; elsewhere from the broadcaster's `GET /portal/networks/:chainId` | `aggregator`, `portalFactory`, `vault`. Each one you pass comes first. On any other chain, pass them in production |
 | `recovery` | no | `NO_RECOVERY_ADDRESS` | Portal recovery address every `payTo` is derived with. The default can never reclaim funds |
 | `shieldDeadlineSeconds` | no | `86400` | How long the broadcaster keeps trying to shield a funded portal, and how long the SDK polls it |
 | `enforceBroadcasterMinimum` | no | `true` | Refuse prices below the broadcaster's `minPortalUsd`, treating the token as USD-pegged with the decimals the broadcaster reports. Set false only for non-USD tokens with your own guard |
@@ -357,11 +415,11 @@ import {
 // 86400
 ```
 
-`RECEIVING_KEYS_VERSION` (`"01"`) is exported from the root entry, `/merchant/keys` and `/merchant`.
+`RECEIVING_KEYS_VERSION` (`"01"`) is exported from the root entry, `/merchant/keys` and `/merchant`. `CURVY_CHECKOUT_URL` (`"https://app.curvy.box/checkout"`) is exported from the root entry and `/transport`, and `CURVY_NETWORKS` from the root entry and `/chain`.
 
 ## Types
 
-The root entry exports these types: `PaymentIntent`, `SignedPaymentIntent`, `PaymentRecipient`, `MerchantKeySet`, `PublishedSigner`, `PaymentNote`, `PaymentReceipt`, `PaymentReadClient`, `PaymentReceiptClient` and `PaymentPublicClient`. The configuration and verification types (`PaymentSDK`, `PaymentSDKConfig`, `BoundVerifyPaymentParameters`, `VerifyPaymentParameters`, `PaidWhen`, `PaymentVerification`, `VerifiedPayment`, `PaymentStatus`, `PaymentVerificationErrorCode`, `PaymentVerifyClient`, `PaymentRecord`, `RecipientParameters`) come from `/merchant`. `RecipientParameters` is the `receivingKeys`-or-`recipient` choice shared by `initialize`, `createPaymentRequest`, `buildPaymentRequest` and `createX402Merchant`. `ChainFees`, `FeeBreakdown` and `PaymentRail` are exported from the root entry and `/economics`; the x402 types from `/x402` and `/x402/merchant`.
+The root entry exports these types: `PaymentIntent`, `SignedPaymentIntent`, `PaymentRecipient`, `MerchantKeySet`, `PublishedSigner`, `PaymentNote`, `PaymentReceipt`, `PaymentReadClient`, `PaymentReceiptClient` and `PaymentPublicClient`. The configuration and verification types (`PaymentSDK`, `PaymentSDKConfig`, `BoundVerifyPaymentParameters`, `VerifyPaymentParameters`, `PaidWhen`, `PaymentVerification`, `VerifiedPayment`, `PaymentStatus`, `PaymentVerificationErrorCode`, `PaymentVerifyClient`, `PaymentRecord`, `RecipientParameters`) come from `/merchant`. `RecipientParameters` is the `receivingKeys`-or-`recipient` choice shared by `initialize`, `createPaymentRequest`, `buildPaymentRequest` and `createX402Merchant`. `ChainFees`, `FeeBreakdown` and `PaymentRail` are exported from the root entry and `/economics`; `CurvyEnvironment`, `CurvyNetwork`, `CurvyCurrency` and `CurvyDeployment` from the root entry and `/chain`; the x402 types from `/x402` and `/x402/merchant`.
 
 ## Related packages
 

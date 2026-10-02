@@ -8,7 +8,7 @@ description: Install @0xcurvy/payments-sdk, create a signed Curvy checkout URL o
 Accept Curvy checkout payments from a Node backend.
 
 ::: warning Preview
-This page describes `@0xcurvy/payments-sdk@0.2.0-rc.1`, a release candidate under npm's `next` tag. The `latest` tag still points to `0.1.2`, whose older `verifyPayment` is unsafe, so install the exact version below. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding.
+This page describes `@0xcurvy/payments-sdk@0.2.0-rc.2`, a release candidate under npm's `next` tag. The `latest` tag still points to `0.1.2`, whose older `verifyPayment` is unsafe, so install the exact version below. Curvy's hosted checkout page is the Curvy web app's `/checkout` route, `https://app.curvy.box/checkout`, and the SDK sends buyers there by default.
 :::
 
 ## What you need
@@ -18,16 +18,16 @@ Collect these values before you write any code. The snippets on this page read t
 | Value | Env var used here | Where it comes from |
 | --- | --- | --- |
 | Public key for payments | `CURVY_PAYMENTS_PUBLIC_KEY` | In the Curvy web app: **Payments** setup, step 3, the `CURVY_PAYMENTS_PUBLIC_KEY` line of the `.env` block. It is one line of about 268 characters, such as `01Q1JL…f57Q`: your three public receiving keys (`S`, `V` and the BabyJubjub key) packed into one value. It is public: packing is not encryption, and the value lets people pay you but not spend or see your funds. The first two characters are the format version (`01` today); an SDK that does not know a newer version refuses it and asks you to upgrade. The value ends in a checksum, so a typo or a cut-off copy is refused instead of paying the wrong keys. A business account exports only these public keys. The web app computes the value locally from your own keys, so it is the source to trust. Every business account must have a registered Curvy handle before it goes live, so you can cross-check with `GET <metadata API>/user/resolve/<full handle>`, where the handle includes its parent domain (for example `bakery.<parent domain>`; any other form returns `400 Unsupported parent domain`): pass the response's `data.publicKeys.spendingKey`, `viewingKey` and `babyJubjubPublicKey` as `S`, `V` and `babyJubjubPublicKey` to `encodeReceivingKeys` and compare the result with the value from Payments setup. If `data` is `null`, the handle is not registered: register it first. If `babyJubjubPublicKey` is `null`, Payments setup offers no value and says the account can't receive checkout payments: the account cannot receive private payments to its own name, so it is not acceptable as a business account; use a separate account for the business. Configure the value on your backend; do not resolve the handle at runtime, because a name can be repointed. |
-| Checkout signing key | `MERCHANT_INTENT_SIGNING_KEY` | A new secp256k1 key used only to sign checkout requests. Create it with `npx @0xcurvy/payments-sdk@0.2.0-rc.1 create-signer [--out <file>]`, which prints the public address and writes the key to an owner-only file (default `curvy-checkout-signer.secret.json`), or with `generateCheckoutSigningKey()` from `@0xcurvy/payments-sdk/merchant/keys`. Move the key into your secret store, or keep it in a KMS/HSM (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)). Never use a wallet or Curvy spending key. |
-| Chain id | `CHAIN_ID` | The EVM network where buyers pay. |
-| Token | `TOKEN_ADDRESS` | The ERC-20 the buyer pays with. It must be registered in the Curvy vault on that chain. |
-| Aggregator | `AGGREGATOR_ADDRESS` | The Curvy aggregator proxy on that chain. Payments setup fills it in for the network you pick; see also [Production values](#production-values). |
-| Checkout page | `CHECKOUT_URL` | The full URL of Curvy’s hosted checkout page, with its path: the Curvy web app’s `/checkout` route. Curvy provides it during onboarding. |
+| Checkout signing key | `MERCHANT_INTENT_SIGNING_KEY` | A new secp256k1 key used only to sign checkout requests. Create it with `npx @0xcurvy/payments-sdk@0.2.0-rc.2 create-signer [--out <file>]`, which prints the public address and writes the key to an owner-only file (default `curvy-checkout-signer.secret.json`), or with `generateCheckoutSigningKey()` from `@0xcurvy/payments-sdk/merchant/keys`. Move the key into your secret store, or keep it in a KMS/HSM (see [Signing with a KMS or HSM](./human-checkout#signing-with-a-kms-or-hsm)). Never use a wallet or Curvy spending key. |
+| Environment | `CURVY_ENVIRONMENT` | `mainnet` to take real money on Arbitrum One, or `testnet` to take test money on Ethereum Sepolia. Payments setup fills it in for the network you pick. The SDK knows Curvy’s contracts on both; see [Networks](#production-values). |
+| Tokens | `TOKENS` | Optional. What buyers may pay in, comma-separated: `USDC`, `USDT` or token addresses. Default: USDC and USDT on mainnet, USDC on testnet. |
 | Your origin | `MERCHANT_ORIGIN` | Your shop’s bare origin, such as `https://shop.example`. Checkout returns the buyer there. |
-| RPC | `RPC_URL` | Your own RPC endpoint for that chain. The SDK uses it to read receipts, logs and fees. |
+| RPC | `RPC_URL` | Your own RPC endpoint for that network. The SDK uses it to read receipts, logs and fees. |
 | Confirmations | `CONFIRMATIONS` | How many blocks, counting the shield block, before a payment is `paid`. |
 | Paid when | `PAID_WHEN` | Optional. `shielded` (default): `paid` once the money is safe in the Curvy vault. `committed`: `paid` only once the note is also spendable in your wallet, which waits for Curvy’s next batch commit. See [When a payment counts as paid](./confirming-payments#when-a-payment-counts-as-paid-paidwhen). |
 | A database | — | Store each payment request server-side (see [step 2](#_2-create-store-sign-and-redirect)). |
+
+The Payments setup of a staging or local Curvy app also gives `CHAIN_ID`, `AGGREGATOR_ADDRESS` and `CHECKOUT_URL`: pass the first two to `initialize` as `network`, and the checkout URL to `buildCheckoutUrl` (see [Other networks](#other-networks)).
 
 ## Installation
 
@@ -36,15 +36,15 @@ Install the Payments SDK on the **server**, at this exact release-candidate vers
 ::: code-group
 
 ```bash [pnpm]
-pnpm add @0xcurvy/payments-sdk@0.2.0-rc.1 @0xcurvy/rs-core-wasm@0.1.0-rc.4
+pnpm add @0xcurvy/payments-sdk@0.2.0-rc.2 @0xcurvy/rs-core-wasm@0.1.0-rc.4
 ```
 
 ```bash [npm]
-npm install @0xcurvy/payments-sdk@0.2.0-rc.1 @0xcurvy/rs-core-wasm@0.1.0-rc.4
+npm install @0xcurvy/payments-sdk@0.2.0-rc.2 @0xcurvy/rs-core-wasm@0.1.0-rc.4
 ```
 
 ```bash [yarn]
-yarn add @0xcurvy/payments-sdk@0.2.0-rc.1 @0xcurvy/rs-core-wasm@0.1.0-rc.4
+yarn add @0xcurvy/payments-sdk@0.2.0-rc.2 @0xcurvy/rs-core-wasm@0.1.0-rc.4
 ```
 
 :::
@@ -58,30 +58,29 @@ Do **not** install `@0xcurvy/curvy-sdk` for merchant checkout. That package is t
 Create the SDK, a viem public client and the signer once, when the process starts:
 
 ```ts
+import type { CurvyEnvironment } from "@0xcurvy/payments-sdk";
 import { initialize, type PaidWhen } from "@0xcurvy/payments-sdk/merchant";
-import { type Address, type Hex, createPublicClient, http } from "viem";
+import { type Hex, createPublicClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 
-const CHAIN_ID = Number(process.env.CHAIN_ID);
-const TOKEN_ADDRESS = process.env.TOKEN_ADDRESS as Address;
-const AGGREGATOR_ADDRESS = process.env.AGGREGATOR_ADDRESS as Address;
-const CHECKOUT_URL = process.env.CHECKOUT_URL!; // Curvy's hosted checkout page, from onboarding
-
 export const sdk = initialize({
+  environment: process.env.CURVY_ENVIRONMENT as CurvyEnvironment, // required: "mainnet" or "testnet"
   receivingKeys: process.env.CURVY_PAYMENTS_PUBLIC_KEY!, // "01…" from the web app's Payments setup
-  chainId: CHAIN_ID,
+  tokens: process.env.TOKENS?.split(","), // optional, e.g. "USDC"; default: USDC and USDT on mainnet, USDC on testnet
   merchantOrigin: process.env.MERCHANT_ORIGIN!, // e.g. "https://shop.example"
-  confirmations: Number(process.env.CONFIRMATIONS), // e.g. 12 on Ethereum mainnet
+  confirmations: Number(process.env.CONFIRMATIONS), // e.g. 12
   paidWhen: (process.env.PAID_WHEN ?? "shielded") as PaidWhen, // optional; default "shielded"
   ttlSeconds: 600, // optional; default 600. Also the buyer's funding window. At most 86400 (24 h): the SDK refuses longer.
   // optional: checkoutCompletePath: "/orders/paid",
 });
 
-export const publicClient = createPublicClient({ transport: http(process.env.RPC_URL) });
+export const publicClient = createPublicClient({ transport: http(process.env.RPC_URL) }); // must serve sdk.chainId
 export const signer = privateKeyToAccount(process.env.MERCHANT_INTENT_SIGNING_KEY as Hex);
 ```
 
-`initialize` checks its inputs and throws on a bad value. `receivingKeys` must be the whole, unedited value from Payments setup (the error says whether the version, length, checksum or a key is wrong). `recipient: { S, V, babyJubjubPublicKey }` still works in place of `receivingKeys`; pass exactly one. `merchantOrigin` must be a bare `http(s)` origin with no path, `confirmations` must be a positive integer, and `paidWhen` must be `"shielded"` or `"committed"`.
+`environment` is required and has no default, so nobody takes real money, or runs a test, by accident. `"mainnet"` is Arbitrum One (chain id `42161`), with real money; `"testnet"` is Ethereum Sepolia (chain id `11155111`), with test money. The SDK has Curvy’s contracts for both built in (see [Networks](#production-values)). `sdk.chainId`, `sdk.tokens` and `sdk.aggregatorAddress` show what it picked. Your RPC endpoint must serve `sdk.chainId`.
+
+`initialize` checks its inputs and throws on a bad value. Each of `tokens` must be a symbol Curvy takes on that network or an address, listed once. `receivingKeys` must be the whole, unedited value from Payments setup (the error says whether the version, length, checksum or a key is wrong). `recipient: { S, V, babyJubjubPublicKey }` still works in place of `receivingKeys`; pass exactly one. `merchantOrigin` must be a bare `http(s)` origin with no path, `confirmations` must be a positive integer, and `paidWhen` must be `"shielded"` or `"committed"`.
 
 `paidWhen` decides what `paid` means. With the default `"shielded"`, a payment is `paid` once the money is in the Curvy vault under your keys and has enough confirmations: it is safe, but your wallet cannot spend it until Curvy’s batch prover commits it. With `"committed"`, the payment stays `confirming` until that commit, so `paid` means the money is spendable. Use `"shielded"` to ship goods; use `"committed"` if you spend the money right after the sale. A later protocol version (v4) will likely require `"committed"`.
 
@@ -97,11 +96,11 @@ import { buildCheckoutUrl } from "@0xcurvy/payments-sdk/transport";
 // 1. Record where to start scanning, before the buyer can pay.
 const fromBlock = await publicClient.getBlockNumber();
 
-// 2. Derive a fresh one-time destination for this amount and token.
+// 2. Derive a fresh one-time destination for this amount, in the tokens set in initialize.
 const request = await sdk.createPaymentRequest({
-  amount: 10_000_000n, // token base units: 10 USDC with 6 decimals
-  token: TOKEN_ADDRESS,
+  amount: 10_000_000n, // token base units: 10 USDC (or USDT) with 6 decimals
   description: "Order #1048 · Blue hour print", // optional; shown at checkout and on the buyer's receipt
+  // optional: tokens: ["USDT"], to take this request in other tokens
 });
 
 // 3. Sign it.
@@ -116,10 +115,10 @@ await db.paymentAttempts.insert({
 });
 
 // 5. Build the checkout URL.
-const checkoutUrl = buildCheckoutUrl(CHECKOUT_URL, signed);
+const checkoutUrl = buildCheckoutUrl(signed); // Curvy's checkout page, https://app.curvy.box/checkout
 ```
 
-The first argument of `buildCheckoutUrl` is the URL of Curvy's hosted checkout page. `buildCheckoutUrl` keeps its origin, path and query and puts the signed package in the URL **fragment**, not the query string. Redirect the customer to `checkoutUrl`.
+`buildCheckoutUrl(signed)` puts the signed package in the URL **fragment** of Curvy's hosted checkout page, `https://app.curvy.box/checkout` (`CURVY_CHECKOUT_URL`), not in the query string. To send buyers to another checkout page, such as a staging app's, pass its URL first: `buildCheckoutUrl(checkoutUrl, signed)` keeps that URL's origin, path and query. Redirect the customer to `checkoutUrl`.
 
 ::: warning Minimum amount
 Human checkout payments must be worth **at least USD 0.50**. Curvy's portal broadcaster fails smaller payments *after* the customer has paid, and the customer then has to reclaim the funds. Protocol fees are deducted from the amount you receive. See [Fees and minimum amounts](./fees).
@@ -129,7 +128,7 @@ Store the record in your **database**, not in a cookie. The session cookie shoul
 
 If `checkoutCompletePath` is omitted, it defaults to `/checkout/complete`. It is always included in the signed EIP-712 data.
 
-For one-off use, the standalone `createPaymentRequest({ receivingKeys, amount, token, chainId, merchantOrigin, ... })` is also exported from `/merchant`.
+For one-off use, the standalone `createPaymentRequest({ receivingKeys, amount, token, chainId, merchantOrigin, ... })` is also exported from `/merchant`. It takes `chainId` directly and `token` as an address.
 
 ## 3. Publish your signers
 
@@ -167,8 +166,7 @@ const attempt = await db.paymentAttempts.get(attemptId); // check the hint again
 const record = parsePaymentRecord(attempt.record);
 try {
   const verification = await sdk.verifyPayment({
-    publicClient,
-    aggregatorAddress: AGGREGATOR_ADDRESS,
+    publicClient, // on sdk.chainId
     request: record.payment.intent,
     txHash, // untrusted hint from the return URL
   });
@@ -186,52 +184,58 @@ try {
 }
 ```
 
-The hash is only a hint. Also run a background job that calls `sdk.verifyPayment({ publicClient, aggregatorAddress, request: record.payment.intent, fromBlock: record.fromBlock })` without a hash for every unfinished attempt. That job completes orders whose buyer closed the tab. Fulfil the order once, when the status is `paid`. With `paidWhen: "committed"`, `confirming` can last until the next batch commit, so keep reconciling `confirming` attempts. See [Confirming payments](./confirming-payments) for every status and error, reconciliation and fees.
+`sdk.verifyPayment` checks against Curvy’s aggregator on your network (`sdk.aggregatorAddress`), so you do not pass one. The hash is only a hint. Also run a background job that calls `sdk.verifyPayment({ publicClient, request: record.payment.intent, fromBlock: record.fromBlock })` without a hash for every unfinished attempt. That job completes orders whose buyer closed the tab. Fulfil the order once, when the status is `paid`. With `paidWhen: "committed"`, `confirming` can last until the next batch commit, so keep reconciling `confirming` attempts. See [Confirming payments](./confirming-payments) for every status and error, reconciliation and fees.
 
-## Production values
+## Networks {#production-values}
 
-Curvy runs one production stack, and the SDK points at it by default:
+`environment` picks the network you are paid on. The SDK has Curvy’s contracts for both networks built in, so you configure nothing else:
 
-| Setting | Production value |
+| | `"mainnet"` | `"testnet"` |
+| --- | --- | --- |
+| Network | Arbitrum One, chain id `42161`, real money | Ethereum Sepolia, chain id `11155111`, test money |
+| USDC | `0xaf88d065e77c8cC2239327C5EDb3A432268e5831`, 6 decimals, vault token id `2` | `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`, 6 decimals, vault token id `2` |
+| USDT | `0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9`, 6 decimals, vault token id `3` | — |
+| Aggregator (`sdk.aggregatorAddress`) | `0xE51924cEF003a654EC9735c4d97f5D4862cBcbB1` | `0x5D4A04d6c9Bdf4613e7acD92E570539A5a6DBa84` |
+| Vault (`readChainFees` finds it from `chainId`) | `0xcC8d5c60A8fb15Aa3793647eF531f1bA7dF24f00` | `0x4a817f82210F17b24577ebAd474E14333A1cB85d` |
+| Portal factory | `0x4f32082C5647F8fE0f0Fb567b98F2a5516361389` | `0x4f32082C5647F8fE0f0Fb567b98F2a5516361389` |
+| Minimum per payment | USD 0.50 (see [Fees and minimum amounts](./fees)) | USD 0.50 |
+
+The addresses are built into the SDK (`CURVY_NETWORKS`, `getCurvyNetwork(chainId)` and `getDefaultCurvyNetwork(environment)`, from the root entry and `/chain`) rather than read from a Curvy service at runtime, because whoever controls the aggregator address decides what counts as a payment. The aggregator and the vault are upgradeable proxies, so their addresses stay the same when Curvy upgrades the contracts.
+
+Curvy’s services serve both networks, and the SDK points at them by default:
+
+| Service | URL |
 | --- | --- |
+| Checkout page | `https://app.curvy.box/checkout` (`CURVY_CHECKOUT_URL`), the default of `buildCheckoutUrl(signed)` |
 | Portal broadcaster | `https://api.curvy.box`, the default `broadcaster` of `createX402Merchant` and of `createBroadcasterClient` |
 | x402 facilitator | `https://api.curvy.box/portal/x402`, served by the broadcaster; the default `facilitator` |
-| Network | Arbitrum One, `chainId` `42161` |
-| USDC (`token`) | `0xaf88d065e77c8cC2239327C5EDb3A432268e5831`, 6 decimals, vault token id `2` |
-| USDT | `0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9`, 6 decimals, vault token id `3` |
-| Aggregator (`aggregatorAddress` for `verifyPayment`) | `0xe51924cef003a654ec9735c4d97f5d4862cbcbb1` |
-| Vault (`vaultAddress` for `readChainFees`) | `0xcc8d5c60a8fb15aa3793647ef531f1ba7df24f00` |
-| Portal factory | `0x4f32082C5647F8fE0f0Fb567b98F2a5516361389` |
-| Minimum per payment | USD 0.50 (see [Fees and minimum amounts](./fees)) |
-| Checkout page (`buildCheckoutUrl` first argument) | Provided during onboarding |
 
-The broadcaster serves the same values live, for every network it shields on:
+### Other networks
 
-```bash
-curl https://api.curvy.box/portal/networks/42161
+Any other chain works with `network`: a staging or local Curvy deployment, or a Curvy network this SDK version does not know yet. The Payments setup of a staging or local Curvy app gives you its `CHAIN_ID`, `AGGREGATOR_ADDRESS` and `CHECKOUT_URL`:
+
+```ts
+import type { Address } from "viem";
+
+export const sdk = initialize({
+  environment: process.env.CURVY_ENVIRONMENT as CurvyEnvironment,
+  network: {
+    chainId: Number(process.env.CHAIN_ID),
+    aggregatorAddress: process.env.AGGREGATOR_ADDRESS as Address, // required on a chain the SDK does not know
+  },
+  tokens: process.env.TOKENS?.split(","), // token addresses on a chain the SDK does not know
+  // ...the other fields as in step 1
+});
+
+const checkoutUrl = buildCheckoutUrl(process.env.CHECKOUT_URL!, signed); // e.g. https://app.curvy.dev/checkout on staging
 ```
 
-```json
-{
-  "data": {
-    "chainId": 42161,
-    "name": "Arbitrum",
-    "testnet": false,
-    "aggregator": "0xe51924cef003a654ec9735c4d97f5d4862cbcbb1",
-    "portalFactory": "0x4f32082C5647F8fE0f0Fb567b98F2a5516361389",
-    "vault": "0xcc8d5c60a8fb15aa3793647ef531f1ba7df24f00",
-    "minPortalUsd": 0.5,
-    "currencies": [
-      { "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", "symbol": "USDC", "decimals": 6, "vaultTokenId": "2" }
-    ]
-  }
-}
-```
-
-`GET /portal/networks/<chainId>` answers 404 for a chain Curvy does not shield on. Read the addresses once, from this table or that endpoint, and pin them in your configuration, so that confirming a payment never depends on what a service advertises.
+- On a chain the SDK does not know, pass `aggregatorAddress`. Without it, `sdk.aggregatorAddress` is `undefined` and `verifyPayment` throws `INVALID_INPUT`. On a chain it knows, the aggregator defaults to Curvy’s.
+- On a chain the SDK does not know, give the tokens by address. Without `tokens`, `sdk.tokens` is empty and every `createPaymentRequest` must name them.
+- A chain the SDK knows must match the environment: `environment: "mainnet"` with Sepolia’s chain id `11155111` throws.
 
 ::: tip Onboarding
-The hosted checkout URL for human checkout comes with onboarding. Contact **<hey@curvy.box>**.
+For production onboarding, contact **<hey@curvy.box>**.
 :::
 
 ## Next steps

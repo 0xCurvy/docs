@@ -13,7 +13,7 @@ description: Merchant payment primitives for Curvy checkout and payment evidence
 | `@0xcurvy/payments-sdk` | Merchants and checkout | Create signed payment requests, verify them, confirm payments on-chain |
 
 ::: warning Preview
-The API on these pages is a **release candidate**: `@0xcurvy/payments-sdk@0.2.0-rc.1`, published under npm's `next` tag. A plain install still gets `0.1.2` (`latest`), which exports an older `verifyPayment` from `/chain`. That version matches only the payment reference and returns a boolean, so do not use it to credit orders: install `0.2.0-rc.1` exactly. Curvy's hosted checkout page is the Curvy web app's `/checkout` route; Curvy provides its URL during onboarding.
+The API on these pages is a **release candidate**: `@0xcurvy/payments-sdk@0.2.0-rc.2`, published under npm's `next` tag. A plain install still gets `0.1.2` (`latest`), which exports an older `verifyPayment` from `/chain`. That version matches only the payment reference and returns a boolean, so do not use it to credit orders: install `0.2.0-rc.2` exactly. Curvy's hosted checkout page is the Curvy web app's `/checkout` route, `https://app.curvy.box/checkout`, and the SDK sends buyers there by default.
 :::
 
 A payment counts as confirmed when an on-chain note matches the **whole request you stored**: the right owner, token and amount. A transaction hash sent by a browser or a facilitator does not confirm a payment by itself.
@@ -43,8 +43,8 @@ You do **not** need Curvy spending or viewing keys on the shop or API server. To
 | --- | --- | --- |
 | `@0xcurvy/payments-sdk` | Browser and Node | Browser-safe convenience barrel |
 | `@0xcurvy/payments-sdk/intent` | Browser and Node | Parse, sign, and verify payment requests |
-| `@0xcurvy/payments-sdk/transport` | Browser and Node | Fragment encode/decode and checkout URLs |
-| `@0xcurvy/payments-sdk/chain` | Browser and Node | Receipt discovery hints (not payment proof); portal prediction, which is internal and unstable |
+| `@0xcurvy/payments-sdk/transport` | Browser and Node | Fragment encode/decode and checkout URLs (`CURVY_CHECKOUT_URL`) |
+| `@0xcurvy/payments-sdk/chain` | Browser and Node | Curvy's built-in networks (`CURVY_NETWORKS`); receipt discovery hints (not payment proof); portal prediction, which is internal and unstable |
 | `@0xcurvy/payments-sdk/contracts` | Browser and Node | Payment contract ABIs |
 | `@0xcurvy/payments-sdk/economics` | Browser and Node | Protocol fee reads, quotes, and minimum amounts |
 | `@0xcurvy/payments-sdk/x402` | Browser and Node | x402 wire types, broadcaster and facilitator clients, payer helper, EIP-712 types, parsers, header codec |

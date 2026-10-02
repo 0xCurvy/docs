@@ -15,14 +15,14 @@ With Curvy, a shop ends up with a **private shielded balance**, and it never has
 In both cases the payment evidence is the same: a note that pays the destination **you** created. It must carry the token and amount you asked for, and it appears in the Curvy aggregator’s `PendingNotes`. Your backend checks this itself with `verifyPayment`, against the request it stored.
 
 ::: warning Status
-Checkout is not yet generally available: the SDK with the API in these docs is a release candidate (`@0xcurvy/payments-sdk@0.2.0-rc.1`, npm tag `next`). Curvy's hosted payment page is the Curvy web app's `/checkout` route, and Curvy provides its URL during onboarding. For production onboarding, contact us.
+Checkout is not yet generally available: the SDK with the API in these docs is a release candidate (`@0xcurvy/payments-sdk@0.2.0-rc.2`, npm tag `next`). Curvy's hosted payment page is the Curvy web app's `/checkout` route, `https://app.curvy.box/checkout`, and the SDK sends buyers there by default. For production onboarding, contact us.
 :::
 
 ## Payments SDK
 
 In the first release, payments go to the Curvy account you are signed in with. It is already registered and has a handle. Shop income lands next to your personal funds in that account, and anyone who holds its viewing key can see both. Separate business accounts come in a later release. Checkout does not look the handle up: your backend is configured with the account's public keys.
 
-Those keys come as one value, your public key for payments. In the Curvy web app, open **Payments** and follow the setup: step 3 (**Connect your backend**) shows a `.env` block for your developer, and its `CURVY_PAYMENTS_PUBLIC_KEY` line holds this value. It is a single line starting with `01`, the format version. It packs the account's three public receiving keys, and nothing else: no secret. It is public, because packing is not encryption: anyone who sees it can pay you, but cannot spend or see your funds. It ends in a checksum, so a mistyped or cut-off copy is refused instead of sending payments to the wrong keys. Give the `.env` block to whoever runs your shop backend. The same value also works for x402.
+Those keys come as one value, your public key for payments. In the Curvy web app, open **Payments** and follow the setup: step 3 (**Connect your backend**) shows a `.env` block for your developer, and its `CURVY_PAYMENTS_PUBLIC_KEY` line holds this value. It is a single line starting with `01`, the format version. It packs the account's three public receiving keys, and nothing else: no secret. It is public, because packing is not encryption: anyone who sees it can pay you, but cannot spend or see your funds. It ends in a checksum, so a mistyped or cut-off copy is refused instead of sending payments to the wrong keys. Give the `.env` block to whoever runs your shop backend. The same value also works for x402. The block also names the environment: `mainnet` takes real money on Arbitrum One, and `testnet` takes test money on Ethereum Sepolia.
 
 Use [`@0xcurvy/payments-sdk`](/sdk/payments/) on your backend to:
 
@@ -37,6 +37,8 @@ Your Curvy spending and viewing keys never go on the shop. Keep them in your Cur
 ## Fees and minimums
 
 The buyer pays the `amount` you set. Curvy’s fees come out of that amount: a percentage deposit fee plus a fixed per-token gas fee for the note and the portal. Your note holds the rest, the net amount. Set prices with this in mind.
+
+By default, buyers can pay in USDC or USDT. On mainnet they can also pay from another network, such as Base or BNB Chain, and Curvy bridges the same token to Arbitrum One. Like a card fee, the bridge cost comes out of what you receive, never out of the buyer's price, and checkout offers a network only when that cost is under 3%. See [Tokens and other networks](/sdk/payments/human-checkout#payments-from-other-networks).
 
 | Price per payment | Use |
 | --- | --- |

@@ -32,7 +32,7 @@ Protocol fees (a percentage fee plus fixed portal-deployment and note-commitment
 | --- | --- | --- |
 | Spending / viewing keys | Offline, in your Curvy wallet | Spending your Curvy balance later. Never put them on the shop. |
 | Public key for payments (one `01…` value: public `S`, `V`, BabyJubjub) | Shop backend (`CURVY_PAYMENTS_PUBLIC_KEY`) | Deriving one-time payment destinations. Copy it from the web app's **Payments** setup: the `CURVY_PAYMENTS_PUBLIC_KEY` line of the `.env` block in step 3. It is public (packing is not encryption): a leak moves no money. |
-| Request signing key (secp256k1) | Shop backend, ideally a KMS/HSM | Signing the checkout payload. Create it with `npx @0xcurvy/payments-sdk@0.2.0-rc.1 create-signer` or `generateCheckoutSigningKey()` from `/merchant/keys`. |
+| Request signing key (secp256k1) | Shop backend, ideally a KMS/HSM | Signing the checkout payload. Create it with `npx @0xcurvy/payments-sdk@0.2.0-rc.2 create-signer` or `generateCheckoutSigningKey()` from `/merchant/keys`. |
 | Signer address list | `/.well-known/curvy-payments.json` | Lets Curvy verify the signature |
 
 In the first release, payments go to **the Curvy account you are signed in with**: copy its `CURVY_PAYMENTS_PUBLIC_KEY` value from the web app's Payments setup. That account is already registered and has a handle. Payments land in the same account as your personal funds, and anyone who holds that account's viewing key can see both. Separate business accounts come in a later release; switching then means putting the business account's value in your backend for new payments. Checkout itself never looks a handle up. Configure the value on your backend directly. It carries only the account's public keys, with a format version (`01`) and a checksum that refuses typos and cut-off copies; see [Receiving keys value](./api#receiving-keys-value). `recipient: { S, V, babyJubjubPublicKey }` also works in its place.
@@ -49,18 +49,18 @@ Treat it like a payment credential:
 
 ```ts
 const fromBlock = await publicClient.getBlockNumber();
-const request = await sdk.createPaymentRequest({ amount: orderTotal, token: TOKEN_ADDRESS });
+const request = await sdk.createPaymentRequest({ amount: orderTotal });
 const signed = await signPaymentIntent(request, (typedData) => signer.signTypedData(typedData));
 await db.paymentAttempts.insert({
   orderId,
   record: serializePaymentRecord({ payment: signed, fromBlock, verification: null }),
 });
-const checkoutUrl = buildCheckoutUrl(CHECKOUT_URL, signed);
+const checkoutUrl = buildCheckoutUrl(signed);
 ```
 
-[Getting started](./getting-started) defines `sdk`, `publicClient`, `signer`, `TOKEN_ADDRESS` and `CHECKOUT_URL`. `serializePaymentRecord` comes from `@0xcurvy/payments-sdk/merchant`. Here `orderTotal` is your order price in token base units, and `db` is your own storage.
+[Getting started](./getting-started) defines `sdk`, `publicClient` and `signer`. `serializePaymentRecord` comes from `@0xcurvy/payments-sdk/merchant`. Here `orderTotal` is your order price in the token's base units (4 USDC is `4_000_000n`), and `db` is your own storage. The request charges in the token set in `initialize`, USDC by default; pass `token` to charge one request in another, such as `{ amount: orderTotal, token: "USDT" }` on mainnet.
 
-The first argument to `buildCheckoutUrl` is the URL of Curvy's hosted checkout page, the Curvy web app's `/checkout` route, which Curvy provides during onboarding. The signed package is written into the URL fragment. Any path and query on the checkout URL are kept.
+`buildCheckoutUrl(signed)` writes the signed package into the URL fragment of Curvy's hosted checkout page, the Curvy web app's `/checkout` route at `https://app.curvy.box/checkout` (`CURVY_CHECKOUT_URL`). To send buyers to another checkout page, such as a staging app's `https://app.curvy.dev/checkout`, pass it first: `buildCheckoutUrl(checkoutUrl, signed)`. Any path and query on that URL are kept.
 
 Storage rules:
 
@@ -82,6 +82,29 @@ After `expiry`, Curvy no longer registers or shields the payment, and Curvy’s 
 **Keep requests short-lived.** The SDK refuses a `ttlSeconds` above **86400** (24 hours, `MAX_PAYMENT_REQUEST_TTL_SECONDS`): `initialize`, `createPaymentRequest` and `buildPaymentRequest` throw `ttlSeconds must be at most 86400 (24 hours)`. `signPaymentIntent` also refuses a request whose `expiry` is more than 24 hours away, however it was built, and checkout’s `verifyPaymentIntent` refuses one that lives longer than 24 hours plus 5 minutes of clock skew. Prefer minutes. When Curvy upgrades its payment contracts, a link signed before the switch and paid after it cannot complete, so short links keep that window small.
 
 `verifyPayment` does not look at `expiry`. If a note does arrive late, it is still reported. Whether you accept a late payment is your decision.
+
+## Tokens and other networks {#payments-from-other-networks}
+
+A request takes every stablecoin Curvy takes on your network unless you name fewer: **USDC and USDT on mainnet**, USDC on testnet. The amount means the same in each, since both have 6 decimals. The buyer picks which one they pay in, and `verifyPayment` tells you which arrived as `payment.token`.
+
+```ts
+const sdk = initialize({
+  environment: "mainnet",
+  tokens: ["USDC"], // optional: only USDC (the default takes USDC and USDT)
+  // …
+});
+// Per request: other tokens, the first one preferred.
+const request = await sdk.createPaymentRequest({ amount: orderTotal, tokens: ["USDT", "USDC"] });
+```
+
+On mainnet, buyers can also pay in one of your tokens on another network where Curvy has a payment address, such as Base, Ethereum, Optimism, Polygon or BNB Chain. Curvy bridges the **same token** to Arbitrum One, never swaps it, and delivers it to you as usual.
+
+**You absorb what bridging costs, the way you absorb card fees.** The buyer always pays exactly your price.
+
+- **Up to 3% can be missing.** A payment on Arbitrum One that arrives up to 3% short still counts as paid, and `verifyPayment` reports what bridging cost you as `payment.shortfall`. See [Fees and net amount](./confirming-payments#fees-and-net-amount). Checkout offers another network only when its bridge is expected to cost less than that, and stablecoin bridges usually cost far less.
+- **Mainnet only.** On testnet, checkout takes USDC on Ethereum Sepolia only.
+- **No swaps.** A buyer holding only USDT can't pay a shop that takes only USDC, on any network.
+- **The buyer pays their own network fee.** They pay the gas for their own wallet transaction; checkout shows it. Nothing else is added to your price.
 
 ## Publishing your signing keys
 
@@ -232,11 +255,13 @@ PaymentIntent(address token,uint256 amount,uint256 chainId,uint256 ownerHash,uin
 
 With a `description`, the primary type is `DescribedPaymentIntent`: the same fields in the same order, then `string description`. It is a separate type so that a description can't be added to a signed intent or removed from one.
 
+When the request takes more than one token, the primary type is `MultiTokenPaymentIntent`: the same fields in the same order, then `string description` (empty when the request has none) and `address[] tokens`. It is a separate type for the same reason: a token can't be added to a signed request.
+
 If you sign outside TypeScript, for example through a KMS, reproduce this exactly. `buildPaymentIntentTypedData(request)` from `/intent` returns the payload `signPaymentIntent` signs.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `token` | `address` | ERC-20 the customer must send |
+| `token` | `address` | ERC-20 the customer sends: the first of `tokens` when there are several |
 | `amount` | `uint256` | Gross amount the customer sends, in token base units. You receive this minus Curvy fees (see [Fees](./confirming-payments#fees-and-net-amount)). |
 | `chainId` | `uint256` | Network. It is also in the domain. |
 | `ownerHash` | `uint256` | Binds the note and the portal to your receiving identity |
@@ -246,6 +271,7 @@ If you sign outside TypeScript, for example through a KMS, reproduce this exactl
 | `checkoutCompletePath` | `string` | Absolute path on that origin (default `/checkout/complete`) |
 | `expiry` | `uint64` | Unix seconds: the end of the funding window |
 | `description` | `string` | Optional. What the buyer is paying for, at most 120 characters of plain text. Checkout shows it and prints it on the buyer's receipt. |
+| `tokens` | `address[]` | Only when the request takes more than one token: all of them, `token` first, each once. See [Tokens and other networks](#payments-from-other-networks). |
 
 There is no refund field and no `paymentId`. What happens to the money if a payment cannot complete is handled on Curvy’s checkout page, not in your signed package.
 

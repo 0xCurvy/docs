@@ -13,7 +13,7 @@ The Curvy aggregator emits a `PendingNotes` event for every shield. Each note in
 
 So a buyer can shield a small amount into a note **they** own and put **your** `R` on it. Matching `R` alone would accept that fake. `verifyPayment` accepts a note only when all of these hold:
 
-1. The event was emitted by the aggregator you configured.
+1. The event was emitted by Curvy’s aggregator on the request’s chain (`sdk.aggregatorAddress`), or by the `aggregatorAddress` you pass.
 2. The note carries the stored request’s `R` and `viewTag`.
 3. Its `noteId` recomputes from the stored `ownerHash`, the note’s amount and its token. That proves the note is yours.
 4. Its token is the vault token id of `request.token`.
@@ -37,21 +37,19 @@ With the hint from the return URL:
 
 ```ts
 const result = await sdk.verifyPayment({
-  publicClient,
-  aggregatorAddress: AGGREGATOR_ADDRESS,
+  publicClient,                   // on sdk.chainId
   request: record.payment.intent, // exactly what createPaymentRequest returned, as signed
   txHash,                         // untrusted hint; only this transaction is examined
 });
 ```
 
-Block confirmations are configured once on `initialize({ confirmations: … })`; you do not pass them again here. `AGGREGATOR_ADDRESS` is the aggregator contract on your chain (`0xe51924cef003a654ec9735c4d97f5d4862cbcbb1` on Arbitrum One; see [Production values](./getting-started#production-values)).
+Block confirmations are configured once on `initialize({ confirmations: … })`; you do not pass them again here. You do not pass the aggregator either: `sdk.verifyPayment` uses `sdk.aggregatorAddress`, Curvy’s aggregator on your environment’s network (see [Networks](./getting-started#production-values)), or the one you set in `network`.
 
 Without a hint, from a background job:
 
 ```ts
 const result = await sdk.verifyPayment({
   publicClient,
-  aggregatorAddress: AGGREGATOR_ADDRESS,
   request: record.payment.intent,
   fromBlock: record.fromBlock, // block number stored when the request was created
 });
@@ -61,7 +59,7 @@ Write each result you accept back into the same value, `serializePaymentRecord({
 
 Without `txHash`, the SDK scans aggregator `PendingNotes` logs from `fromBlock` to the latest block and keeps the notes that belong to the request (checks 1–3). Look-alike notes are skipped. It then judges token, amount and confirmations on each of them and reports the first note that is `paid`, else the first that is `confirming`. Only when none pays does it report the earliest match, as `underpaid` or `wrong_token`. With `paidWhen: "shielded"` this is simply the earliest note that pays. With `paidWhen: "committed"` a later note that is already committed wins over an earlier one still waiting for its batch, because the batch prover chooses which pending notes it commits first. With `txHash` the same rule applies to the notes inside that one transaction. `fromBlock` is required when `txHash` is omitted, and ignored when it is present.
 
-The standalone `verifyPayment({ ..., confirmations, paidWhen })` from `/merchant` takes `confirmations` and `paidWhen` directly.
+The standalone `verifyPayment({ ..., confirmations, paidWhen })` from `/merchant` takes `confirmations` and `paidWhen` directly. Its `aggregatorAddress` defaults to Curvy’s aggregator on `request.chainId`; on a chain the SDK does not know, pass it, or the call throws `INVALID_INPUT`.
 
 ## When a payment counts as paid (`paidWhen`)
 
@@ -131,7 +129,7 @@ When the SDK cannot produce a status, it throws `PaymentVerificationError` with 
 | `UNRELATED` | The transaction shielded notes, but none pays this request | Reject the hint and do not poll it again. The order keeps reconciling. |
 | `WRONG_CHAIN` | `publicClient` is not on `request.chainId` | Fix your configuration. |
 | `MISSING_FROM_BLOCK` | Neither `txHash` nor `fromBlock` was given | Store `fromBlock` when you create the request. |
-| `INVALID_INPUT` | Malformed request, address, hash, `confirmations`, `paidWhen` or `fromBlock` | Fix the caller. A stored request that no longer parses was altered, or was stored before the stricter parser. |
+| `INVALID_INPUT` | Malformed request, address, hash, `confirmations`, `paidWhen` or `fromBlock`, or no `aggregatorAddress` on a chain the SDK does not know | Fix the caller. A stored request that no longer parses was altered, or was stored before the stricter parser. |
 
 Other errors, such as RPC failures, are thrown as plain errors, not `PaymentVerificationError`. Retry them. A failed read at the shield block or a failed `eth_getLogs` names the block or block range in its message, with the RPC error as `cause`.
 
@@ -162,7 +160,9 @@ netAmount = amount
 - `pendingNoteCommitment` and `portalDeployment` are per-token gas fees, in token units: `vault.perTokenGasFees(tokenId)`.
 - `vault` is `aggregator.curvyVault()`.
 
-`verifyPayment` reads these values at the shield block and returns the result as `minimumNetAmount`. It is floored at `1`. To quote a price before the sale, use `readChainFees` and `quotePayment({ …, rail: "portal" })` from `@0xcurvy/payments-sdk/economics` (see [Fees and minimum amounts](./fees)).
+`verifyPayment` reads these values at the shield block and returns the result as `minimumNetAmount`. It is floored at `1`.
+
+On Arbitrum One, a payment [made on another network](./human-checkout#payments-from-other-networks) may arrive short by what bridging it cost, so `minimumNetAmount` is computed from `amount` less 3% of it (`ROUTED_PAYMENT_TOLERANCE_BPS`). `payment.shortfall` is how much less the note carries than the full `amount` would have yielded: the bridge cost you absorbed (0 when paid in full). `payment.token` is which of the request's tokens it arrived in. To quote a price before the sale, use `readChainFees` and `quotePayment({ …, rail: "portal" })` from `@0xcurvy/payments-sdk/economics` (see [Fees and minimum amounts](./fees)).
 
 Consequences for pricing:
 
@@ -189,12 +189,24 @@ const url = buildCheckoutCompleteUrl(request, shieldTxHash);
 
 ## Upgrading from 0.1.x
 
-Moving from `0.1.x` to `0.2.0-rc.1` brings these changes:
+Moving from `0.1.x` to `0.2.0-rc.2` brings these changes, and then those in [Upgrading from 0.2.0-rc.1](#upgrading-from-0-2-0-rc-1):
 
 - `verifyPayment` moved from `/chain` and the root entry to `/merchant`. `PaymentVerifyClient` moved with it, and it now also needs `getChainId` and `readContract`. A viem `PublicClient` has all of these.
 - It takes the stored `request` in place of `ephemeralKey`, and it returns `{ status, payment }` instead of a boolean.
 - `fromBlock` is required when you omit `txHash`. The old no-hash path scanned from block `0` and waited for `CommittedNotes`; pass `paidWhen: "committed"` to wait for the commit again.
 - `parsePaymentIntent` now rejects out-of-range numbers and non-canonical decimals. Requests from `createPaymentRequest` still parse.
+
+## Upgrading from 0.2.0-rc.1 {#upgrading-from-0-2-0-rc-1}
+
+Moving from `0.2.0-rc.1` to `0.2.0-rc.2`:
+
+- `initialize` takes a required `environment: "mainnet" | "testnet"` in place of `chainId`. `"mainnet"` is Arbitrum One (`42161`) and `"testnet"` is Ethereum Sepolia (`11155111`). For any other chain, pass `network: { chainId, aggregatorAddress }` (see [Other networks](./getting-started#other-networks)).
+- Requests take `tokens`, a list of symbols such as `"USDC"` or addresses, set once on `initialize` or per `sdk.createPaymentRequest`. By default a request takes every token Curvy takes on the network: USDC and USDT on mainnet, USDC on testnet. A request with more than one token lists them in `intent.tokens` and is signed as `MultiTokenPaymentIntent`. `sdk.tokens` replaces `sdk.token`.
+- On Arbitrum One, buyers can also pay in one of your tokens on another network, and `verifyPayment` counts a payment up to 3% short as paid (see [Tokens and other networks](./human-checkout#payments-from-other-networks)). Every `VerifiedPayment` now has `shortfall` and `token`. Payment records saved before still read, with `shortfall` 0 and `token` null.
+- `aggregatorAddress` is optional on `sdk.verifyPayment` and on the standalone `verifyPayment`. It defaults to Curvy’s aggregator on the request’s chain, and is required only on a chain the SDK does not know.
+- `buildCheckoutUrl(signed)` uses Curvy’s checkout page, `https://app.curvy.box/checkout` (`CURVY_CHECKOUT_URL`). `buildCheckoutUrl(checkoutUrl, signed)` still works for another page.
+- `readChainFees` takes `chainId` in place of `vaultAddress` on Curvy’s networks.
+- `createX402Merchant` takes `token` as a symbol or an address, and on Curvy’s networks uses the SDK’s own contract addresses before the broadcaster’s.
 
 ## Related
 
