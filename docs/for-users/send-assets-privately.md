@@ -1,31 +1,32 @@
 # Send assets privately
 
-There are three ways to send assets from your Curvy web app, depending on whether the recipient:
+Open **Send** in the Curvy App. At the top of the form you pick the recipient type, depending on whether the recipient:
 
-- already has a registered Curvy ID: [Send to Curvy ID](#send-to-curvy-id)
-- wants to receive funds to a regular Ethereum account (EOA address): [Send to external wallet](#send-to-external-wallet)
-- doesn't have a crypto wallet or address but wants to onboard to Curvy: [Send as a link](#send-as-a-link)
+- already has a registered Curvy ID: [Curvy ID](#send-to-curvy-id)
+- wants to receive funds to a regular blockchain account (EOA address): [External wallet](#send-to-external-wallet)
+- doesn't have a crypto wallet or address but wants to onboard to Curvy: [Gift link](#send-a-gift-link)
+
+In all three cases you choose the asset and amount, then **Review transfer** shows the full details, including fees, before you confirm.
+After confirming you can follow the transfer as it is prepared, submitted, and settled, and find it again later under **Activity**.
 
 ## Send to Curvy ID
 
-When the recipient already has a registered Curvy ID, you can select the *Send to Curvy ID* option.
+When the recipient already has a registered Curvy ID, select **Curvy ID** and type their name, for example `mihailo.curvy.name`.
+They don't have to be a saved contact, although you can save them as one for next time.
 
-In the screenshot below, you can see an example of sending to *mihailo.curvy.name*:
-
-![Send to Curvy ID](send-to-curvy-id.png)
+This is a fully private transfer: nothing about the sender, the recipient, or the amount is visible on-chain.
 
 ## Send to external wallet
 
-When the recipient only has a blockchain address they can share with you, you'll need to select
-both the network where they will receive the funds and the exact address.
+When the recipient only has a blockchain address they can share with you, select **External wallet**. You'll need to select
+both the network where they will receive the funds and the exact address, for example `0xd8d...` on Polygon or a Solana address.
 
-In the example below, we are sending the funds to `0xd8d...` on the Polygon network.
+> [!WARNING]
+> This is a withdrawal from your private balance. The amount, destination address, and timing are visible on the destination network.
 
-![Send to external wallet](send-to-external-wallet.png)
+## Send a gift link
 
-## Send as a link
-
-The third option in the send dialog, **Send as a link**, allows you to generate a single-use link that
+The third option, **Gift link**, allows you to generate a single-use link that
 anyone can use to register or log in to a Curvy account and claim the funds you've sent them.
 
 This is useful in situations where:
@@ -35,7 +36,7 @@ This is useful in situations where:
 - You want to give someone a crypto "giftcard"
 
 > [!WARNING]
-> A couple of important things about **Send as a link** feature:
+> A couple of important things about the **Gift link** feature:
 > <br>
 >
 > 1. Curvy links don't expire! The only way for you to get back the funds that were unclaimed is to claim the funds using the link yourself.
@@ -45,18 +46,16 @@ This is useful in situations where:
 > 3. Keep the links safe, as anyone who gains access to them will also gain access to the funds they are sending!
 > <br>
 
-Upon entering the amount and currency, you will be presented with a warning similar to the one above:
+After you enter the amount and asset, **Review gift** repeats these warnings and shows the fees. Once you confirm, wait for the private transfer to finish.
 
-![Send as a link warning](send-as-a-link-warning.png)
+The transfer view then shows the gift link, with a copy button and a QR code. Save it somewhere safe before you share it:
+you can reopen it from the transfer view during this session, but not from another device.
 
-After confirming the action, you will need for the private transfer process to finish:
-
-![Send as a link ](send-as-a-link.png)
-
-After that, your recipient can simply open a link similar to the one below:
+Your recipient opens a link of the form
 
 ```
-https://app.curvy.box#737461&5&91227993...883431253847704268123135462&5000000000000000&1
+https://app.curvy.box/claim/<gift-id>
 ```
 
-and any Curvy ID they log in to or register will automatically claim these funds upon opening the app, rendering the link no longer usable.
+logs in to, or registers, any Curvy ID, reviews the gift and chooses **Claim gift**.
+A small claim fee is deducted from the gift amount, and the link stops working once claimed.

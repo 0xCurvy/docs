@@ -10,13 +10,14 @@ They just need to copy and paste your public URL or ENS address (which is also i
 
 Below are three ways you can share payment instructions with senders so that you can receive assets automatically shielded in Curvy.
 
+Everything you need to share is on the **Receive** page of the Curvy App: your Curvy name, the link to your receiving page, and a QR code of it.
+
 ## By sharing your ENS
 
 The easiest way for someone to send you assets is by using your Curvy ID in an ENS-compatible wallet such as Rabby or MetaMask.
 
-The sender can simply enter your Curvy ID as the recipient for a new transaction:
-
-![Using Curvy name in Metamask](ens-metamask.png)
+The sender can simply enter your Curvy ID, for example `your-curvy-id.curvy.name`, as the recipient for a new transaction.
+Their wallet resolves it to a fresh private address, so nothing about you appears on-chain.
 
 ## By sharing your public URL
 
@@ -26,15 +27,13 @@ If the sender's wallet doesn't support ENS, they can always open your public URL
 https://your-curvy-id.curvy.name
 ```
 
-and copy the generated address to the wallet of their choice.
-
-An example with [https://travica.curvy.name](https://travica.curvy.name):
-
-![Public page](public-page.png)
+choose EVM or Solana, then **Get payment address**, and copy the generated address to the wallet of their choice.
+The same address works on any [supported network](/for-users/#supported-networks-and-tokens) of that kind.
+The address is single-use: only the first transfer to it is forwarded automatically.
 
 ## By generating a private address
 
 If you are, for example, withdrawing funds from an exchange, you will not be able to enter the ENS as the withdrawal address or send a URL through a message, as it's an automated process.
 
-In this case, you'd simply follow the steps explained above in ["By sharing your public URL"](#by-sharing-your-public-url)
+In this case, open the **Receive** page in the Curvy App, choose **Create one-time address** (EVM or Solana, depending on where the exchange will send from),
 and copy the newly generated private address to the withdrawal form.

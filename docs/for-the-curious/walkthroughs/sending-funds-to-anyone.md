@@ -1,8 +1,8 @@
-# Sending funds to anyone (send as a link)
+# Sending funds to anyone (gift link)
 
 Bob wants to send his nephew Charlie some crypto for his birthday. Charlie doesn't have a Curvy ID — in fact, he doesn't have a crypto wallet at all.
 
-Bob uses Curvy's **Send as a link** feature to generate a single-use link and shares it with Charlie over a secure messaging channel.
+Bob uses Curvy's **Gift link** feature to generate a single-use link and shares it with Charlie over a secure messaging channel.
 
 ## How it works under the hood
 

@@ -8,4 +8,4 @@ We will explain the entirety of the Curvy Protocol by covering three main proces
 
 As a bonus, we also explain how Curvy lets you pay someone who doesn't have a wallet at all:
 
-- [Sending funds to anyone (send as a link)](./sending-funds-to-anyone.md)
+- [Sending funds to anyone (gift link)](./sending-funds-to-anyone.md)

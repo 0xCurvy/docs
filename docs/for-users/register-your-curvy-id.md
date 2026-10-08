@@ -1,6 +1,6 @@
 # Register Your Curvy ID
 
-To set up your Curvy Wallet, the first step is to register your Curvy ID.
+To set up your Curvy Wallet, the first step is to create your account. Every account gets a Curvy ID.
 
 A Curvy ID is like a personal email address or an internet domain that other people can use to privately send funds to you.
 
@@ -13,12 +13,19 @@ Curvy never stores your password or private keys.
 
 :::
 
-## Step 1: Choose your Curvy ID
+## Step 1: Create your account
 
-Upon opening [app.curvy.box](https://app.curvy.box) and clicking on **Create New Account**,
-you will be prompted to choose the desired Curvy ID.
+Open [app.curvy.box](https://app.curvy.box) and choose **Create account**. If you already have an account, choose **Log in** instead.
 
-A good way to choose a Curvy ID is to make sure it is:
+You are then asked how you want to sign in. There are two options:
+
+- **Use a passkey**: your face, fingerprint, or device PIN unlocks the account.
+- **Use a wallet**: an existing Ethereum wallet plus a password you create.
+
+Curvy picks an available Curvy ID for you and shows it once the account is ready.
+You can change it at any time under **Settings → Profile**; your old name is released when you do.
+
+A good Curvy ID is:
 
 - Easy to pronounce and spell
 - Unambiguous
@@ -27,20 +34,14 @@ A good way to choose a Curvy ID is to make sure it is:
 You are free to even set your full name as the Curvy ID, as it will only be used when
 addressing payments to you. The underlying privacy protocol ensures that only the sender knows to whom the funds are addressed.
 
-After choosing your Curvy ID, you can either use a Passkey ([more on passkeys](https://www.eff.org/deeplinks/2023/10/what-passkey))
-or to sign up using a Web3 wallet.
-
-![Sign-up methods](signup-methods.png)
-
 ## Step 2a: Register using a Passkey
 
-Make sure your passkey storage is Google, Apple, or 1Password, and that you are accessing through supported browsers:
+Choose **Use a passkey** and approve the prompt from your browser or password manager ([more on passkeys](https://www.eff.org/deeplinks/2023/10/what-passkey)).
 
-- Google Chrome
-- Apple Safari
-- Samsung Internet
+Curvy derives your keys from the passkey, so the passkey provider has to support the WebAuthn PRF extension.
+Major platform passkeys (Google, Apple) and password managers such as 1Password do. If yours does not, the app tells you so during sign-up and you can use a wallet instead.
 
-If you have backed up your Passkey to Google's or Apple's cloud storage, you will also be able to log in on desktops using your mobile device.
+If your passkey is synced to your platform's cloud, you will also be able to log in on desktops using your mobile device.
 
 > [!TIP]
 > Passkeys are a good and secure way to access the Curvy App on both desktop and mobile devices without needing a cryptocurrency wallet.
@@ -54,17 +55,15 @@ If you have backed up your Passkey to Google's or Apple's cloud storage, you wil
 
 To get started:
 
-- Tap `Connect Wallet` on the Curvy web app.
+- Choose **Use a wallet** and pick the wallet you'd like to connect (an Ethereum / EVM wallet such as MetaMask or Rabby, or any wallet through WalletConnect).
+  The wallet you connect becomes the key to your Curvy account. Combined with the password you set in the next step, it provides the most secure way to access and manage your Curvy web app.
 
-- Select the wallet you’d like to use to create your Curvy account (e.g. Argent, MetaMask, Braavos).
-  The wallet you connect becomes the key to your Curvy account. Combined with the password you'll set up in the next steps, it provides the most secure way to access and manage your Curvy web app.
-
-- Next, you'll need a password to protect your wallet. Curvy combines your original wallet signature with the password you create to generate your private keys, ensuring your account is secure and fully self-custodial.
+- Next, create a password (at least 8 characters). Curvy combines your wallet signature with this password to generate your private keys, ensuring your account is secure and fully self-custodial.
 
 > [!TIP]
 > Ensure you keep your password safe and back up your Curvy keys right after creating your account. If you lose access to your wallet or forget your password, your backup keys will be the only way to recover your funds.
 
-- Curvy will next ask you to sign a message. This isn't a blockchain transaction; it's a local action that enables your wallet to generate the keys needed to manage your Curvy account and funds. This happens entirely in your browser. Your private keys remain on your device and are never uploaded, shared, or stored anywhere else.
+- Curvy will then ask your wallet to sign a message. This isn't a blockchain transaction; it's a local action that enables your wallet to generate the keys needed to manage your Curvy account and funds. This happens entirely in your browser. Your private keys remain on your device and are never uploaded, shared, or stored anywhere else.
 
 > [!NOTE]
 > To learn more about how the authentication process in Curvy works, you can refer to the [Curvy ID](/for-the-curious/building-blocks/curvy-id) in the "Curvy for the curious" section.

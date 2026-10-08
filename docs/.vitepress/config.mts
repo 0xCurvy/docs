@@ -73,7 +73,7 @@ const generalSidebar: DefaultTheme.SidebarItem[] = [
         items: [
           { text: "To a Curvy ID", link: "/for-users/send-assets-privately#send-to-curvy-id" },
           { text: "To an external wallet", link: "/for-users/send-assets-privately#send-to-external-wallet" },
-          { text: "As a link", link: "/for-users/send-assets-privately#send-as-a-link" },
+          { text: "As a gift link", link: "/for-users/send-assets-privately#send-a-gift-link" },
         ],
       },
       { text: "Swap assets privately", link: "/for-users/swap-assets-privately" },
